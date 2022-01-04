@@ -69,7 +69,7 @@ class Product(models.Model):
             quant_qty = row2[0] * 1.0
             product_id = row2[1]
             location_id = row2[2]
-            lot_id = row2[3]
+            lot_id = row2[3] if self.tracking != "serial" else False
             package_id = row2[4]
             owner_id = row2[5]
             key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id or False, package_id or False, owner_id or False)
@@ -122,7 +122,7 @@ class Product(models.Model):
             move_qty = row[0]
             product_id = row[1]
             location_id = row[2]
-            lot_id = row[3]
+            lot_id = row[3] if self.tracking != "serial" else False
             package_id = row[4]
             owner_id = row[5]
             key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id or False, package_id or False, owner_id or False)
@@ -169,7 +169,7 @@ class Product(models.Model):
             move_qty = row[0]
             product_id = row[1]
             location_dest_id = row[2]
-            lot_id = row[3]
+            lot_id = row[3] if self.tracking != "serial" else False
             package_id = row[4]
             owner_id = row[5]
             key = "%d_%d_%d_%d_%d" % (

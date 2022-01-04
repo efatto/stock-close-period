@@ -29,6 +29,7 @@
         action="action_stock_close_import_wizard"
         parent="menu_stock_close_group"
         sequence="110"
+        groups="stock_close_period.group_stock_close_period_manager"
     />
 
 </odoo>
