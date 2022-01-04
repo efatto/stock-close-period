@@ -13,6 +13,7 @@
         "report_xlsx",
     ],
     "data": [
+        "security/stock_close_group.xml",
         "security/ir.model.access.csv",
         "views/stock_close_views.xml",
         "wizards/stock_close_import.xml",

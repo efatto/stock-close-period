@@ -5,7 +5,7 @@
         <field name="name">stock.close.period.tree</field>
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
-            <tree string="stock close period">
+            <tree create="0" delete="0" edit="0" string="stock close period">
                 <field name="name"/>
                 <field name="close_date"/>
                 <field name="amount"/>
@@ -17,11 +17,29 @@
         </field>
     </record>
 
+    <record id="stock_close_period_tree_manager_view_inherit" model="ir.ui.view">
+        <field name="name">stock.close.period.tree.manager.view.inherit</field>
+        <field name="model">stock.close.period</field>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_tree"/>
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">1</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="edit">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="stock_close_period_line_tree" model="ir.ui.view">
         <field name="name">stock.close.period.line.tree</field>
         <field name="model">stock.close.period.line</field>
         <field name="arch" type="xml">
-            <tree string="stock Close Period Lines" editable="top">
+            <tree create="0" delete="0" edit="0" string="stock Close Period Lines">
                 <field name="close_id"/>
                 <field name="product_id"/>
                 <field name="categ_name"/>
@@ -34,6 +52,27 @@
                 <field name="price_unit"/>
                 <field name="amount_line"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="stock_close_period_line_tree_manager_view_inherit" model="ir.ui.view">
+        <field name="name">stock.close.period.line.tree.manager.view.inherit</field>
+        <field name="model">stock.close.period.line</field>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_line_tree"/>
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">1</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="delete">1</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="edit">1</attribute>
+            </xpath>
+            <xpath expr="//tree" position="attributes">
+                <attribute name="editable">top</attribute>
+            </xpath>
         </field>
     </record>
 
@@ -58,17 +97,19 @@
         <field name="name">stock.close.period.form</field>
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
-            <form string="stock Close Period">
+            <form create="0" delete="0" edit="0" string="stock Close Period">
                 <header>
                     <button name="action_start" states="draft" string="Start" type="object" class="oe_highlight"
-                            groups="stock.group_stock_user"/>
+                            groups="stock_close_period.group_stock_close_period_manager"/>
                     <button name="action_recalculate_purchase" states="confirm" string="Compute Purchase" type="object"
-                            class="oe_highlight" groups="stock.group_stock_manager"/>
+                            class="oe_highlight" groups="stock_close_period.group_stock_close_period_manager"/>
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                            groups="stock.group_stock_manager"
+                            groups="stock_close_period.group_stock_close_period_manager"
                             attrs="{'invisible': [('state', 'not in', ['confirm'])]}"/>
-                    <button name="action_cancel" states="confirm,done" string="Cancel" type="object"/>
-                    <button name="action_set_to_draft" states="cancel" string="Set to Draft" type="object"/>
+                    <button name="action_cancel" states="confirm,done" string="Cancel" type="object"
+                            groups="stock_close_period.group_stock_close_period_manager"/>
+                    <button name="action_set_to_draft" states="cancel" string="Set to Draft" type="object"
+                            groups="stock_close_period.group_stock_close_period_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                 </header>
                 <sheet>
@@ -107,10 +148,29 @@
         </field>
     </record>
 
+    <record id="stock_close_period_form_manager_view_inherit" model="ir.ui.view">
+        <field name="name">stock.close.period.form.manager.view.inherit</field>
+        <field name="model">stock.close.period</field>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_form"/>
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="attributes">
+                <attribute name="create">1</attribute>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="delete">1</attribute>
+            </xpath>
+            <xpath expr="//form" position="attributes">
+                <attribute name="edit">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <menuitem id="menu_stock_close_group"
         name="Stock Close Period"
         parent="stock.menu_stock_root"
         sequence="5"
+        groups="stock_close_period.group_stock_close_period_user_readonly"
     />
 
     <act_window

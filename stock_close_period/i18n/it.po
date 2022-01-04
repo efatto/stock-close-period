@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-11 14:47+0000\n"
-"PO-Revision-Date: 2021-11-11 14:47+0000\n"
+"POT-Creation-Date: 2022-01-04 08:56+0000\n"
+"PO-Revision-Date: 2022-01-04 08:56+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -227,6 +227,11 @@ msgid "Lot/Serial Number"
 msgstr "Lotto/Numero di serie"
 
 #. module: stock_close_period
+#: model:res.groups,name:stock_close_period.group_stock_close_period_manager
+msgid "Manager"
+msgstr "Responsabile"
+
+#. module: stock_close_period
 #: selection:stock.close.period.line,evaluation_method:0
 msgid "Manual"
 msgstr "Manuale"
@@ -373,6 +378,7 @@ msgstr "Importa chiusura di magazzino wizard"
 #: model:ir.model,name:stock_close_period.model_stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__close_id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__close_id
+#: model:ir.module.category,name:stock_close_period.module_category_stock_close_period
 #: model:ir.ui.menu,name:stock_close_period.menu_action_stock_close_form
 #: model:ir.ui.menu,name:stock_close_period.menu_stock_close_group
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_line_search
@@ -425,6 +431,11 @@ msgstr "Costo unitario"
 #, python-format
 msgid "Uom"
 msgstr "UdM"
+
+#. module: stock_close_period
+#: model:res.groups,name:stock_close_period.group_stock_close_period_user_readonly
+msgid "User (Read Only)"
+msgstr "Utente (Sola lettura)"
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_form
