@@ -149,7 +149,12 @@ class StockMoveLine(models.Model):
                     self.env.cr.execute(query)
 
         # memorizzo il risultato alla data di chiusura
-        closing_line_id.price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        if price_unit == 0:
+            closing_line_id.price_unit = product_id.standard_price
+            closing_line_id.evaluation_method = "standard"
+
+        closing_line_id.price_unit = price_unit
         closing_line_id.evaluation_method = "purchase"
 
     def _get_standard_price(self, product_id, closing_id):
@@ -204,6 +209,14 @@ class StockMoveLine(models.Model):
                         boms_to_recompute=boms_to_recompute)
                     total += line.product_id.uom_id._compute_price(child_total, line.product_uom_id) * line.product_qty
                 else:
+                    # If product in doesn't have price in close period and not have method continue
+                    bom_closing_product_id = self.env["stock.close.period.line"].search([
+                        ("close_id", "=", closing_id.id),
+                        ("product_id", "=", product_id.id)
+                    ], limit=1)
+                    if self._get_standard_price(line.product_id, closing_id) == 0 and \
+                            not bom_closing_product_id.evaluation_method:
+                        continue
                     total += line.product_id.uom_id._compute_price(
                         self._get_standard_price(line.product_id, closing_id),
                         line.product_uom_id) * line.product_qty
@@ -311,6 +324,9 @@ class StockMoveLine(models.Model):
         # all closing_line_ids ready to elaborate
         for closing_line_id in closing_line_ids:
             product_id = closing_line_id.product_id
+
+            if product_id.id == 565:
+                print("Product found!!")
 
             # se il prodotto ha una bom, deve processarlo perché tipo produzione
             if not mb._bom_find(product=product_id):

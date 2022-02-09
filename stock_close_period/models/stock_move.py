@@ -151,7 +151,12 @@ class StockMoveLine(models.Model):
                     self.env.cr.execute(query)
 
         # memorizzo il risultato alla data di chiusura
-        closing_line_id.price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        if price_unit == 0:
+            closing_line_id.price_unit = product_id.standard_price
+            closing_line_id.evaluation_method = "standard"
+
+        closing_line_id.price_unit = price_unit
         closing_line_id.evaluation_method = "purchase"
 
     def _get_cost_stock_move_standard(self, product_id, closing_id, company_id, closing_line_id):
