@@ -13,6 +13,7 @@
                 <field name="work_end"/>
                 <field name="state"/>
                 <field name="force_archive"/>
+                <field name="company_id" readonly="1"/>
             </tree>
         </field>
     </record>
@@ -120,8 +121,16 @@
                         </div>
                         <group>
                             <field name="close_date"/>
-                            <field name="amount"/>
+                            <label for="amount" />
+                            <div class="o_row">
+                                <field name="amount" />
+                                <button type="object" name="action_recompute_amount" class="btn-secondary"
+                                        icon="fa-refresh" aria-label="Update amount" title="Update amount" />
+                            </div>
+                            <field name="last_closed_id"/>
+                            <field name="force_evaluation_method"/>
                             <field name="force_archive"/>
+                            <field name="company_id" readonly="1"/>
                             <field name="purchase_ok"/>
                         </group>
                     </group>
@@ -191,7 +200,7 @@
         id="action_stock_close_form_line"
         name="Stock Close Period Line"
         res_model="stock.close.period.line"
-        view_mode="tree"
+        view_mode="tree,form"
     />
 
     <menuitem

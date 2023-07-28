@@ -3,6 +3,7 @@ from odoo import models, api, fields
 
 class StockClosePrint(models.TransientModel):
     _name = "stock.close.print.wizard"
+    _description = "Stock Close Print Wizard"
 
     close_name = fields.Many2one(comodel_name="stock.close.period", string="Close Period")
 
