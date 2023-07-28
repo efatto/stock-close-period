@@ -29,7 +29,7 @@ class StockClosePeriodInherit(models.Model):
             if not stock_close._check_qty_available():
                 raise UserError(_("Is not possible continue the execution. There are product with quantities < 0."))
 
-            stock_close.env["stock.move.line"].recompute_average_cost_period_production()
+            stock_close.env["stock.move.line"].recompute_average_cost_period_production(self)
             stock_close.production_ok = True
             if stock_close.force_archive:
                 stock_close._deactivate_moves()

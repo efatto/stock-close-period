@@ -9,13 +9,13 @@ _logger = logging.getLogger(__name__)
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    def recompute_average_cost_period_production(self):
+    def recompute_average_cost_period_production(self, closing_id):
         _logger.info("Recompute average cost period. Making in 2 phases:")
         _logger.info("[1/2] Recompute cost product production")
         _logger.info("[2/2] Write results")
 
-        self._recompute_cost_stock_move_production()
-        self._write_results()
+        self._recompute_cost_stock_move_production(closing_id)
+        self._write_results(closing_id)
 
         _logger.info("End recompute average cost product")
 
@@ -28,6 +28,7 @@ class StockMoveLine(models.Model):
             ("product_id", "=", product_id.id),
             ("date", ">", last_close_date),
             ("active", ">=", 0),
+            ("company_id", "=", company_id),
         ], order="date")
 
         first_move_date = False
@@ -43,12 +44,13 @@ class StockMoveLine(models.Model):
                 storic_price = ph.search([
                     ("product_id", "=", product_id.id),
                     ("datetime", ">=", first_move_date),
+                    ("company_id", "=", company_id),
                 ])
                 if storic_price:
                     storic_price.unlink()
 
                 # get start data from last close
-                start_qty, start_price = self._get_last_closing(product_id.id)
+                start_qty, start_price = self._get_last_closing(closing_id, product_id.id, company_id)
 
                 # se valorizzata, crea la prima riga sullo storico prezzi
                 if start_qty:
@@ -96,7 +98,28 @@ class StockMoveLine(models.Model):
                 else:
                     # è un vero PO da mediare
                     # fa prevalere vale il prezzo sul PO nel caso sia stato aggiornato
-                    price = move_id.purchase_line_id.price_unit
+                    try:
+                        distribution_obj = self.env["purchase.cost.distribution.line"]
+                        distribution_line_id = distribution_obj.sudo().search([
+                            ("move_id", "=", move_id.id),
+                            ("company_id", "=", company_id),
+                        ])
+                        standard_price_new = distribution_line_id.standard_price_new
+                    except:
+                        standard_price_new = 0
+
+                    if standard_price_new:
+                        price = standard_price_new
+                    elif move_id.purchase_line_id.currency_id == move_id.purchase_line_id.company_id.currency_id:
+                        price = move_id.purchase_line_id.price_unit
+                    else:
+                        price = move_id.purchase_line_id.currency_id._convert(
+                            move_id.purchase_line_id.price_unit,
+                            move_id.purchase_line_id.company_id.currency_id,
+                            move_id.purchase_line_id.company_id,
+                            move_id.date,
+                            False
+                        )
                     if move_id.price_unit != price:
                         new_price = price
                         move_id.price_unit = new_price
@@ -171,10 +194,29 @@ class StockMoveLine(models.Model):
 
         return price
 
+    def _get_evaluation_method_exist(self, product_id, closing_id):
+        closing_line_id = self.env["stock.close.period.line"].search([
+            ("close_id", "=", closing_id.id),
+            ("product_id", "=", product_id.id)
+        ], limit=1)
+
+        if closing_line_id and closing_line_id.evaluation_method:
+            return True
+        else:
+            return False
+
     def _get_cost_stock_move_standard(self, product_id, closing_id, company_id, closing_line_id):
         # ricalcola std_cost
         # recupera il prezzo standard alla data del movimento
-        price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        history_price = self.env["product.price.history"].search([
+            ("company_id", "=", company_id),
+            ("product_id", "in", product_id.ids),
+            ("datetime", ">", closing_id.close_date)
+        ])
+        if history_price:
+            price_unit = product_id.get_history_price(company_id, closing_id.close_date)
+        else:
+            price_unit = product_id.standard_price
 
         # se non trova std_cost, prende il prezzo ora disponibile
         if price_unit == 0:
@@ -184,14 +226,16 @@ class StockMoveLine(models.Model):
         closing_line_id.price_unit = price_unit
         closing_line_id.evaluation_method = "standard"
 
-    def _get_cost_stock_move_production(self, product_id, mb, closing_line_id, closing_id):
+    def _get_cost_stock_move_production(self, product_id, mb, closing_line_id, closing_id, company_id):
         # ricalcola std_cost
         # recupero il costo industriale della BOM [costo standard bom]
 
         bom = mb._bom_find(product=product_id)
+        skip = False
         if bom:
             total = 0
             boms_to_recompute = mb.search([
+                ("company_id", "=", company_id),
                 "|", ("product_id", "in", product_id.ids),
                 "&", ("product_id", "=", False), ("product_tmpl_id", "in", product_id.mapped("product_tmpl_id").ids)
             ])
@@ -209,30 +253,28 @@ class StockMoveLine(models.Model):
                         boms_to_recompute=boms_to_recompute)
                     total += line.product_id.uom_id._compute_price(child_total, line.product_uom_id) * line.product_qty
                 else:
-                    # If product in doesn't have price in close period and not have method continue
-                    bom_closing_product_id = self.env["stock.close.period.line"].search([
-                        ("close_id", "=", closing_id.id),
-                        ("product_id", "=", product_id.id)
-                    ], limit=1)
+                    # If product in doesn't have price in close period and in route have Manufacture skip
                     if self._get_standard_price(line.product_id, closing_id) == 0 and \
-                            not bom_closing_product_id.evaluation_method:
-                        continue
+                            self.env.ref("mrp.route_warehouse0_manufacture").id in line.product_id.route_ids.ids and \
+                            not self._get_evaluation_method_exist(line.product_id, closing_id):
+                        skip = True
                     total += line.product_id.uom_id._compute_price(
                         self._get_standard_price(line.product_id, closing_id),
                         line.product_uom_id) * line.product_qty
 
             # memorizzo il risultato
-            closing_line_id.price_unit = total
-            closing_line_id.evaluation_method = "production"
+            if not skip:
+                closing_line_id.price_unit = total
+                closing_line_id.evaluation_method = "production"
 
         # se non trova std_cost, prende il prezzo ora disponibile
-        if closing_line_id.price_unit == 0:
+        if not skip and closing_line_id.price_unit == 0:
 
             # memorizzo il risultato
             closing_line_id.price_unit = product_id.standard_price
             closing_line_id.evaluation_method = "standard"
 
-    def _recompute_cost_stock_move_purchase(self):
+    def _recompute_cost_stock_move_purchase(self, closing_id):
         #
         #   Aquisti: Prezzo medio ponderato nel periodo. Esempio:
         #
@@ -250,8 +292,6 @@ class StockMoveLine(models.Model):
         ph = self.env["product.price.history"]
         mb = self.env["mrp.bom"]
 
-        # get closing_id
-        closing_id = wcp.search([("state", "=", "confirm")], limit=1)
         # search only lines not elaborated
         closing_line_ids = wcpl.search([
             ("close_id", "=", closing_id.id),
@@ -260,7 +300,14 @@ class StockMoveLine(models.Model):
         ])
 
         # get last_close_date
-        last_closed_id = wcp.search([("state", "=", "done")], order="close_date desc", limit=1)
+        if closing_id.last_closed_id:
+            last_closed_id = closing_id.last_closed_id
+        else:
+            last_closed_id = wcp.search([
+                ("state", "=", "done"),
+                ("company_id", "=", company_id),
+            ], order="close_date desc", limit=1)
+
         if last_closed_id:
             # get from last closed
             last_close_date = last_closed_id.close_date
@@ -277,16 +324,24 @@ class StockMoveLine(models.Model):
                 continue
 
             # solo prodotti valutati al medio o standard
-            if product_id.categ_id.property_cost_method == "average":
-                self._get_cost_stock_move_purchase_average(
-                    product_id, last_close_date, sm, ph, company_id, closing_line_id, closing_id)
-            if product_id.categ_id.property_cost_method == "standard":
-                self._get_cost_stock_move_standard(product_id, closing_id, company_id, closing_line_id)
+            if closing_id.force_evaluation_method != "no_force" and not closing_line_id.evaluation_method:
+                if closing_id.force_evaluation_method == "purchase":
+                    self._get_cost_stock_move_purchase_average(
+                        product_id, last_close_date, sm, ph, company_id, closing_line_id, closing_id)
+                if closing_id.force_evaluation_method == "standard":
+                    self._get_cost_stock_move_standard(product_id, closing_id, company_id, closing_line_id)
+            else:
+                # solo prodotti valutati al medio o standard
+                if product_id.categ_id.property_cost_method == "average":
+                    self._get_cost_stock_move_purchase_average(
+                        product_id, last_close_date, sm, ph, company_id, closing_line_id, closing_id)
+                if product_id.categ_id.property_cost_method == "standard":
+                    self._get_cost_stock_move_standard(product_id, closing_id, company_id, closing_line_id)
 
             self.env.cr.commit()
         _logger.info("[1/2] Finish recompute average cost product")
 
-    def _recompute_cost_stock_move_production(self):
+    def _recompute_cost_stock_move_production(self, closing_id):
         #
         #   Produzione INTERNA: Prezzo STANDARD medio ponderato nel periodo.
         #   Produzione ESTERNA: Prezzo STANDARD medio ponderato nel periodo.
@@ -304,12 +359,8 @@ class StockMoveLine(models.Model):
 
         _logger.info("[1/2] Start recompute cost product production")
         company_id = self.env.user.company_id.id
-        wcp = self.env["stock.close.period"]
         wcpl = self.env["stock.close.period.line"]
         mb = self.env["mrp.bom"]
-
-        # get closing_id
-        closing_id = wcp.search([("state", "=", "confirm")], limit=1)
 
         # search lines
         wcpl.search([("close_id", "=", closing_id.id)])
@@ -325,9 +376,6 @@ class StockMoveLine(models.Model):
         for closing_line_id in closing_line_ids:
             product_id = closing_line_id.product_id
 
-            if product_id.id == 565:
-                print("Product found!!")
-
             # se il prodotto ha una bom, deve processarlo perché tipo produzione
             if not mb._bom_find(product=product_id):
                 continue
@@ -336,7 +384,7 @@ class StockMoveLine(models.Model):
             if closing_id.force_standard_price:
                 self._get_cost_stock_move_standard(product_id, closing_id, company_id, closing_line_id)
             else:
-                self._get_cost_stock_move_production(product_id, mb, closing_line_id, closing_id)
+                self._get_cost_stock_move_production(product_id, mb, closing_line_id, closing_id, company_id)
 
             self.env.cr.commit()
         _logger.info("[1/2] Finish add standard cost product")
