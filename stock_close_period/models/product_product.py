@@ -1,13 +1,17 @@
+# Copyright (C) 2023-Today:
+# Dinamiche Aziendali Srl (<http://www.dinamicheaziendali.it/>)
+# @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+# @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, models, _
 import copy
+
+from odoo import _, models
 
 
 class Product(models.Model):
     _inherit = "product.product"
 
-    @api.multi
     def _get_last_average_price(self):
         last_price = 0
         origin = ""
@@ -21,14 +25,18 @@ class Product(models.Model):
             last_price = last_close.price_unit
             origin = (_("Closing") + " [" + str(last_close.id) + "] " + last_close.close_id.name)
 
-        # last history standard price
+        # last stock valuation layer price
         if last_price == 0:
-            history = self.env["product.price.history"].search([
-                ("product_id", "=", self.id)
-            ], order="datetime desc", limit=1)
-            if history:
-                last_price = history.cost
-                origin = _("Last history standard price")
+            svl = self.env["stock.valuation.layer"].search([
+                ("product_id", "=", self.id),
+                "|",
+                ("description", "not like", _("Manual Stock Valuation")),
+                ("description", "not like", _("Product cost updated from")),
+                ("company_id", "=", self.env.user.company_id.id),
+            ], order="create_date desc", limit=1)
+            if svl:
+                last_price = svl.value
+                origin = _("Last stock valuation layer price")
 
         return last_price, origin
 
@@ -71,10 +79,10 @@ class Product(models.Model):
             product_id = row2[1]
             location_id = row2[2]
             lot_id = row2[3] if self.tracking != "serial" else False
-            package_id = row2[4]
-            owner_id = row2[5]
-            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id or False, package_id or False, owner_id or False)
-            if key in quan:
+            package_id = row2[4] if row2[4] else False
+            owner_id = row2[5] if row2[5] else False
+            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
+            if key in quan.keys():
                 quan[key] = quan[key] + quant_qty
             else:
                 quan[key] = quant_qty * 1.0
@@ -125,10 +133,10 @@ class Product(models.Model):
             product_id = row[1]
             location_id = row[2]
             lot_id = row[3] if self.tracking != "serial" else False
-            package_id = row[4]
-            owner_id = row[5]
-            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id or False, package_id or False, owner_id or False)
-            if key in move:
+            package_id = row[4] if row[4] else False
+            owner_id = row[5] if row[5] else False
+            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
+            if key in move.keys():
                 move[key] += move_qty
             else:
                 move[key] = move_qty
@@ -173,11 +181,10 @@ class Product(models.Model):
             product_id = row[1]
             location_dest_id = row[2]
             lot_id = row[3] if self.tracking != "serial" else False
-            package_id = row[4]
-            owner_id = row[5]
-            key = "%d_%d_%d_%d_%d" % (
-                product_id, location_dest_id, lot_id or False, package_id or False, owner_id or False)
-            if key in move:
+            package_id = row[4] if row[4] else False
+            owner_id = row[5] if row[5] else False
+            key = "%d_%d_%d_%d_%d" % (product_id, location_dest_id, lot_id, package_id, owner_id)
+            if key in move.keys():
                 move[key] -= move_qty
             else:
                 move[key] = -move_qty

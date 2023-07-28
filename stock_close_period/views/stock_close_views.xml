@@ -6,14 +6,14 @@
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
             <tree create="0" delete="0" edit="0" string="stock close period">
-                <field name="name"/>
-                <field name="close_date"/>
-                <field name="amount"/>
-                <field name="work_start"/>
-                <field name="work_end"/>
-                <field name="state"/>
-                <field name="force_archive"/>
-                <field name="company_id" readonly="1"/>
+                <field name="name" />
+                <field name="close_date" />
+                <field name="amount" />
+                <field name="work_start" />
+                <field name="work_end" />
+                <field name="state" />
+                <field name="force_archive" />
+                <field name="company_id" readonly="1" />
             </tree>
         </field>
     </record>
@@ -21,8 +21,8 @@
     <record id="stock_close_period_tree_manager_view_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.tree.manager.view.inherit</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_tree"/>
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_tree" />
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">1</attribute>
@@ -41,17 +41,17 @@
         <field name="model">stock.close.period.line</field>
         <field name="arch" type="xml">
             <tree create="0" delete="0" edit="0" string="stock Close Period Lines">
-                <field name="close_id"/>
-                <field name="product_id"/>
-                <field name="categ_name"/>
-                <field name="location_id"/>
-                <field name="lot_id"/>
-                <field name="owner_id"/>
-                <field name="evaluation_method"/>
-                <field name="product_uom_id"/>
-                <field name="product_qty"/>
-                <field name="price_unit"/>
-                <field name="amount_line"/>
+                <field name="close_id" />
+                <field name="product_id" />
+                <field name="categ_name" />
+                <field name="location_id" />
+                <field name="lot_id" />
+                <field name="owner_id" />
+                <field name="evaluation_method" />
+                <field name="product_uom_id" />
+                <field name="product_qty" />
+                <field name="price_unit" />
+                <field name="amount_line" />
             </tree>
         </field>
     </record>
@@ -59,8 +59,8 @@
     <record id="stock_close_period_line_tree_manager_view_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.line.tree.manager.view.inherit</field>
         <field name="model">stock.close.period.line</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_line_tree"/>
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_line_tree" />
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">1</attribute>
@@ -82,13 +82,13 @@
         <field name="model">stock.close.period.line</field>
         <field name="arch" type="xml">
             <search string="stock Close Period Lines">
-                <field name="product_id"/>
-                <filter string="Qty 0" name="qty_zero" domain="[('product_qty','=',0)]"/>
-                <filter string="Negative Qty" name="negative_qty" domain="[('product_qty','&lt;',0)]"/>
+                <field name="product_id" />
+                <filter string="Qty 0" name="qty_zero" domain="[('product_qty','=',0)]" />
+                <filter string="Negative Qty" name="negative_qty" domain="[('product_qty','&lt;',0)]" />
                 <group expand="0" string="Group By">
-                    <filter string="Stock Close Period" name="close_period" domain="" context="{'group_by':'close_id'}"/>
-                    <filter string="Location" name="location" domain="" context="{'group_by':'location_id'}"/>
-                    <filter string="Product" name="product" domain="" context="{'group_by':'product_id'}"/>
+                    <filter string="Stock Close Period" name="close_period" domain="" context="{'group_by':'close_id'}" />
+                    <filter string="Location" name="location" domain="" context="{'group_by':'location_id'}" />
+                    <filter string="Product" name="product" domain="" context="{'group_by':'product_id'}" />
                 </group>
             </search>
         </field>
@@ -101,53 +101,53 @@
             <form create="0" delete="0" edit="0" string="stock Close Period">
                 <header>
                     <button name="action_start" states="draft" string="Start" type="object" class="oe_highlight"
-                            groups="stock_close_period.group_stock_close_period_manager"/>
+                            groups="stock_close_period.group_stock_close_period_manager" />
                     <button name="action_recalculate_purchase" states="confirm" string="Compute Purchase" type="object"
-                            class="oe_highlight" groups="stock_close_period.group_stock_close_period_manager"/>
+                            class="oe_highlight" groups="stock_close_period.group_stock_close_period_manager" />
                     <button name="action_done" string="Validate" type="object" class="oe_highlight"
                             groups="stock_close_period.group_stock_close_period_manager"
-                            attrs="{'invisible': [('state', 'not in', ['confirm'])]}"/>
+                            attrs="{'invisible': [('state', 'not in', ['confirm'])]}" />
                     <button name="action_cancel" states="confirm,done" string="Cancel" type="object"
-                            groups="stock_close_period.group_stock_close_period_manager"/>
+                            groups="stock_close_period.group_stock_close_period_manager" />
                     <button name="action_set_to_draft" states="cancel" string="Set to Draft" type="object"
-                            groups="stock_close_period.group_stock_close_period_manager"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+                            groups="stock_close_period.group_stock_close_period_manager" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" />
                 </header>
                 <sheet>
                     <group>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" placeholder="e.g. Annual Closing YEAR"/></h1>
+                            <label for="name" class="oe_edit_only" />
+                            <h1><field name="name" placeholder="e.g. Annual Closing YEAR" /></h1>
                         </div>
                         <group>
-                            <field name="close_date"/>
+                            <field name="close_date" />
                             <label for="amount" />
                             <div class="o_row">
                                 <field name="amount" />
                                 <button type="object" name="action_recompute_amount" class="btn-secondary"
                                         icon="fa-refresh" aria-label="Update amount" title="Update amount" />
                             </div>
-                            <field name="last_closed_id"/>
-                            <field name="force_evaluation_method"/>
-                            <field name="force_archive"/>
-                            <field name="company_id" readonly="1"/>
-                            <field name="purchase_ok"/>
+                            <field name="last_closed_id" />
+                            <field name="force_evaluation_method" />
+                            <field name="force_archive" />
+                            <field name="company_id" readonly="1" />
+                            <field name="purchase_ok" />
                         </group>
                     </group>
                     <notebook>
                         <page string="Product list">
                             <field name="line_ids">
                                 <tree string="stock Close Period Lines" editable="top">
-                                    <field name="product_id"/>
-                                    <field name="categ_name"/>
-                                    <field name="location_id"/>
-                                    <field name="lot_id"/>
-                                    <field name="owner_id"/>
-                                    <field name="evaluation_method"/>
-                                    <field name="product_uom_id"/>
-                                    <field name="product_qty"/>
-                                    <field name="price_unit"/>
-                                    <field name="amount_line"/>
+                                    <field name="product_id" />
+                                    <field name="categ_name" />
+                                    <field name="location_id" />
+                                    <field name="lot_id" />
+                                    <field name="owner_id" />
+                                    <field name="evaluation_method" />
+                                    <field name="product_uom_id" />
+                                    <field name="product_qty" />
+                                    <field name="price_unit" />
+                                    <field name="amount_line" />
                                 </tree>
                             </field>
                         </page>
@@ -160,8 +160,8 @@
     <record id="stock_close_period_form_manager_view_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.form.manager.view.inherit</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_form"/>
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"/>
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
+        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="create">1</attribute>
@@ -182,12 +182,12 @@
         groups="stock_close_period.group_stock_close_period_user_readonly"
     />
 
-    <act_window
-        id="action_stock_close_form"
-        name="Stock Close Period"
-        res_model="stock.close.period"
-        view_mode="tree,form"
-    />
+    <record id="action_stock_close_form" model="ir.actions.act_window">
+        <field name="name">Stock Close Period</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.close.period</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
     <menuitem
         id="menu_action_stock_close_form"
@@ -196,12 +196,12 @@
         sequence="10"
     />
 
-    <act_window
-        id="action_stock_close_form_line"
-        name="Stock Close Period Line"
-        res_model="stock.close.period.line"
-        view_mode="tree,form"
-    />
+    <record id="action_stock_close_form_line" model="ir.actions.act_window">
+        <field name="name">Stock Close Period Line</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">stock.close.period.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
 
     <menuitem
         id="menu_action_stock_close_form_line"

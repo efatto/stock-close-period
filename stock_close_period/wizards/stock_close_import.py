@@ -1,12 +1,17 @@
-# Copyright 2020 Openindustry.it SAS
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# Copyright (C) 2023-Today:
+# Dinamiche Aziendali Srl (<http://www.dinamicheaziendali.it/>)
+# @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+# @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, fields, api
-from odoo.exceptions import UserError
-from datetime import *
 import logging
 import unicodecsv
 import base64
+
+from datetime import *
+
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -16,16 +21,22 @@ class StockCloseImportWizard(models.TransientModel):
     _name = "stock.close.import.wizard"
     _description = "Stock Close Import Wizard"
 
-    file = fields.Binary("File")
+    file = fields.Binary()
     close_id = fields.Many2one("stock.close.period", string="Stock Close Period")
-    log = []
 
-    @api.multi
+    def load_products(self, lines):
+        products = {}
+        for index, row in enumerate(lines):
+            default_code = row["CODE"]
+            product_obj = self.env["product.product"].search([("default_code", "=", default_code)], limit=1)
+            if not product_obj:
+                raise UserError(_("Product %s not found") % default_code)
+            products[default_code] = product_obj[0]
+        return products
+
     def import_csv(self):
         # set done close_id
-        wcp = self.env["stock.close.period"]
-        closing_id = wcp.search([("id", "=", self.close_id.id)])
-        closing_id.work_start = datetime.now()
+        self.close_id.work_start = datetime.now()
 
         try:
             file_to_import = base64.decodebytes(self.file).splitlines()
@@ -52,12 +63,7 @@ class StockCloseImportWizard(models.TransientModel):
                     "COST": str(row["COST"]).replace(",", "."),
                     "QTY": str(row["QTY"]).replace(",", "."),
                 })
-            self.log = []
             products = self.load_products(lines)
-            if self.log:
-                raise Exception(*self.log)
-            wcpl = self.env["stock.close.period.line"]
-            self.log = []
             total = 0.0
             dp_qty = 4
             dp_price = 5
@@ -66,7 +72,7 @@ class StockCloseImportWizard(models.TransientModel):
                 unit_cost = round(float(row["COST"]), dp_price)
                 qty = round(float(row["QTY"]), dp_qty)
                 total += unit_cost * qty
-                wcpl.with_context(tracking_disable=True).create({
+                self.env["stock.close.period.line"].with_context(tracking_disable=True).create({
                     "close_id": self.close_id.id,
                     "product_id": product_id,
                     "price_unit": unit_cost,
@@ -76,23 +82,9 @@ class StockCloseImportWizard(models.TransientModel):
                 })
 
             # set done close_id
-            closing_id.amount = total
-            closing_id.work_end = datetime.now()
-            closing_id.state = "done"
+            self.close_id.amount = total
+            self.close_id.work_end = datetime.now()
+            self.close_id.state = "done"
 
         except Exception as e:
             raise UserError(e)
-
-    def load_products(self, lines):
-        product = self.env["product.product"]
-        products = {}
-        for index, row in enumerate(lines):
-            default_code = row["CODE"]
-            product_obj = product.search([("default_code", "=", default_code)], limit=1)
-            if not product_obj:
-                error_string = "Prodotto %s non trovato" % default_code
-                if error_string not in self.log:
-                    self.log.append(error_string)
-                continue
-            products[default_code] = product_obj[0]
-        return products
