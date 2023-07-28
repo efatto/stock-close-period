@@ -1,15 +1,21 @@
-# Copyright 2020 Marcelo Frare (Associazione PNLUG - Gruppo Odoo)
+# Copyright (C) 2023-Today:
+# Dinamiche Aziendali Srl (<http://www.dinamicheaziendali.it/>)
+# @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+# @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
+
 {
     "name": "Stock Close Period",
     "summary": "Stock Close Period",
-    "version": "12.0.1.0.0",
+    "version": "14.0.1.0.0",
     "category": "Stock",
     "author": "Pordenone Linux User Group (PNLUG), Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/stock-logistics-workflow",
     "license": "AGPL-3",
     "depends": [
         "stock",
+        "purchase_stock",
+        "stock_account",
         "report_xlsx",
     ],
     "data": [

@@ -1,10 +1,15 @@
+# Copyright (C) 2023-Today:
+# Dinamiche Aziendali Srl (<http://www.dinamicheaziendali.it/>)
+# @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+# @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import api, fields, models, _
-from odoo.addons import decimal_precision as dp
-from odoo.exceptions import UserError
 import logging
+
 from datetime import datetime
+
+from odoo import _, fields, models
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -17,14 +22,16 @@ class StockClosePeriod(models.Model):
         string="Reference",
         readonly=True,
         required=True,
-        states={"draft": [("readonly", False)], "confirm": [("readonly", False)]})
+        states={"draft": [("readonly", False)], "confirm": [("readonly", False)]},
+    )
     line_ids = fields.One2many(
         "stock.close.period.line",
         "close_id",
         string="Product",
         copy=True,
         readonly=False,
-        states={"done": [("readonly", True)]})
+        states={"done": [("readonly", True)]},
+    )
     state = fields.Selection([
         ("draft", "Draft"),
         ("confirm", "In Progress"),
@@ -32,59 +39,53 @@ class StockClosePeriod(models.Model):
         ("cancel", "Cancelled")
     ], copy=False, index=True, readonly=True, default="draft", string="Status")
     close_date = fields.Date(
-        "Close Date",
         readonly=True,
         required=True,
         default=fields.Date.context_today,
         states={"draft": [("readonly", False)], "confirm": [("readonly", False)]},
-        help="The date that will be used for the store the product quantity and average cost.")
+        help="The date that will be used for the store the product quantity and average cost.",
+    )
     amount = fields.Float(string="Stock Amount Value", readonly=True, copy=False)
-    work_start = fields.Datetime("Work Start", readonly=True, default=fields.Datetime.now)
-    work_end = fields.Datetime("Work End", readonly=True)
+    work_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
+    work_end = fields.Datetime(readonly=True)
     force_evaluation_method = fields.Selection([
         ("no_force", "Compute based category setup"),
         ("purchase", "Compute based purchase average cost"),
         ("standard", "Compute based cost in product")
-    ], string="Force Evaluation method", default="no_force", copy=False,
-        help="Force Evaluation method will be used only for compute purchase costs.")
+    ], default="no_force", copy=False, help="Force Evaluation method will be used only for compute purchase costs.")
     last_closed_id = fields.Many2one(
         "stock.close.period",
         string="Last Closed",
         copy=False,
-        states={"done": [("readonly", True)]})
+        states={"done": [("readonly", True)]},
+    )
     force_archive = fields.Boolean(
         default=False,
-        help="Marks as archive the inventory move lines used during the process.")
+        help="Marks as archive the inventory move lines used during the process.",
+    )
     purchase_ok = fields.Boolean(default=False, readonly=True, help="Marks if action 'Compute Purchase' is processed.")
-    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.user.company_id)
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
 
-    @api.multi
     def unlink(self):
-        if self.state in ["confirm", "done"]:
-            raise UserError(_(
-                "State in '%s'. You can only delete in state 'Draft' or 'Cancelled'." % self.state
-            ))
+        for closing in self:
+            if closing.state in ["confirm", "done"]:
+                raise UserError(_(
+                    "State in '%s'. You can only delete in state 'Draft' or 'Cancelled'." % closing.state
+                ))
         return super(StockClosePeriod, self).unlink()
 
     def action_set_to_draft(self):
-        if self.state == "cancel":
-            # clear data
-            wcpl = self.env["stock.close.period.line"].search([("close_id", "=", self.id)])
-            if wcpl:
-                wcpl.unlink()
-            self.state = "draft"
-            self.amount = 0
-            self.purchase_ok = False
-
-    def action_start(self):
-        for closing in self.filtered(lambda x: x.state not in ("done", "cancel")):
-            # add product line
-            closing._get_product_lines()
-            # set confirm status
-            self.state = "confirm"
-        return True
+        for closing in self:
+            if closing.state == "cancel":
+                # clear data
+                closing.line_ids.unlink()
+                closing.state = "draft"
+                closing.amount = 0
+                closing.purchase_ok = False
 
     def _get_product_lines(self):
+        self.ensure_one()
+
         # add all products actived not services type
         query = """
             INSERT INTO 
@@ -123,9 +124,7 @@ class StockClosePeriod(models.Model):
         self.env.cr.execute(query)
 
         # get quantity on end period for each product
-        closing_line_ids = self.env["stock.close.period.line"].search([("close_id", "=", self.id)])
-
-        for closing_line_id in closing_line_ids:
+        for closing_line_id in self.line_ids:
             # giacenza fine periodo
             product_id = closing_line_id.product_id
             list_product_qty = product_id._compute_qty_available(self.close_date)
@@ -149,47 +148,19 @@ class StockClosePeriod(models.Model):
                     })
                 count += 1
 
-    def action_recalculate_purchase(self):
-        if not self._check_qty_available():
-            raise UserError(_("Is not possible continue the execution. There are product with quantities < 0."))
-
-        self.env["stock.move.line"].recompute_average_cost_period_purchase(self)
-        self.purchase_ok = True
-        if self.force_archive:
-            self._deactivate_moves()
-        self.work_end = datetime.now()
+    def action_start(self):
+        for closing in self.filtered(lambda x: x.state not in ("done", "cancel")):
+            # add product line
+            closing._get_product_lines()
+            # set confirm status
+            closing.state = "confirm"
         return True
-
-    def action_cancel(self):
-        self.state = "cancel"
-        return True
-
-    def action_force_done(self):
-        for closing in self:
-            closing.state = "done"
-            closing.amount = sum(closing.mapped("line_ids.amount_line"))
-
-    def action_done(self):
-        self.state = "done"
-        self.amount = sum(self.mapped("line_ids.amount_line"))
-        query = """
-            DELETE FROM
-                stock_close_period_line
-            WHERE
-                close_id = %s
-                AND product_qty = 0
-                AND price_unit = 0;
-        """ % self.id
-        self.env.cr.execute(query)
-        return True
-
-    def action_recompute_amount(self):
-        for closing in self:
-            closing.amount = sum(closing.mapped("line_ids.amount_line"))
 
     def _check_qty_available(self):
+        self.ensure_one()
+
         # if a negative value, can't continue
-        negative = self.env["stock.close.period.line"].search([("close_id", "=", self.id), ("product_qty", "<", 0)])
+        negative = self.line_ids.filtered(lambda x: x.product_qty < 0)
         if negative:
             res = False
         else:
@@ -197,6 +168,8 @@ class StockClosePeriod(models.Model):
         return res
 
     def _deactivate_moves(self):
+        self.ensure_one()
+
         # set active = False on stock_move and stock_move_line
         query = """
             UPDATE 
@@ -223,51 +196,45 @@ class StockClosePeriod(models.Model):
                 company_id is null;
         """ % (self.close_date, self.company_id.id)
         self.env.cr.execute(query)
-
         return True
 
+    def action_recalculate_purchase(self):
+        for closing in self:
+            if not closing._check_qty_available():
+                raise UserError(_("Is not possible continue the execution. There are product with quantities < 0."))
 
-class StockClosePeriodLine(models.Model):
-    _name = "stock.close.period.line"
-    _description = "Stock Close Period Line"
-    _rec_name = "product_id"
+            self.env["stock.move.line"].recompute_average_cost_period_purchase(closing)
+            closing.purchase_ok = True
+            if closing.force_archive:
+                closing._deactivate_moves()
+            closing.work_end = datetime.now()
+        return True
 
-    close_id = fields.Many2one("stock.close.period", string="Stock Close Period", index=True, ondelete="cascade")
-    product_id = fields.Many2one(
-        "product.product",
-        string="Product",
-        domain=[("type", "=", "product")],
-        index=True,
-        required=True)
-    product_name = fields.Char(string="Product Name", related="product_id.name", store=True, readonly=True)
-    product_code = fields.Char(string="Product Code", related="product_id.default_code", store=True, readonly=True)
-    product_uom_id = fields.Many2one(
-        "uom.uom",
-        string="UOM",
-        required=True,
-        default=lambda self: self.env.ref("uom.product_uom_unit", raise_if_not_found=True))
-    categ_name = fields.Char(
-        string="Category Name",
-        related="product_id.categ_id.complete_name",
-        store=True,
-        readonly=True)
-    evaluation_method = fields.Selection([
-        ("purchase", "Purchase"),
-        ("standard", "Standard"),
-        ("manual", "Manual")
-    ], string="Evaluation method", copy=False)
-    product_qty = fields.Float(string="End Quantity", digits=dp.get_precision("Product Unit of Measure"), default=0)
-    price_unit = fields.Float(string="End Average Price", digits=dp.get_precision("Product Price"))
-    amount_line = fields.Float(
-        string="Amount Line",
-        compute="_compute_amount_line",
-        digits=dp.get_precision("Product Price"))
-    location_id = fields.Many2one("stock.location", string="Location")
-    lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
-    owner_id = fields.Many2one("res.partner", string="Owner")
-    company_id = fields.Many2one("res.company", string="Company", related="close_id.company_id", store=True)
+    def action_cancel(self):
+        for closing in self:
+            closing.state = "cancel"
+        return True
 
-    @api.depends("product_qty", "price_unit")
-    def _compute_amount_line(self):
-        for line in self:
-            line.amount_line = line.product_qty * line.price_unit
+    def action_force_done(self):
+        for closing in self:
+            closing.state = "done"
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
+
+    def action_done(self):
+        for closing in self:
+            closing.state = "done"
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
+            query = """
+                DELETE FROM
+                    stock_close_period_line
+                WHERE
+                    close_id = %s
+                    AND product_qty = 0
+                    AND price_unit = 0;
+            """ % closing.id
+            self.env.cr.execute(query)
+        return True
+
+    def action_recompute_amount(self):
+        for closing in self:
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
