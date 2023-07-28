@@ -1,6 +1,10 @@
-# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl.html).
+# Copyright (C) 2023-Today:
+# Dinamiche Aziendali Srl (<http://www.dinamicheaziendali.it/>)
+# @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+# @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
+# License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import models, _
+from odoo import _, models
 
 
 class XlsxStockClosePeriod(models.AbstractModel):

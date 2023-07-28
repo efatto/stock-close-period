@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="stock_close_period.stock_close_period_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//tree/field[@name='state']" position="after">
-                <field name="force_standard_price"/>
+                <field name="force_standard_price" />
             </xpath>
         </field>
     </record>
@@ -18,18 +18,23 @@
         <field name="inherit_id" ref="stock_close_period.stock_close_period_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form/header/button[@name='action_recalculate_purchase']" position="after">
-                <button name="action_recalculate_production" string="Compute Production"
-                        type="object" class="oe_highlight" groups="stock_close_period.group_stock_close_period_manager"
-                        attrs="{'invisible': ['|',('purchase_ok', '=', False),('state', 'not in', ['confirm'])]}"/>
+                <button
+                    name="action_recalculate_production"
+                    string="Compute Production"
+                    type="object"
+                    class="oe_highlight"
+                    groups="stock_close_period.group_stock_close_period_manager"
+                    attrs="{'invisible': ['|',('purchase_ok', '=', False),('state', 'not in', ['confirm'])]}"
+                />
             </xpath>
             <xpath expr="//form/header/button[@name='action_done']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|',('production_ok', '=', False),('state', 'not in', ['confirm'])]}</attribute>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='force_evaluation_method']" position="after">
-                <field name="force_standard_price" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
+                <field name="force_standard_price" attrs="{'invisible': [('purchase_ok', '=', False)]}" />
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='purchase_ok']" position="after">
-                <field name="production_ok"/>
+                <field name="production_ok" />
             </xpath>
         </field>
     </record>
