@@ -25,7 +25,7 @@
             <xpath expr="//form/header/button[@name='action_done']" position="attributes">
                 <attribute name="attrs">{'invisible': ['|',('production_ok', '=', False),('state', 'not in', ['confirm'])]}</attribute>
             </xpath>
-            <xpath expr="//form/sheet/group/group/field[@name='amount']" position="after">
+            <xpath expr="//form/sheet/group/group/field[@name='force_evaluation_method']" position="after">
                 <field name="force_standard_price" attrs="{'invisible': [('purchase_ok', '=', False)]}"/>
             </xpath>
             <xpath expr="//form/sheet/group/group/field[@name='purchase_ok']" position="after">
