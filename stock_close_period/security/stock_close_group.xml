@@ -18,5 +18,19 @@
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
 
+        <record id="stock_close_period_comp_rule" model="ir.rule">
+            <field name="name">Stock Close Period Company Rule</field>
+            <field name="model_id" ref="stock_close_period.model_stock_close_period"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
+        <record id="stock_close_period_line_comp_rule" model="ir.rule">
+            <field name="name">Stock Close Period Line Company Rule</field>
+            <field name="model_id" ref="stock_close_period.model_stock_close_period_line"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+        </record>
+
     </data>
 </odoo>

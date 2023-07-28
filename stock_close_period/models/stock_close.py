@@ -41,18 +41,22 @@ class StockClosePeriod(models.Model):
     amount = fields.Float(string="Stock Amount Value", readonly=True, copy=False)
     work_start = fields.Datetime("Work Start", readonly=True, default=fields.Datetime.now)
     work_end = fields.Datetime("Work End", readonly=True)
+    force_evaluation_method = fields.Selection([
+        ("no_force", "Compute based category setup"),
+        ("purchase", "Compute based purchase average cost"),
+        ("standard", "Compute based cost in product")
+    ], string="Force Evaluation method", default="no_force", copy=False,
+        help="Force Evaluation method will be used only for compute purchase costs.")
+    last_closed_id = fields.Many2one(
+        "stock.close.period",
+        string="Last Closed",
+        copy=False,
+        states={"done": [("readonly", True)]})
     force_archive = fields.Boolean(
         default=False,
         help="Marks as archive the inventory move lines used during the process.")
     purchase_ok = fields.Boolean(default=False, readonly=True, help="Marks if action 'Compute Purchase' is processed.")
-
-    @api.model
-    def create(self, values):
-        if self._check_existing():
-            closing_id = False
-        else:
-            closing_id = super(StockClosePeriod, self).create(values)
-        return closing_id
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.user.company_id)
 
     @api.multi
     def unlink(self):
@@ -61,12 +65,6 @@ class StockClosePeriod(models.Model):
                 "State in '%s'. You can only delete in state 'Draft' or 'Cancelled'." % self.state
             ))
         return super(StockClosePeriod, self).unlink()
-
-    def _check_existing(self):
-        existings = self.search([("state", "=", "confirm")])
-        if existings:
-            raise UserError(_("You cannot have two stock closing in state 'in Progress'"))
-        return existings
 
     def action_set_to_draft(self):
         if self.state == "cancel":
@@ -79,12 +77,11 @@ class StockClosePeriod(models.Model):
             self.purchase_ok = False
 
     def action_start(self):
-        if not self._check_existing():
-            for closing in self.filtered(lambda x: x.state not in ("done", "cancel")):
-                # add product line
-                closing._get_product_lines()
-                # set confirm status
-                self.state = "confirm"
+        for closing in self.filtered(lambda x: x.state not in ("done", "cancel")):
+            # add product line
+            closing._get_product_lines()
+            # set confirm status
+            self.state = "confirm"
         return True
 
     def _get_product_lines(self):
@@ -118,10 +115,11 @@ class StockClosePeriod(models.Model):
                 -- product_template.active = True AND
                 product_template.type != 'service' AND
                 product_product.product_tmpl_id = product_template.id AND
-                product_template.categ_id = product_category.id 
+                product_template.categ_id = product_category.id AND
+                (product_template.company_id = %r OR product_template.company_id IS NULL)
             ORDER BY
                 product_product.id;
-        """ % self.id
+        """ % (self.id, self.company_id.id)
         self.env.cr.execute(query)
 
         # get quantity on end period for each product
@@ -155,7 +153,7 @@ class StockClosePeriod(models.Model):
         if not self._check_qty_available():
             raise UserError(_("Is not possible continue the execution. There are product with quantities < 0."))
 
-        self.env["stock.move.line"].recompute_average_cost_period_purchase()
+        self.env["stock.move.line"].recompute_average_cost_period_purchase(self)
         self.purchase_ok = True
         if self.force_archive:
             self._deactivate_moves()
@@ -166,8 +164,14 @@ class StockClosePeriod(models.Model):
         self.state = "cancel"
         return True
 
+    def action_force_done(self):
+        for closing in self:
+            closing.state = "done"
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
+
     def action_done(self):
         self.state = "done"
+        self.amount = sum(self.mapped("line_ids.amount_line"))
         query = """
             DELETE FROM
                 stock_close_period_line
@@ -178,6 +182,10 @@ class StockClosePeriod(models.Model):
         """ % self.id
         self.env.cr.execute(query)
         return True
+
+    def action_recompute_amount(self):
+        for closing in self:
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
 
     def _check_qty_available(self):
         # if a negative value, can't continue
@@ -196,8 +204,11 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) and state = 'done';
-        """ % self.close_date
+                date <= date(%r) and 
+                state = 'done' and 
+                company_id == %r or 
+                company_id is null;
+        """ % (self.close_date, self.company_id.id)
         self.env.cr.execute(query)
 
         query = """
@@ -206,8 +217,11 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) and state = 'done';
-        """ % self.close_date
+                date <= date(%r) and 
+                state = 'done'
+                company_id == %r or 
+                company_id is null;
+        """ % (self.close_date, self.company_id.id)
         self.env.cr.execute(query)
 
         return True
@@ -216,6 +230,7 @@ class StockClosePeriod(models.Model):
 class StockClosePeriodLine(models.Model):
     _name = "stock.close.period.line"
     _description = "Stock Close Period Line"
+    _rec_name = "product_id"
 
     close_id = fields.Many2one("stock.close.period", string="Stock Close Period", index=True, ondelete="cascade")
     product_id = fields.Many2one(
@@ -250,6 +265,7 @@ class StockClosePeriodLine(models.Model):
     location_id = fields.Many2one("stock.location", string="Location")
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
+    company_id = fields.Many2one("res.company", string="Company", related="close_id.company_id", store=True)
 
     @api.depends("product_qty", "price_unit")
     def _compute_amount_line(self):

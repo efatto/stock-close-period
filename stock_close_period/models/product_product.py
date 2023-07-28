@@ -55,14 +55,15 @@ class Product(models.Model):
                 stock_location
             WHERE 
                 stock_quant.location_id = stock_location.id and
-                stock_quant.product_id = %r 
+                stock_quant.product_id = %r and 
+                stock_location.company_id = %r
             ORDER BY 
                 stock_quant.product_id, 
                 stock_quant.location_id, 
                 stock_quant.lot_id, 
                 stock_quant.package_id, 
                 stock_quant.owner_id;
-        """ % self.id
+        """ % (self.id, self.env.user.company_id.id)
 
         self.env.cr.execute(query2)
         for row2 in self._cr.fetchall():
@@ -100,7 +101,8 @@ class Product(models.Model):
             WHERE
                 stock_move_line.date >= '%s' and 
                 stock_move_line.state='done' and 
-                stock_move_line.product_id = %r
+                stock_move_line.product_id = %r and 
+                stock_move_line.company_id = %r
             GROUP BY 
                 stock_move_line.product_id, 
                 stock_move_line.location_id, 
@@ -115,7 +117,7 @@ class Product(models.Model):
                 stock_move_line.package_id, 
                 stock_move_line.owner_id, 
                 stock_move_line.date desc;
-        """ % (date, self.id)
+        """ % (date, self.id, self.env.user.company_id.id)
 
         self.env.cr.execute(query)
         for row in self._cr.fetchall():
@@ -146,8 +148,9 @@ class Product(models.Model):
                 stock_move_line
             WHERE 
                 stock_move_line.date >= '%s' and 
-                stock_move_line.state='done' and                        
-                stock_move_line.product_id = %r                
+                stock_move_line.state='done' and 
+                stock_move_line.product_id = %r and 
+                stock_move_line.company_id = %r
             GROUP BY
                 stock_move_line.product_id, 
                 stock_move_line.location_dest_id, 
@@ -162,7 +165,7 @@ class Product(models.Model):
                 stock_move_line.package_id, 
                 stock_move_line.owner_id, 
                 stock_move_line.date desc;
-        """ % (date, self.id)
+        """ % (date, self.id, self.env.user.company_id.id)
 
         self.env.cr.execute(query)
         for row in self._cr.fetchall():
