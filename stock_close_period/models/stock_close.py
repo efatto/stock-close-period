@@ -113,11 +113,13 @@ class StockClosePeriod(models.Model):
                 product_product,
                 product_category
             WHERE
-                -- product_template.active = True AND
-                product_template.type != 'service' AND
-                product_product.product_tmpl_id = product_template.id AND
-                product_template.categ_id = product_category.id AND
-                (product_template.company_id = %r OR product_template.company_id IS NULL)
+                product_template.type != 'service' 
+                AND product_product.product_tmpl_id = product_template.id 
+                AND product_template.categ_id = product_category.id 
+                AND (
+                    product_template.company_id = %r 
+                    OR product_template.company_id IS NULL
+                )
             ORDER BY
                 product_product.id;
         """ % (self.id, self.company_id.id)
@@ -177,10 +179,12 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) and 
-                state = 'done' and 
-                company_id == %r or 
-                company_id is null;
+                date <= date(%r) 
+                AND state = 'done' 
+                AND (
+                    company_id == %r 
+                    OR company_id IS NULL
+                );
         """ % (self.close_date, self.company_id.id)
         self.env.cr.execute(query)
 
@@ -190,10 +194,12 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) and 
-                state = 'done'
-                company_id == %r or 
-                company_id is null;
+                date <= date(%r) 
+                AND state = 'done' 
+                AND (
+                    company_id == %r 
+                    OR company_id IS NULL
+                );
         """ % (self.close_date, self.company_id.id)
         self.env.cr.execute(query)
         return True
