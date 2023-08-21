@@ -62,9 +62,9 @@ class Product(models.Model):
                 stock_quant,
                 stock_location
             WHERE 
-                stock_quant.location_id = stock_location.id and
-                stock_quant.product_id = %r and 
-                stock_location.company_id = %r
+                stock_quant.location_id = stock_location.id 
+                AND stock_quant.product_id = %r 
+                AND stock_location.company_id = %r
             ORDER BY 
                 stock_quant.product_id, 
                 stock_quant.location_id, 
@@ -97,7 +97,7 @@ class Product(models.Model):
         # moves +
         query = """
             SELECT 
-                sum(stock_move_line.qty_done), 
+                SUM(stock_move_line.qty_done), 
                 stock_move_line.product_id, 
                 stock_move_line.location_id, 
                 stock_move_line.lot_id, 
@@ -107,10 +107,10 @@ class Product(models.Model):
             FROM
                 stock_move_line
             WHERE
-                stock_move_line.date >= '%s' and 
-                stock_move_line.state='done' and 
-                stock_move_line.product_id = %r and 
-                stock_move_line.company_id = %r
+                stock_move_line.date >= '%s' 
+                AND stock_move_line.state = 'done' 
+                AND stock_move_line.product_id = %r 
+                AND stock_move_line.company_id = %r
             GROUP BY 
                 stock_move_line.product_id, 
                 stock_move_line.location_id, 
@@ -145,7 +145,7 @@ class Product(models.Model):
         # moves -
         query = """                
             SELECT 
-                sum(stock_move_line.qty_done), 
+                SUM(stock_move_line.qty_done), 
                 stock_move_line.product_id, 
                 stock_move_line.location_dest_id, 
                 stock_move_line.lot_id, 
@@ -155,10 +155,10 @@ class Product(models.Model):
             FROM
                 stock_move_line
             WHERE 
-                stock_move_line.date >= '%s' and 
-                stock_move_line.state='done' and 
-                stock_move_line.product_id = %r and 
-                stock_move_line.company_id = %r
+                stock_move_line.date >= '%s' 
+                AND stock_move_line.state='done' 
+                AND stock_move_line.product_id = %r 
+                AND stock_move_line.company_id = %r
             GROUP BY
                 stock_move_line.product_id, 
                 stock_move_line.location_dest_id, 
