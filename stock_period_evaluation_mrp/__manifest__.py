@@ -15,7 +15,6 @@
     "depends": [
         "stock_close_period",
         "mrp",
-        "mrp_bom_cost",
     ],
     "data": [
         "views/stock_close_views.xml",
