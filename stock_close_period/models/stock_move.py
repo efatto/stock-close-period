@@ -122,7 +122,7 @@ class StockMoveLine(models.Model):
                         ("create_date", "<=", move_id.date or fields.Datetime.now())
                     ], order="create_date desc, id desc", limit=1).value or 0.0
 
-                    self.env["stock.valuation.layer"].search({
+                    self.env["stock.valuation.layer"].create({
                         "product_id": product_id.id,
                         "create_date": first_move_date,
                         "value": start_price,

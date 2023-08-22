@@ -78,9 +78,9 @@ class Product(models.Model):
             quant_qty = row2[0] * 1.0
             product_id = row2[1]
             location_id = row2[2]
-            lot_id = row2[3] if self.tracking != "serial" else False
-            package_id = row2[4] if row2[4] else False
-            owner_id = row2[5] if row2[5] else False
+            lot_id = row2[3] if self.tracking != "serial" and row2[3] is not None else False
+            package_id = row2[4] if row2[4] and row2[4] is not None else False
+            owner_id = row2[5] if row2[5] and row2[5] is not None else False
             key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
             if key in quan.keys():
                 quan[key] = quan[key] + quant_qty
@@ -132,9 +132,9 @@ class Product(models.Model):
             move_qty = row[0]
             product_id = row[1]
             location_id = row[2]
-            lot_id = row[3] if self.tracking != "serial" else False
-            package_id = row[4] if row[4] else False
-            owner_id = row[5] if row[5] else False
+            lot_id = row[3] if self.tracking != "serial" and row[3] is not None else False
+            package_id = row[4] if row[4] and row[4] is not None else False
+            owner_id = row[5] if row[5] and row[5] is not None else False
             key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
             if key in move.keys():
                 move[key] += move_qty
@@ -180,9 +180,9 @@ class Product(models.Model):
             move_qty = row[0]
             product_id = row[1]
             location_dest_id = row[2]
-            lot_id = row[3] if self.tracking != "serial" else False
-            package_id = row[4] if row[4] else False
-            owner_id = row[5] if row[5] else False
+            lot_id = row[3] if self.tracking != "serial" and row[3] is not None else False
+            package_id = row[4] if row[4] and row[4] is not None else False
+            owner_id = row[5] if row[5] and row[5] is not None else False
             key = "%d_%d_%d_%d_%d" % (product_id, location_dest_id, lot_id, package_id, owner_id)
             if key in move.keys():
                 move[key] -= move_qty
