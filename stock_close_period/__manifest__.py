@@ -21,7 +21,6 @@
     "data": [
         "security/stock_close_group.xml",
         "security/ir.model.access.csv",
-        "data/action_server.xml",
         "views/stock_close_views.xml",
         "wizards/stock_close_import.xml",
         "wizards/stock_close_print.xml",
