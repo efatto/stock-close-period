@@ -14,18 +14,6 @@ _logger = logging.getLogger(__name__)
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    def _get_standard_price_new(self, move_id, company_id):
-        # non dovrebbe capitare, ma esistono righe con PO e WO impostate
-        # sono uscite di magazzino verso il terzista, non deve considerare il PO
-        # e deve portare il price_unit a zero
-        if move_id.workorder_id:
-            move_id.price_unit = 0
-            move_id.value = 0
-            move_id.remaining_value = 0
-            return 0
-        else:
-            return super()._get_standard_price_new(move_id, company_id)
-
     def _get_standard_price(self, product_id, closing_id):
         price = 0
 
@@ -50,42 +38,12 @@ class StockMoveLine(models.Model):
         else:
             return False
 
-    def _get_cost_stock_move_standard(self, closing_line_id):
-        company_id = closing_line_id.company_id
-        product_id = closing_line_id.product_id
-
-        # ricalcola std_cost
-        # recupera il prezzo standard alla data del movimento
-        history_price = self.env["stock.valuation.layer"].search([
-            ("company_id", "=", company_id.id),
-            ("product_id", "in", product_id.ids),
-            ("create_date", ">", closing_line_id.close_id.close_date or fields.Datetime.now())
-        ], order="create_date desc, id desc", limit=1).value or 0.0
-        if history_price:
-            price_unit = self.env["stock.valuation.layer"].search([
-                ("company_id", "=", company_id),
-                ("product_id", "in", product_id.ids),
-                ("create_date", "<=", closing_line_id.close_id.close_date or fields.Datetime.now())
-            ], order="create_date desc, id desc", limit=1).value or 0.0
-        else:
-            price_unit = product_id.standard_price
-
-        # se non trova std_cost, prende il prezzo ora disponibile
-        if price_unit == 0:
-            price_unit = product_id.standard_price
-
-        # memorizzo il risultato
-        closing_line_id.price_unit = price_unit
-        closing_line_id.evaluation_method = "standard"
-
     def _get_cost_stock_move_production(self, closing_line_id):
-        # ricalcola std_cost
-        # recupero il costo industriale della BOM [costo standard bom]
-
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
         bom = self.env["mrp.bom"]._bom_find(product=product_id)
         skip = False
+
         if bom:
             total = 0
             boms_to_recompute = self.env["mrp.bom"].search([
@@ -124,34 +82,15 @@ class StockMoveLine(models.Model):
                         line.product_uom_id
                     ) * line.product_qty
 
-            # memorizzo il risultato
             if not skip:
                 closing_line_id.price_unit = total
                 closing_line_id.evaluation_method = "production"
 
-        # se non trova std_cost, prende il prezzo ora disponibile
         if not skip and closing_line_id.price_unit == 0:
-
-            # memorizzo il risultato
             closing_line_id.price_unit = product_id.standard_price
             closing_line_id.evaluation_method = "standard"
 
     def _recompute_cost_stock_move_production(self, closing_id):
-        #
-        #   Produzione INTERNA: Prezzo STANDARD medio ponderato nel periodo.
-        #   Produzione ESTERNA: Prezzo STANDARD medio ponderato nel periodo.
-        #
-        #   il calcolo della media ponderata è uguale che per gli acquisti.
-        #   il valore del prodotto è dato da:
-        #   -> Produzione INTERNA:
-        #   + somma dei costi STANDARD dei componenti semilavorati
-        #   + somma dei costi STANDARD dei componenti di acqusto
-        #
-        #   -> Produzione ESTERNA:
-        #   + somma dei costi STANDARD dei componenti inviati al fornitore
-        #   + somma degli acquisto per le lavorazioni eseguite
-        #
-
         _logger.info("[1/2] Start recompute cost product production")
 
         # search only lines not elaborated
