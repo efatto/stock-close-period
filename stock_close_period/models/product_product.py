@@ -12,34 +12,6 @@ from odoo import _, models
 class Product(models.Model):
     _inherit = "product.product"
 
-    def _get_last_average_price(self):
-        last_price = 0
-        origin = ""
-
-        # from the last closing
-        last_close = self.env["stock.close.period.line"].search([
-            ("product_id", "=", self.id),
-            ("state", "=", "done")
-        ], limit=1, order="close_date")
-        if last_close:
-            last_price = last_close.price_unit
-            origin = (_("Closing") + " [" + str(last_close.id) + "] " + last_close.close_id.name)
-
-        # last stock valuation layer price
-        if last_price == 0:
-            svl = self.env["stock.valuation.layer"].search([
-                ("product_id", "=", self.id),
-                "|",
-                ("description", "not like", _("Manual Stock Valuation")),
-                ("description", "not like", _("Product cost updated from")),
-                ("company_id", "=", self.env.user.company_id.id),
-            ], order="create_date desc", limit=1)
-            if svl:
-                last_price = svl.value
-                origin = _("Last stock valuation layer price")
-
-        return last_price, origin
-
     def _compute_qty_available(self, to_date):
         res = self._compute_quantities_available(to_date)
         return res
