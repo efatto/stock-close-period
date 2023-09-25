@@ -97,7 +97,8 @@ class StockClosePeriod(models.Model):
                     product_uom_id,
                     categ_name,
                     product_qty,
-                    price_unit
+                    price_unit,
+                    company_id
                 )
             SELECT
                 %r AS close_id,
@@ -107,7 +108,8 @@ class StockClosePeriod(models.Model):
                 product_template.uom_id AS product_uom,   
                 product_category.complete_name AS complete_name,
                 0 AS product_qty,
-                0 AS price_unit
+                0 AS price_unit,
+                %r AS company_id
             FROM
                 product_template,
                 product_product,
@@ -122,7 +124,7 @@ class StockClosePeriod(models.Model):
                 )
             ORDER BY
                 product_product.id;
-        """ % (self.id, self.company_id.id)
+        """ % (self.id, self.company_id.id, self.company_id.id)
         self.env.cr.execute(query)
 
         # get quantity on end period for each product
@@ -136,7 +138,6 @@ class StockClosePeriod(models.Model):
                     closing_line_id.location_id = line["location_id"]
                     closing_line_id.lot_id = line["lot_id"]
                     closing_line_id.owner_id = line["owner_id"]
-                    closing_line_id.company_id = self.company_id.id or self.env.company.id
                 else:
                     self.env["stock.close.period.line"].create({
                         "close_id": self.id,
@@ -146,7 +147,6 @@ class StockClosePeriod(models.Model):
                         "location_id": line["location_id"],
                         "lot_id": line["lot_id"],
                         "owner_id": line["owner_id"],
-                        "company_id": self.company_id.id or self.env.company.id,
                         "price_unit": 0
                     })
                 count += 1

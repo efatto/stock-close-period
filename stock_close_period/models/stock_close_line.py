@@ -59,7 +59,12 @@ class StockClosePeriodLine(models.Model):
     location_id = fields.Many2one("stock.location", string="Location")
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
-    company_id = fields.Many2one("res.company", related="close_id.company_id", store=True)
+    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
+
+    @api.depends("close_id.company_id")
+    def _compute_company(self):
+        for line in self:
+            line.company_id = line.close_id.company_id.id
 
     @api.depends("product_qty", "price_unit")
     def _compute_amount_line(self):
