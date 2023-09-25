@@ -136,6 +136,7 @@ class StockClosePeriod(models.Model):
                     closing_line_id.location_id = line["location_id"]
                     closing_line_id.lot_id = line["lot_id"]
                     closing_line_id.owner_id = line["owner_id"]
+                    closing_line_id.company_id = self.company_id.id or self.env.company.id
                 else:
                     self.env["stock.close.period.line"].create({
                         "close_id": self.id,
@@ -145,7 +146,7 @@ class StockClosePeriod(models.Model):
                         "location_id": line["location_id"],
                         "lot_id": line["lot_id"],
                         "owner_id": line["owner_id"],
-                        "company_id": self.company_id.id,
+                        "company_id": self.company_id.id or self.env.company.id,
                         "price_unit": 0
                     })
                 count += 1
