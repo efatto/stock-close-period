@@ -86,7 +86,7 @@ class StockClosePeriod(models.Model):
     def _get_product_lines(self):
         self.ensure_one()
 
-        # add all products actived not services type
+        # add all products active not services type
         query = """
             INSERT INTO 
                 stock_close_period_line(
@@ -127,7 +127,6 @@ class StockClosePeriod(models.Model):
 
         # get quantity on end period for each product
         for closing_line_id in self.line_ids:
-            # giacenza fine periodo
             product_id = closing_line_id.product_id
             list_product_qty = product_id._compute_qty_available(self.close_date)
             count = 0
@@ -146,6 +145,7 @@ class StockClosePeriod(models.Model):
                         "location_id": line["location_id"],
                         "lot_id": line["lot_id"],
                         "owner_id": line["owner_id"],
+                        "company_id": self.company_id.id,
                         "price_unit": 0
                     })
                 count += 1

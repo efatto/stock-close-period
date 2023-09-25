@@ -1,14 +1,14 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-#	* stock_close_period
+# 	* stock_close_period
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0+e\n"
+"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-01-02 14:16+0000\n"
-"PO-Revision-Date: 2023-01-02 14:16+0000\n"
-"Last-Translator: <>\n"
+"POT-Creation-Date: 2023-09-25 10:29+0000\n"
+"PO-Revision-Date: 2023-09-25 10:29+0000\n"
+"Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,12 +33,12 @@ msgid "Cancel"
 msgstr "Annulla"
 
 #. module: stock_close_period
-#: selection:stock.close.period,state:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__state__cancel
 msgid "Cancelled"
 msgstr "Annullato"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:39
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Category"
 msgstr "Categoria"
@@ -64,12 +64,6 @@ msgid "Close Period"
 msgstr "Periodo di chiusura"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/models/product_product.py:22
-#, python-format
-msgid "Closing"
-msgstr "Chiusura"
-
-#. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__company_id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__company_id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__company_id
@@ -87,17 +81,17 @@ msgid "Compute Purchase"
 msgstr "Calcola acquisti"
 
 #. module: stock_close_period
-#: selection:stock.close.period,force_evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__force_evaluation_method__no_force
 msgid "Compute based category setup"
 msgstr "Calcola in base alla categoria prodotto"
 
 #. module: stock_close_period
-#: selection:stock.close.period,force_evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__force_evaluation_method__standard
 msgid "Compute based cost in product"
 msgstr "Calcola in base al costo nel prodotto"
 
 #. module: stock_close_period
-#: selection:stock.close.period,force_evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__force_evaluation_method__purchase
 msgid "Compute based purchase average cost"
 msgstr "Calcola in base al costo medio di acquisto"
 
@@ -118,16 +112,34 @@ msgid "Created on"
 msgstr "Creato il"
 
 #. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__cumulative_amount
+msgid "Cumulative Amount"
+msgstr "Importo cumulativo"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__cumulative_landed_cost
+msgid "Cumulative Landed Cost"
+msgstr "Costi sbarcati cumulativi"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__cumulative_qty
+msgid "Cumulative Quantity"
+msgstr "Quantità cumulativa"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_report_stock_close_period_report_xlsx_stock_close_print__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__display_name
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move__display_name
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: stock_close_period
-#: selection:stock.close.period,state:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__state__draft
 msgid "Draft"
 msgstr "Bozza"
 
@@ -142,14 +154,14 @@ msgid "End Quantity"
 msgstr "Quantità finale"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:43
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Evaluation"
 msgstr "Valutazione"
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__evaluation_method
-msgid "Evaluation method"
+msgid "Evaluation Method"
 msgstr "Metodo di valutazione"
 
 #. module: stock_close_period
@@ -169,18 +181,14 @@ msgstr "Forza archiviazione movimenti"
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__force_evaluation_method
-msgid "Force Evaluation method"
+msgid "Force Evaluation Method"
 msgstr "Forza metodo di valutazione"
 
 #. module: stock_close_period
 #: model:ir.model.fields,help:stock_close_period.field_stock_close_period__force_evaluation_method
 msgid "Force Evaluation method will be used only for compute purchase costs."
-msgstr "Forza metodo di valutazione utilizzato solo per calcolo costi acquisti"
-
-#. module: stock_close_period
-#: model:ir.actions.server,name:stock_close_period.action_force_validation
-msgid "Force Validation"
-msgstr "Forza validazione"
+msgstr ""
+"Forza metodo di valutazione utilizzato solo per calcolo costi acquisti"
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_line_search
@@ -188,11 +196,14 @@ msgid "Group By"
 msgstr "Raggruppa per"
 
 #. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_product_product__id
 #: model:ir.model.fields,field_description:stock_close_period.field_report_stock_close_period_report_xlsx_stock_close_print__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__id
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move__id
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__id
 msgid "ID"
 msgstr ""
 
@@ -207,15 +218,34 @@ msgid "Import Stock Close"
 msgstr "Importa chiusura di magazzino"
 
 #. module: stock_close_period
-#: selection:stock.close.period,state:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__state__confirm
 msgid "In Progress"
 msgstr "In corso"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/models/stock_close.py:154
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__product_code
+msgid "Internal Reference"
+msgstr "Riferimento interno"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__inventory_amount
+msgid "Inventory Amount"
+msgstr "Importo inventario"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__inventory_qty
+msgid "Inventory Quantity"
+msgstr "Quantità inventario"
+
+#. module: stock_close_period
+#: code:addons/stock_close_period/models/stock_close.py:0
 #, python-format
-msgid "Is not possible continue the execution. There are product with quantities < 0."
-msgstr "Non è possibile continuare la valorizzazione. Ci sono prodotti con quantità < 0."
+msgid ""
+"Is not possible continue the execution. There are product with quantities < "
+"0."
+msgstr ""
+"Non è possibile continuare la valorizzazione. Ci sono prodotti con quantità "
+"< 0."
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__last_closed_id
@@ -223,11 +253,14 @@ msgid "Last Closed"
 msgstr "Ultima chiusura"
 
 #. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_product_product____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_report_stock_close_period_report_xlsx_stock_close_print____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard____last_update
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move____last_update
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line____last_update
 msgid "Last Modified on"
 msgstr "Ultima modifica il"
 
@@ -248,13 +281,7 @@ msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/models/product_product.py:31
-#, python-format
-msgid "Last history standard price"
-msgstr "Ultimo costo medio"
-
-#. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:40
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__location_id
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_line_search
 #, python-format
@@ -262,7 +289,7 @@ msgid "Location"
 msgstr "Ubicazione"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:41
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__lot_id
 #, python-format
 msgid "Lot/Serial Number"
@@ -274,14 +301,16 @@ msgid "Manager"
 msgstr "Responsabile"
 
 #. module: stock_close_period
-#: selection:stock.close.period.line,evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period_line__evaluation_method__manual
 msgid "Manual"
 msgstr "Manuale"
 
 #. module: stock_close_period
 #: model:ir.model.fields,help:stock_close_period.field_stock_close_period__force_archive
 msgid "Marks as archive the inventory move lines used during the process."
-msgstr "Imposta come archiviati i movimenti del periodo interessati al calcolo del costo medio"
+msgstr ""
+"Imposta come archiviati i movimenti del periodo interessati al calcolo del "
+"costo medio"
 
 #. module: stock_close_period
 #: model:ir.model.fields,help:stock_close_period.field_stock_close_period__purchase_ok
@@ -289,7 +318,8 @@ msgid "Marks if action 'Compute Purchase' is processed."
 msgstr "Indica se azione 'Calcola acquisti' è stata eseguita."
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:38
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__product_name
 #, python-format
 msgid "Name"
 msgstr "Nome"
@@ -300,14 +330,14 @@ msgid "Negative Qty"
 msgstr "Quantità negativa"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:42
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__owner_id
 #, python-format
 msgid "Owner"
 msgstr "Proprietario"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:37
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #: model:ir.model,name:stock_close_period.model_product_product
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__line_ids
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__product_id
@@ -317,9 +347,10 @@ msgid "Product"
 msgstr "Prodotto"
 
 #. module: stock_close_period
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__product_code
-msgid "Product Code"
-msgstr "Codice prodotto"
+#: code:addons/stock_close_period/wizards/stock_close_import.py:0
+#, python-format
+msgid "Product %s not found"
+msgstr "Prodotto %s non trovato"
 
 #. module: stock_close_period
 #: model:ir.model,name:stock_close_period.model_stock_move_line
@@ -327,17 +358,12 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "Movimenti prodotto (riga movimento magazzino)"
 
 #. module: stock_close_period
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__product_name
-msgid "Product Name"
-msgstr "Nome prodotto"
-
-#. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_form
 msgid "Product list"
 msgstr "Lista di prodotti"
 
 #. module: stock_close_period
-#: selection:stock.close.period.line,evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period_line__evaluation_method__purchase
 msgid "Purchase"
 msgstr "Acquisto"
 
@@ -352,7 +378,7 @@ msgid "Qty 0"
 msgstr "Quantità 0"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:44
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Quantity"
 msgstr "Quantità"
@@ -373,7 +399,7 @@ msgid "Set to Draft"
 msgstr "Imposta a bozza"
 
 #. module: stock_close_period
-#: selection:stock.close.period.line,evaluation_method:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period_line__evaluation_method__standard
 msgid "Standard"
 msgstr ""
 
@@ -383,10 +409,11 @@ msgid "Start"
 msgstr "Inizia"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/models/stock_close.py:64
+#: code:addons/stock_close_period/models/stock_close.py:0
 #, python-format
 msgid "State in '%s'. You can only delete in state 'Draft' or 'Cancelled'."
-msgstr "Stato in '%s'. Puoi solo eliminare nello stato 'Bozza' or 'Annullato'."
+msgstr ""
+"Stato in '%s'. Puoi solo eliminare nello stato 'Bozza' or 'Annullato'."
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__state
@@ -410,7 +437,7 @@ msgid "Stock Close Import Wizard"
 msgstr "Importa chiusura di magazzino wizard"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:16
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #: model:ir.actions.act_window,name:stock_close_period.action_stock_close_form
 #: model:ir.model,name:stock_close_period.model_stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__close_id
@@ -444,15 +471,17 @@ msgstr "Wizard stampa chiusura di magazzino"
 #. module: stock_close_period
 #: model:ir.model,name:stock_close_period.model_stock_move
 msgid "Stock Move"
-msgstr "Movimento magazzino"
+msgstr "Movimento di magazzino"
 
 #. module: stock_close_period
 #: model:ir.model.fields,help:stock_close_period.field_stock_close_period__close_date
-msgid "The date that will be used for the store the product quantity and average cost."
+msgid ""
+"The date that will be used for the store the product quantity and average "
+"cost."
 msgstr "Data utilizzata per memorizzare giacenza e costo medio dei prodotti"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:47
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Total Cost"
 msgstr "Totale"
@@ -463,13 +492,13 @@ msgid "UOM"
 msgstr "UdM"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:46
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Unit Cost"
 msgstr "Costo unitario"
 
 #. module: stock_close_period
-#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:45
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
 #, python-format
 msgid "Uom"
 msgstr "UdM"
@@ -490,7 +519,7 @@ msgid "Validate"
 msgstr "Valida"
 
 #. module: stock_close_period
-#: selection:stock.close.period,state:0
+#: model:ir.model.fields.selection,name:stock_close_period.selection__stock_close_period__state__done
 msgid "Validated"
 msgstr "Validato"
 
@@ -525,4 +554,3 @@ msgstr "Righe chiusura di magazzino"
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_tree
 msgid "stock close period"
 msgstr "chiusura di magazzino"
-
