@@ -122,14 +122,14 @@ class StockMoveLine(models.Model):
         if price_unit == 0:
             closing_line_id.price_unit = product_id.standard_price
             closing_line_id.evaluation_method = "standard"
-
-        closing_line_id.price_unit = price_unit
-        closing_line_id.inventory_amount = price_unit
-        closing_line_id.inventory_qty = inventory_qty
-        closing_line_id.cumulative_amount = cumulative_amount
-        closing_line_id.cumulative_landed_cost = cumulative_landed_cost
-        closing_line_id.cumulative_qty = cumulative_qty
-        closing_line_id.evaluation_method = "purchase"
+        else:
+            closing_line_id.price_unit = price_unit
+            closing_line_id.inventory_amount = inventory_amount
+            closing_line_id.inventory_qty = inventory_qty
+            closing_line_id.cumulative_amount = cumulative_amount
+            closing_line_id.cumulative_landed_cost = cumulative_landed_cost
+            closing_line_id.cumulative_qty = cumulative_qty
+            closing_line_id.evaluation_method = "purchase"
 
     def _get_cost_stock_move_standard(self, closing_line_id):
         closing_line_id.price_unit = closing_line_id.product_id.standard_price
@@ -141,6 +141,20 @@ class StockMoveLine(models.Model):
         :return: True if line is consistency else False
         """
         return True
+
+    def _search_same_product_value(self, closing_line_id):
+        other_closing_line_id = self.env["stock.close.period.line"].search([
+            ("close_id", "=", closing_line_id.close_id.id),
+            ("product_id", "=", closing_line_id.product_id),
+            ("price_unit", "!=", 0),
+        ], limit=1)
+        closing_line_id.price_unit = other_closing_line_id.price_unit
+        closing_line_id.inventory_amount = other_closing_line_id.inventory_amount
+        closing_line_id.inventory_qty = other_closing_line_id.inventory_qty
+        closing_line_id.cumulative_amount = other_closing_line_id.cumulative_amount
+        closing_line_id.cumulative_landed_cost = other_closing_line_id.cumulative_landed_cost
+        closing_line_id.cumulative_qty = other_closing_line_id.cumulative_qty
+        closing_line_id.evaluation_method = other_closing_line_id.evaluation_method
 
     def _recompute_cost_stock_move_purchase(self, closing_id):
         _logger.info("[1/2] Start recompute cost product purchase")
@@ -169,10 +183,13 @@ class StockMoveLine(models.Model):
             last_close_date = self.env["ir.config_parameter"].sudo().get_param("stock_close_period.last_close_date")
 
         # all closing line ready to elaborate
+        elaborated_products = self.env["product.product"]
         for closing_line_id in closing_line_ids:
             if not self._check_consistency(closing_line_id):
                 continue
             product_id = closing_line_id.product_id
+            if product_id.id in elaborated_products.ids:
+                self._search_same_product_value(closing_line_id)
 
             if closing_id.force_evaluation_method != "no_force" and not closing_line_id.evaluation_method:
                 if closing_id.force_evaluation_method == "purchase":
