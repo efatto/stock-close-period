@@ -155,6 +155,7 @@ class StockMoveLine(models.Model):
         closing_line_id.cumulative_landed_cost = other_closing_line_id.cumulative_landed_cost
         closing_line_id.cumulative_qty = other_closing_line_id.cumulative_qty
         closing_line_id.evaluation_method = other_closing_line_id.evaluation_method
+        self.env.cr.commit()
 
     def _recompute_cost_stock_move_purchase(self, closing_id):
         _logger.info("[1/2] Start recompute cost product purchase")
@@ -190,8 +191,8 @@ class StockMoveLine(models.Model):
             product_id = closing_line_id.product_id
             if product_id.id in elaborated_products.ids:
                 self._search_same_product_value(closing_line_id)
-                elaborated_products |= product_id
                 continue
+            elaborated_products |= product_id
 
             if closing_id.force_evaluation_method != "no_force" and not closing_line_id.evaluation_method:
                 if closing_id.force_evaluation_method == "purchase":
