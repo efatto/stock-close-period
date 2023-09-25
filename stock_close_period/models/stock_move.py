@@ -145,7 +145,7 @@ class StockMoveLine(models.Model):
     def _search_same_product_value(self, closing_line_id):
         other_closing_line_id = self.env["stock.close.period.line"].search([
             ("close_id", "=", closing_line_id.close_id.id),
-            ("product_id", "=", closing_line_id.product_id),
+            ("product_id", "=", closing_line_id.product_id.id),
             ("price_unit", "!=", 0),
         ], limit=1)
         closing_line_id.price_unit = other_closing_line_id.price_unit
