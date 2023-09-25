@@ -190,7 +190,8 @@ class StockMoveLine(models.Model):
             product_id = closing_line_id.product_id
             if product_id.id in elaborated_products.ids:
                 self._search_same_product_value(closing_line_id)
-            elaborated_products |= product_id
+                elaborated_products |= product_id
+                continue
 
             if closing_id.force_evaluation_method != "no_force" and not closing_line_id.evaluation_method:
                 if closing_id.force_evaluation_method == "purchase":
