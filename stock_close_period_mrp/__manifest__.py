@@ -7,7 +7,7 @@
 {
     "name": "Stock Close Period - MRP",
     "summary": "Stock Close Period - MRP",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Stock",
     "author": "Pordenone Linux User Group (PNLUG), Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/stock-logistics-workflow",
@@ -15,6 +15,7 @@
     "depends": [
         "stock_close_period",
         "mrp",
+        "mrp_account",
     ],
     "data": [
         "views/stock_close_views.xml",

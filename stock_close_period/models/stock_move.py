@@ -56,7 +56,9 @@ class StockMoveLine(models.Model):
             ("cost_id.company_id", "=", company_id),
         ])
         if svals:
-            additional_landed_cost_new = sum(svals.mapped("additional_landed_cost"))
+            additional_landed_cost_new = sum(
+                svals.mapped("additional_landed_cost")
+            )
         else:
             additional_landed_cost_new = 0
         return additional_landed_cost_new
@@ -76,7 +78,9 @@ class StockMoveLine(models.Model):
         ], order="date")
 
         # get start data from last close
-        start_qty, start_price = self._get_last_closing(closing_line_id.close_id, product_id.id, company_id)
+        start_qty, start_price = self._get_last_closing(
+            closing_line_id.close_id, product_id.id, company_id
+        )
         if start_qty:
             inventory_amount = start_price * start_qty
             inventory_qty = start_qty
@@ -88,33 +92,42 @@ class StockMoveLine(models.Model):
         cumulative_landed_cost = 0
         cumulative_qty = 0
         for move_id in move_ids.filtered(lambda m: m.purchase_line_id):
-            if move_id.purchase_line_id.invoice_lines:
+            purchase_line_id = move_id.purchase_line_id
+            if purchase_line_id.invoice_lines:
                 cumulative_amount += sum(
                     abs(line.balance)
-                    for line in move_id.purchase_line_id.invoice_lines
+                    for line in purchase_line_id.invoice_lines
                 )
-                cumulative_qty += sum(move_id.purchase_line_id.invoice_lines.mapped("quantity"))
-            elif move_id.purchase_line_id.currency_id == move_id.purchase_line_id.company_id.currency_id:
-                price = move_id.purchase_line_id.price_unit
-                cumulative_amount += move_id.purchase_line_id.product_uom_qty * price
-                cumulative_qty += move_id.purchase_line_id.product_uom_qty
+                cumulative_qty += sum(
+                    purchase_line_id.invoice_lines.mapped("quantity")
+                )
+            elif (
+                purchase_line_id.currency_id == purchase_line_id.company_id.currency_id
+            ):
+                price = purchase_line_id.price_unit
+                cumulative_amount += purchase_line_id.product_uom_qty * price
+                cumulative_qty += purchase_line_id.product_uom_qty
             else:
-                price = move_id.purchase_line_id.currency_id._convert(
-                    move_id.purchase_line_id.price_unit,
-                    move_id.purchase_line_id.company_id.currency_id,
-                    move_id.purchase_line_id.company_id,
+                price = purchase_line_id.currency_id._convert(
+                    purchase_line_id.price_unit,
+                    purchase_line_id.company_id.currency_id,
+                    purchase_line_id.company_id,
                     move_id.date,
                     False
                 )
-                cumulative_amount += move_id.purchase_line_id.product_uom_qty * price
-                cumulative_qty += move_id.purchase_line_id.product_uom_qty
+                cumulative_amount += purchase_line_id.product_uom_qty * price
+                cumulative_qty += purchase_line_id.product_uom_qty
 
             additional_landed_cost_new = self._get_additional_landed_cost_new(move_id, company_id)
             cumulative_landed_cost += additional_landed_cost_new
 
         if (cumulative_qty + inventory_qty) != 0:
             price_unit = (
-                (inventory_amount + cumulative_amount + cumulative_landed_cost) / (cumulative_qty + inventory_qty)
+                (
+                    inventory_amount
+                    + cumulative_amount
+                    + cumulative_landed_cost
+                ) / (cumulative_qty + inventory_qty)
             )
         else:
             price_unit = 0
@@ -181,7 +194,9 @@ class StockMoveLine(models.Model):
         if last_closed_id:
             last_close_date = last_closed_id.close_date
         else:
-            last_close_date = self.env["ir.config_parameter"].sudo().get_param("stock_close_period.last_close_date")
+            last_close_date = self.env["ir.config_parameter"].sudo().get_param(
+                "stock_close_period.last_close_date"
+            )
 
         # all closing line ready to elaborate
         elaborated_products = self.env["product.product"]
@@ -194,14 +209,21 @@ class StockMoveLine(models.Model):
                 continue
             elaborated_products |= product_id
 
-            if closing_id.force_evaluation_method != "no_force" and not closing_line_id.evaluation_method:
+            if (
+                closing_id.force_evaluation_method != "no_force"
+                and not closing_line_id.evaluation_method
+            ):
                 if closing_id.force_evaluation_method == "purchase":
-                    self._get_cost_stock_move_purchase_average(last_close_date, closing_line_id)
+                    self._get_cost_stock_move_purchase_average(
+                        last_close_date, closing_line_id
+                    )
                 if closing_id.force_evaluation_method == "standard":
                     self._get_cost_stock_move_standard(closing_line_id)
             else:
                 if product_id.categ_id.property_cost_method in ["average", "fifo"]:
-                    self._get_cost_stock_move_purchase_average(last_close_date, closing_line_id)
+                    self._get_cost_stock_move_purchase_average(
+                        last_close_date, closing_line_id
+                    )
                 if product_id.categ_id.property_cost_method == "standard":
                     self._get_cost_stock_move_standard(closing_line_id)
 

@@ -41,7 +41,9 @@ class StockMoveLine(models.Model):
     def _get_cost_stock_move_production(self, closing_line_id):
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
-        bom = self.env["mrp.bom"]._bom_find(product=product_id)
+        bom = self.env["mrp.bom"]._bom_find(
+            product=product_id
+        )[product_id]
         skip = False
 
         if bom:
@@ -49,15 +51,15 @@ class StockMoveLine(models.Model):
             boms_to_recompute = self.env["mrp.bom"].search([
                 ("company_id", "=", closing_line_id.company_id.id),
                 "|", ("product_id", "in", product_id.ids),
-                "&", ("product_id", "=", False), ("product_tmpl_id", "in", product_id.mapped("product_tmpl_id").ids)
+                "&", ("product_id", "=", False),
+                ("product_tmpl_id", "in", product_id.mapped("product_tmpl_id").ids)
             ])
             for opt in bom.operation_ids:
                 duration_expected = (
-                    opt.workcenter_id.time_start
-                    + opt.workcenter_id.time_stop
+                    opt.workcenter_id._get_expected_duration(product_id)
                     + opt.time_cycle * 100 / opt.workcenter_id.time_efficiency
                 )
-                total += (duration_expected / 60) * opt.workcenter_id.costs_hour
+                total += (duration_expected / 60) * opt._total_cost_per_hour()
             for line in bom.bom_line_ids:
                 if line._skip_bom_line(product_id):
                     continue
@@ -68,7 +70,9 @@ class StockMoveLine(models.Model):
                         line.child_bom_id,
                         boms_to_recompute=boms_to_recompute
                     )
-                    total += line.product_id.uom_id._compute_price(child_total, line.product_uom_id) * line.product_qty
+                    total += line.product_id.uom_id._compute_price(
+                        child_total, line.product_uom_id
+                    ) * line.product_qty
                 else:
                     # If product in doesn't have price in close period and in route have Manufacture skip
                     if (
@@ -105,7 +109,9 @@ class StockMoveLine(models.Model):
             product_id = closing_line_id.product_id
 
             # se il prodotto ha una bom, deve processarlo perché tipo produzione
-            if not self.env["mrp.bom"]._bom_find(product=product_id):
+            if not self.env["mrp.bom"]._bom_find(
+                product=product_id
+            )[product_id]:
                 continue
 
             # imposta il metodo di calcolo
@@ -129,6 +135,8 @@ class StockMoveLine(models.Model):
 
     def _check_consistency(self, closing_line_id):
         result = super()._check_consistency(closing_line_id)
-        if self.env["mrp.bom"]._bom_find(product=closing_line_id.product_id):
+        if self.env["mrp.bom"]._bom_find(
+            product=closing_line_id.product_id
+        )[closing_line_id.product_id]:
             return False
         return result

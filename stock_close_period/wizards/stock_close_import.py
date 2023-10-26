@@ -4,9 +4,9 @@
 # @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
+import base64
 import logging
 import unicodecsv
-import base64
 
 from datetime import *
 
@@ -28,7 +28,9 @@ class StockCloseImportWizard(models.TransientModel):
         products = {}
         for index, row in enumerate(lines):
             default_code = row["CODE"]
-            product_obj = self.env["product.product"].search([("default_code", "=", default_code)], limit=1)
+            product_obj = self.env["product.product"].search([
+                ("default_code", "=", default_code),
+            ], limit=1)
             if not product_obj:
                 raise UserError(_("Product %s not found") % default_code)
             products[default_code] = product_obj[0]

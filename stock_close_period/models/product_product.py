@@ -6,7 +6,7 @@
 
 import copy
 
-from odoo import _, models
+from odoo import models
 
 
 class Product(models.Model):
