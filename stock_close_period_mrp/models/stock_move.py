@@ -41,9 +41,7 @@ class StockMoveLine(models.Model):
     def _get_cost_stock_move_production(self, closing_line_id):
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
-        bom = self.env["mrp.bom"]._bom_find(
-            product=product_id
-        )[product_id]
+        bom = self.env["mrp.bom"]._bom_find(product_id)[product_id]
         skip = False
 
         if bom:
@@ -109,9 +107,7 @@ class StockMoveLine(models.Model):
             product_id = closing_line_id.product_id
 
             # se il prodotto ha una bom, deve processarlo perché tipo produzione
-            if not self.env["mrp.bom"]._bom_find(
-                product=product_id
-            )[product_id]:
+            if not self.env["mrp.bom"]._bom_find(product_id)[product_id]:
                 continue
 
             # imposta il metodo di calcolo
@@ -136,7 +132,7 @@ class StockMoveLine(models.Model):
     def _check_consistency(self, closing_line_id):
         result = super()._check_consistency(closing_line_id)
         if self.env["mrp.bom"]._bom_find(
-            product=closing_line_id.product_id
+            closing_line_id.product_id
         )[closing_line_id.product_id]:
             return False
         return result
