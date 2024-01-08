@@ -118,7 +118,10 @@ class StockMoveLine(models.Model):
                 cumulative_amount += purchase_line_id.product_uom_qty * price
                 cumulative_qty += purchase_line_id.product_uom_qty
 
-            additional_landed_cost_new = self._get_additional_landed_cost_new(move_id, company_id)
+            if self.env["ir.model"].search([("model", "=", "stock.valuation.adjustment.lines")]):
+                additional_landed_cost_new = self._get_additional_landed_cost_new(move_id, company_id)
+            else:
+                additional_landed_cost_new = 0
             cumulative_landed_cost += additional_landed_cost_new
 
         if (cumulative_qty + inventory_qty) != 0:
