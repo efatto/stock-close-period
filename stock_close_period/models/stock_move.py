@@ -6,7 +6,7 @@
 
 import logging
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -23,7 +23,13 @@ class StockMoveLine(models.Model):
 
     # add field to manage closed lines
     active = fields.Boolean(related="move_id.active", store=True, default=True)
-    company_id = fields.Many2one(related="move_id.company_id", store=True)
+    company_id = fields.Many2one(compute="_compute_company", store=True)
+
+    @api.depends("move_id", "move_id.company_id")
+    def _compute_company(self):
+        for move_line in self:
+            if move_line.move_id and move_line.move_id.company_id:
+                move_line.company_id = move_line.move_id.company_id.id
 
     def _get_last_closing(self, closing_id, product_id, company_id):
         # default value
