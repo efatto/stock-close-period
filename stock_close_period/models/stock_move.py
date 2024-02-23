@@ -56,6 +56,12 @@ class StockMoveLine(models.Model):
 
         return start_qty, start_price
 
+    def _check_stock_landed_costs(self):
+        try:
+            return self.env["ir.model"].search([("model", "=", "stock.valuation.adjustment.lines")])
+        except Exception:
+            return False
+
     def _get_additional_landed_cost_new(self, move_id, company_id):
         svals = self.env["stock.valuation.adjustment.lines"].sudo().search([
             ("move_id", "=", move_id.id),
@@ -124,7 +130,7 @@ class StockMoveLine(models.Model):
                 cumulative_amount += purchase_line_id.product_uom_qty * price
                 cumulative_qty += purchase_line_id.product_uom_qty
 
-            if self.env["ir.model"].search([("model", "=", "stock.valuation.adjustment.lines")]):
+            if self._check_stock_landed_costs():
                 additional_landed_cost_new = self._get_additional_landed_cost_new(move_id, company_id)
             else:
                 additional_landed_cost_new = 0
