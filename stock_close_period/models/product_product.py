@@ -47,7 +47,7 @@ class Product(models.Model):
 
         self.env.cr.execute(query2)
         for row2 in self._cr.fetchall():
-            quant_qty = row2[0] * 1.0
+            quant_qty = (row2[0] if row2[0] else 0.0) * 1.0
             product_id = row2[1]
             location_id = row2[2]
             lot_id = row2[3] if self.tracking != "serial" and row2[3] is not None else False
