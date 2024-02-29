@@ -33,8 +33,9 @@ class StockMoveLine(models.Model):
 
     def _get_last_closing(self, closing_id, product_id, company_id):
         # default value
-        start_qty = 0
-        start_price = 0
+        start_qty = 0.0
+        start_price = 0.0
+        start_value = 0.0
 
         if closing_id.last_closed_id:
             last_closed_id = closing_id.last_closed_id
@@ -45,14 +46,24 @@ class StockMoveLine(models.Model):
             ], order="close_date desc", limit=1)
 
         # search product
-        closing_line_id = self.env["stock.close.period.line"].search([
+        closing_lines = self.env["stock.close.period.line"].search([
             ("close_id", "=", last_closed_id.id),
+            ("price_unit", "!=", 0.0),
             ("product_id", "=", product_id)
-        ], limit=1)
+        ])
 
-        if closing_line_id:
-            start_qty = closing_line_id.product_qty
-            start_price = closing_line_id.price_unit
+        if closing_lines:
+            start_qty = sum(
+                closing_line.product_qty
+                for closing_line in closing_lines
+            )
+            start_value = sum(
+                closing_line.product_qty * closing_line.price_unit
+                for closing_line in closing_lines
+            )
+
+        if start_qty:
+            start_price = start_value / start_qty
 
         return start_qty, start_price
 
@@ -72,7 +83,7 @@ class StockMoveLine(models.Model):
                 svals.mapped("additional_landed_cost")
             )
         else:
-            additional_landed_cost_new = 0
+            additional_landed_cost_new = 0.0
         return additional_landed_cost_new
 
     def _get_cost_stock_move_purchase_average(self, last_close_date, closing_line_id):
@@ -82,10 +93,10 @@ class StockMoveLine(models.Model):
         # get all moves
         move_ids = self.env["stock.move"].search([
             ("state", "=", "done"),
-            ("product_qty", ">", 0),
+            ("product_qty", ">", 0.0),
             ("product_id", "=", product_id.id),
             ("date", ">", last_close_date),
-            ("active", ">=", 0),
+            ("active", "=", True),
             ("company_id", "=", company_id),
         ], order="date")
 
@@ -97,12 +108,12 @@ class StockMoveLine(models.Model):
             inventory_amount = start_price * start_qty
             inventory_qty = start_qty
         else:
-            inventory_amount = 0
-            inventory_qty = 0
+            inventory_amount = 0.0
+            inventory_qty = 0.0
 
-        cumulative_amount = 0
-        cumulative_landed_cost = 0
-        cumulative_qty = 0
+        cumulative_amount = 0.0
+        cumulative_landed_cost = 0.0
+        cumulative_qty = 0.0
         for move_id in move_ids.filtered(lambda m: m.purchase_line_id):
             purchase_line_id = move_id.purchase_line_id
             if purchase_line_id.invoice_lines:
@@ -133,10 +144,10 @@ class StockMoveLine(models.Model):
             if self._check_stock_landed_costs():
                 additional_landed_cost_new = self._get_additional_landed_cost_new(move_id, company_id)
             else:
-                additional_landed_cost_new = 0
+                additional_landed_cost_new = 0.0
             cumulative_landed_cost += additional_landed_cost_new
 
-        if (cumulative_qty + inventory_qty) != 0:
+        if (cumulative_qty + inventory_qty) != 0.0:
             price_unit = (
                 (
                     inventory_amount
@@ -145,9 +156,9 @@ class StockMoveLine(models.Model):
                 ) / (cumulative_qty + inventory_qty)
             )
         else:
-            price_unit = 0
+            price_unit = 0.0
 
-        if price_unit == 0:
+        if price_unit == 0.0:
             closing_line_id.price_unit = product_id.standard_price
             closing_line_id.evaluation_method = "standard"
         else:
@@ -174,7 +185,7 @@ class StockMoveLine(models.Model):
         other_closing_line_id = self.env["stock.close.period.line"].search([
             ("close_id", "=", closing_line_id.close_id.id),
             ("product_id", "=", closing_line_id.product_id.id),
-            ("price_unit", "!=", 0),
+            ("price_unit", "!=", 0.0),
         ], limit=1)
         closing_line_id.price_unit = other_closing_line_id.price_unit
         closing_line_id.inventory_amount = other_closing_line_id.inventory_amount
@@ -193,7 +204,7 @@ class StockMoveLine(models.Model):
         closing_line_ids = self.env["stock.close.period.line"].search([
             ("close_id", "=", closing_id.id),
             ("evaluation_method", "not in", ["manual"]),
-            ("price_unit", "=", 0)
+            ("price_unit", "=", 0.0)
         ])
 
         # get last close
@@ -251,7 +262,7 @@ class StockMoveLine(models.Model):
         _logger.info("[2/2] Start writing results")
 
         # compute amount
-        amount = 0
+        amount = 0.0
         for closing_line_id in closing_id.line_ids:
             row_value = closing_line_id.product_qty * closing_line_id.price_unit
             amount += round(row_value, decimal)
