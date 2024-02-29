@@ -102,3 +102,18 @@ class StockClosePeriodLine(models.Model):
     def _compute_amount_line(self):
         for line in self:
             line.amount_line = line.product_qty * line.price_unit
+
+    def goto_stock_close_period_line(self, **kwargs):
+        action = self.env["ir.actions.act_window"]._for_xml_id(
+            "stock_close_period.action_stock_close_form_line"
+        )
+        action.update(kwargs)
+
+        action["views"] = [
+            (
+                self.env.ref("stock_close_period.stock_close_period_line_form").id,
+                "form",
+            )
+        ]
+        action["res_id"] = self.id
+        return action
