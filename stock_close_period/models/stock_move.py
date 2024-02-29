@@ -67,6 +67,22 @@ class StockMoveLine(models.Model):
 
         return start_qty, start_price
 
+    @api.model
+    def _get_right_invoice_lines(self, purchase_line_id):
+        invoice_lines = (
+            purchase_line_id.invoice_lines.filtered(
+                lambda il: il.move_id.is_purchase_document()
+            )
+        )
+        if "rc_original_purchase_invoice_ids" in self.env["account.move"].fields_get():
+            rc_original_purchase_invoice_ids = (
+                invoice_lines.mapped("move_id.rc_original_purchase_invoice_ids")
+            )
+            invoice_lines = invoice_lines.filtered(
+                lambda il: il.move_id.id in rc_original_purchase_invoice_ids.ids
+            )
+        return invoice_lines
+
     def _check_stock_landed_costs(self):
         try:
             return self.env["ir.model"].search([("model", "=", "stock.valuation.adjustment.lines")])
@@ -116,14 +132,13 @@ class StockMoveLine(models.Model):
         cumulative_qty = 0.0
         for move_id in move_ids.filtered(lambda m: m.purchase_line_id):
             purchase_line_id = move_id.purchase_line_id
-            if purchase_line_id.invoice_lines:
+            invoice_lines = self._get_right_invoice_lines(purchase_line_id)
+            if invoice_lines:
                 cumulative_amount += sum(
                     abs(line.balance)
-                    for line in purchase_line_id.invoice_lines
+                    for line in invoice_lines
                 )
-                cumulative_qty += sum(
-                    purchase_line_id.invoice_lines.mapped("quantity")
-                )
+                cumulative_qty += sum(invoice_lines.mapped("quantity"))
             elif (
                 purchase_line_id.currency_id == purchase_line_id.company_id.currency_id
             ):
@@ -170,13 +185,16 @@ class StockMoveLine(models.Model):
             closing_line_id.cumulative_qty = cumulative_qty
             closing_line_id.evaluation_method = "purchase"
 
+    @api.model
     def _get_cost_stock_move_standard(self, closing_line_id):
         closing_line_id.price_unit = closing_line_id.product_id.standard_price
         closing_line_id.evaluation_method = "standard"
 
+    @api.model
     def _check_consistency(self, closing_line_id):
         """
         Check inconsistency before elaborate closing line
+        Possible overriding by other modules
         :return: True if line is consistency else False
         """
         return True

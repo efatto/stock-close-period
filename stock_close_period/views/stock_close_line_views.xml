@@ -51,18 +51,18 @@
                             <field name="lot_id" />
                             <field name="owner_id" />
                             <field name="evaluation_method" />
+                            <field name="product_qty" />
+                            <field name="price_unit" />
                             <field name="amount_line" />
                         </group>
                         <group string="Amount">
                             <field name="inventory_amount" />
                             <field name="cumulative_amount" />
                             <field name="cumulative_landed_cost" />
-                            <field name="price_unit" />
                         </group>
                         <group string="Quantity">
                             <field name="inventory_qty" />
                             <field name="cumulative_qty" />
-                            <field name="product_qty" />
                         </group>
                     </group>
                 </sheet>

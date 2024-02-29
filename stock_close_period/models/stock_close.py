@@ -190,13 +190,13 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) 
+                date <= %r 
                 AND state = 'done' 
                 AND (
-                    company_id == %r 
+                    company_id = %r 
                     OR company_id IS NULL
                 );
-        """ % (self.close_date, self.company_id.id)
+        """ % (fields.Date.to_string(self.close_date), self.company_id.id)
         self.env.cr.execute(query)
 
         query = """
@@ -205,13 +205,13 @@ class StockClosePeriod(models.Model):
             SET 
                 active = false 
             WHERE
-                date <= date(%r) 
+                date <= %r 
                 AND state = 'done' 
                 AND (
-                    company_id == %r 
+                    company_id = %r 
                     OR company_id IS NULL
                 );
-        """ % (self.close_date, self.company_id.id)
+        """ % (fields.Date.to_string(self.close_date), self.company_id.id)
         self.env.cr.execute(query)
         return True
 
