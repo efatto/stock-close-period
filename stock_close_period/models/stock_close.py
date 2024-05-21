@@ -223,10 +223,10 @@ class StockClosePeriod(models.Model):
             SET
                 active = false
             WHERE
-                date <= date(%r)
+                date <= date(%s)
                 AND state = 'done'
                 AND (
-                    company_id == %r
+                    company_id == %s
                     OR company_id IS NULL
                 );
             """,

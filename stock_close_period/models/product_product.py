@@ -150,8 +150,8 @@ class Product(models.Model):
             WHERE
                 stock_move_line.date >= '%s'
                 AND stock_move_line.state='done'
-                AND stock_move_line.product_id = %r
-                AND stock_move_line.company_id = %r
+                AND stock_move_line.product_id = %s
+                AND stock_move_line.company_id = %s
             GROUP BY
                 stock_move_line.product_id,
                 stock_move_line.location_dest_id,
