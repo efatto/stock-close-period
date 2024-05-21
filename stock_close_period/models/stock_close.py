@@ -107,7 +107,8 @@ class StockClosePeriod(models.Model):
         self.ensure_one()
 
         # add all products active not services type
-        query = """
+        self.env.cr.execute(
+            """
             INSERT INTO
                 stock_close_period_line(
                     close_id,
@@ -121,7 +122,7 @@ class StockClosePeriod(models.Model):
                     company_id
                 )
             SELECT
-                %r AS close_id,
+                %s AS close_id,
                 product_product.id AS product_id,
                 product_template.default_code AS product_code,
                 product_template.name AS product_name,
@@ -129,7 +130,7 @@ class StockClosePeriod(models.Model):
                 product_category.complete_name AS complete_name,
                 0 AS product_qty,
                 0 AS price_unit,
-                %r AS company_id
+                %s AS company_id
             FROM
                 product_template,
                 product_product,
@@ -139,17 +140,14 @@ class StockClosePeriod(models.Model):
                 AND product_product.product_tmpl_id = product_template.id
                 AND product_template.categ_id = product_category.id
                 AND (
-                    product_template.company_id = %r
+                    product_template.company_id = %s
                     OR product_template.company_id IS NULL
                 )
             ORDER BY
                 product_product.id;
-        """ % (
-            self.id,
-            self.company_id.id,
-            self.company_id.id,
+        """,
+            (self.id, self.company_id.id, self.company_id.id),
         )
-        self.env.cr.execute(query)
 
         # get quantity on end period for each product
         for closing_line_id in self.line_ids:
@@ -200,25 +198,26 @@ class StockClosePeriod(models.Model):
         self.ensure_one()
 
         # set active = False on stock_move and stock_move_line
-        query = """
+
+        self.env.cr.execute(
+            """
             UPDATE
                 stock_move
             SET
                 active = false
             WHERE
-                date <= date(%r)
+                date <= date(%s)
                 AND state = 'done'
                 AND (
-                    company_id == %r
+                    company_id == %s
                     OR company_id IS NULL
                 );
-        """ % (
-            self.close_date,
-            self.company_id.id,
+            """,
+            (self.close_date, self.company_id.id),
         )
-        self.env.cr.execute(query)
 
-        query = """
+        self.env.cr.execute(
+            """
             UPDATE
                 stock_move_line
             SET
@@ -230,11 +229,10 @@ class StockClosePeriod(models.Model):
                     company_id == %r
                     OR company_id IS NULL
                 );
-        """ % (
-            self.close_date,
-            self.company_id.id,
+            """,
+            (self.close_date, self.company_id.id),
         )
-        self.env.cr.execute(query)
+
         return True
 
     def action_recalculate_purchase(self):
@@ -268,7 +266,7 @@ class StockClosePeriod(models.Model):
         for closing in self:
             closing.state = "done"
             closing.amount = sum(closing.mapped("line_ids.amount_line"))
-            query = (
+            self.env.cr.execute(
                 """
                 DELETE FROM
                     stock_close_period_line
@@ -276,10 +274,10 @@ class StockClosePeriod(models.Model):
                     close_id = %s
                     AND product_qty = 0
                     AND price_unit = 0;
-            """
-                % closing.id
+                """,
+                closing.id,
             )
-            self.env.cr.execute(query)
+
         return True
 
     def action_recompute_amount(self):

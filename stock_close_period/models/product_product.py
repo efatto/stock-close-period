@@ -21,7 +21,8 @@ class Product(models.Model):
 
         # get quants
         quan = {}
-        query2 = """
+        self.env.cr.execute(
+            """
             SELECT
                 stock_quant.quantity,
                 stock_quant.product_id,
@@ -35,20 +36,18 @@ class Product(models.Model):
                 stock_location
             WHERE
                 stock_quant.location_id = stock_location.id
-                AND stock_quant.product_id = %r
-                AND stock_location.company_id = %r
+                AND stock_quant.product_id = %s
+                AND stock_location.company_id = %s
             ORDER BY
                 stock_quant.product_id,
                 stock_quant.location_id,
                 stock_quant.lot_id,
                 stock_quant.package_id,
                 stock_quant.owner_id;
-        """ % (
-            self.id,
-            self.env.user.company_id.id,
+        """,
+            (self.id, self.env.user.company_id.id),
         )
 
-        self.env.cr.execute(query2)
         for row2 in self._cr.fetchall():
             quant_qty = row2[0] * 1.0
             product_id = row2[1]
@@ -78,7 +77,8 @@ class Product(models.Model):
 
         # recompute moves if set request date
         # moves +
-        query = """
+        self.env.cr.execute(
+            """
             SELECT
                 SUM(stock_move_line.qty_done),
                 stock_move_line.product_id,
@@ -92,8 +92,8 @@ class Product(models.Model):
             WHERE
                 stock_move_line.date >= '%s'
                 AND stock_move_line.state = 'done'
-                AND stock_move_line.product_id = %r
-                AND stock_move_line.company_id = %r
+                AND stock_move_line.product_id = %s
+                AND stock_move_line.company_id = %s
             GROUP BY
                 stock_move_line.product_id,
                 stock_move_line.location_id,
@@ -108,13 +108,10 @@ class Product(models.Model):
                 stock_move_line.package_id,
                 stock_move_line.owner_id,
                 stock_move_line.date desc;
-        """ % (
-            date,
-            self.id,
-            self.env.user.company_id.id,
+        """,
+            (date, self.id, self.env.user.company_id.id),
         )
 
-        self.env.cr.execute(query)
         for row in self._cr.fetchall():
             move_qty = row[0]
             product_id = row[1]
@@ -138,7 +135,8 @@ class Product(models.Model):
                 stock_now[key] = 0
 
         # moves -
-        query = """
+        self.env.cr.execute(
+            """
             SELECT
                 SUM(stock_move_line.qty_done),
                 stock_move_line.product_id,
@@ -168,13 +166,10 @@ class Product(models.Model):
                 stock_move_line.package_id,
                 stock_move_line.owner_id,
                 stock_move_line.date desc;
-        """ % (
-            date,
-            self.id,
-            self.env.user.company_id.id,
+        """,
+            (date, self.id, self.env.user.company_id.id),
         )
 
-        self.env.cr.execute(query)
         for row in self._cr.fetchall():
             move_qty = row[0]
             product_id = row[1]
