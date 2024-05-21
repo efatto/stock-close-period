@@ -19,6 +19,9 @@
         "stock_account",
         "report_xlsx",
     ],
+    "external_dependencies": {
+        "python": ["unicodecsv"],
+    },
     "data": [
         "security/stock_close_group.xml",
         "security/ir.model.access.csv",
