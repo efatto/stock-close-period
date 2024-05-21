@@ -178,7 +178,7 @@ class StockMoveLine(models.Model):
         )
         closing_line_id.cumulative_qty = other_closing_line_id.cumulative_qty
         closing_line_id.evaluation_method = other_closing_line_id.evaluation_method
-        self.env.cr.commit()
+        self.env.cr.commit()  # pylint: disable=E8102
 
     def _recompute_cost_stock_move_purchase(self, closing_id):
         _logger.info("[1/2] Start recompute cost product purchase")
@@ -242,7 +242,7 @@ class StockMoveLine(models.Model):
                 if product_id.categ_id.property_cost_method == "standard":
                     self._get_cost_stock_move_standard(closing_line_id)
 
-            self.env.cr.commit()
+            self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish recompute average cost product")
 
     def _write_results(self, closing_id):

@@ -132,7 +132,7 @@ class StockMoveLine(models.Model):
             else:
                 self._get_cost_stock_move_production(closing_line_id)
 
-            self.env.cr.commit()
+            self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish add standard cost product")
 
     def recompute_average_cost_period_production(self, closing_id):
