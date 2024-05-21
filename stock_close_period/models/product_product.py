@@ -6,7 +6,7 @@
 
 import copy
 
-from odoo import _, models
+from odoo import models
 
 
 class Product(models.Model):
@@ -22,38 +22,49 @@ class Product(models.Model):
         # get quants
         quan = {}
         query2 = """
-            SELECT 
-                stock_quant.quantity, 
-                stock_quant.product_id, 
-                stock_quant.location_id, 
-                stock_quant.lot_id, 
-                stock_quant.package_id, 
-                stock_quant.owner_id, 
+            SELECT
+                stock_quant.quantity,
+                stock_quant.product_id,
+                stock_quant.location_id,
+                stock_quant.lot_id,
+                stock_quant.package_id,
+                stock_quant.owner_id,
                 stock_quant.id
             FROM
                 stock_quant,
                 stock_location
-            WHERE 
-                stock_quant.location_id = stock_location.id 
-                AND stock_quant.product_id = %r 
+            WHERE
+                stock_quant.location_id = stock_location.id
+                AND stock_quant.product_id = %r
                 AND stock_location.company_id = %r
-            ORDER BY 
-                stock_quant.product_id, 
-                stock_quant.location_id, 
-                stock_quant.lot_id, 
-                stock_quant.package_id, 
+            ORDER BY
+                stock_quant.product_id,
+                stock_quant.location_id,
+                stock_quant.lot_id,
+                stock_quant.package_id,
                 stock_quant.owner_id;
-        """ % (self.id, self.env.user.company_id.id)
+        """ % (
+            self.id,
+            self.env.user.company_id.id,
+        )
 
         self.env.cr.execute(query2)
         for row2 in self._cr.fetchall():
             quant_qty = row2[0] * 1.0
             product_id = row2[1]
             location_id = row2[2]
-            lot_id = row2[3] if self.tracking != "serial" and row2[3] is not None else False
+            lot_id = (
+                row2[3] if self.tracking != "serial" and row2[3] is not None else False
+            )
             package_id = row2[4] if row2[4] and row2[4] is not None else False
             owner_id = row2[5] if row2[5] and row2[5] is not None else False
-            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
+            key = "%d_%d_%d_%d_%d" % (
+                product_id,
+                location_id,
+                lot_id,
+                package_id,
+                owner_id,
+            )
             if key in quan.keys():
                 quan[key] = quan[key] + quant_qty
             else:
@@ -68,46 +79,58 @@ class Product(models.Model):
         # recompute moves if set request date
         # moves +
         query = """
-            SELECT 
-                SUM(stock_move_line.qty_done), 
-                stock_move_line.product_id, 
-                stock_move_line.location_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+            SELECT
+                SUM(stock_move_line.qty_done),
+                stock_move_line.product_id,
+                stock_move_line.location_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date
             FROM
                 stock_move_line
             WHERE
-                stock_move_line.date >= '%s' 
-                AND stock_move_line.state = 'done' 
-                AND stock_move_line.product_id = %r 
+                stock_move_line.date >= '%s'
+                AND stock_move_line.state = 'done'
+                AND stock_move_line.product_id = %r
                 AND stock_move_line.company_id = %r
-            GROUP BY 
-                stock_move_line.product_id, 
-                stock_move_line.location_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+            GROUP BY
+                stock_move_line.product_id,
+                stock_move_line.location_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date
-            ORDER BY 
-                stock_move_line.product_id, 
-                stock_move_line.location_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+            ORDER BY
+                stock_move_line.product_id,
+                stock_move_line.location_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date desc;
-        """ % (date, self.id, self.env.user.company_id.id)
+        """ % (
+            date,
+            self.id,
+            self.env.user.company_id.id,
+        )
 
         self.env.cr.execute(query)
         for row in self._cr.fetchall():
             move_qty = row[0]
             product_id = row[1]
             location_id = row[2]
-            lot_id = row[3] if self.tracking != "serial" and row[3] is not None else False
+            lot_id = (
+                row[3] if self.tracking != "serial" and row[3] is not None else False
+            )
             package_id = row[4] if row[4] and row[4] is not None else False
             owner_id = row[5] if row[5] and row[5] is not None else False
-            key = "%d_%d_%d_%d_%d" % (product_id, location_id, lot_id, package_id, owner_id)
+            key = "%d_%d_%d_%d_%d" % (
+                product_id,
+                location_id,
+                lot_id,
+                package_id,
+                owner_id,
+            )
             if key in move.keys():
                 move[key] += move_qty
             else:
@@ -115,47 +138,59 @@ class Product(models.Model):
                 stock_now[key] = 0
 
         # moves -
-        query = """                
-            SELECT 
-                SUM(stock_move_line.qty_done), 
-                stock_move_line.product_id, 
-                stock_move_line.location_dest_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+        query = """
+            SELECT
+                SUM(stock_move_line.qty_done),
+                stock_move_line.product_id,
+                stock_move_line.location_dest_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date
             FROM
                 stock_move_line
-            WHERE 
-                stock_move_line.date >= '%s' 
-                AND stock_move_line.state='done' 
-                AND stock_move_line.product_id = %r 
+            WHERE
+                stock_move_line.date >= '%s'
+                AND stock_move_line.state='done'
+                AND stock_move_line.product_id = %r
                 AND stock_move_line.company_id = %r
             GROUP BY
-                stock_move_line.product_id, 
-                stock_move_line.location_dest_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+                stock_move_line.product_id,
+                stock_move_line.location_dest_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date
-            ORDER BY 
-                stock_move_line.product_id, 
-                stock_move_line.location_dest_id, 
-                stock_move_line.lot_id, 
-                stock_move_line.package_id, 
-                stock_move_line.owner_id, 
+            ORDER BY
+                stock_move_line.product_id,
+                stock_move_line.location_dest_id,
+                stock_move_line.lot_id,
+                stock_move_line.package_id,
+                stock_move_line.owner_id,
                 stock_move_line.date desc;
-        """ % (date, self.id, self.env.user.company_id.id)
+        """ % (
+            date,
+            self.id,
+            self.env.user.company_id.id,
+        )
 
         self.env.cr.execute(query)
         for row in self._cr.fetchall():
             move_qty = row[0]
             product_id = row[1]
             location_dest_id = row[2]
-            lot_id = row[3] if self.tracking != "serial" and row[3] is not None else False
+            lot_id = (
+                row[3] if self.tracking != "serial" and row[3] is not None else False
+            )
             package_id = row[4] if row[4] and row[4] is not None else False
             owner_id = row[5] if row[5] and row[5] is not None else False
-            key = "%d_%d_%d_%d_%d" % (product_id, location_dest_id, lot_id, package_id, owner_id)
+            key = "%d_%d_%d_%d_%d" % (
+                product_id,
+                location_dest_id,
+                lot_id,
+                package_id,
+                owner_id,
+            )
             if key in move.keys():
                 move[key] -= move_qty
             else:
@@ -183,18 +218,22 @@ class Product(models.Model):
             dif = qua - mov
 
             # only internal locations
-            location_obj = self.env["stock.location"].search([("id", "=", location_id)], limit=1)
+            location_obj = self.env["stock.location"].search(
+                [("id", "=", location_id)], limit=1
+            )
             if location_obj.usage == "internal":
-                list_internal_quant.append(({
-                    "date": date,
-                    "product_id": product_id,
-                    "uom_id": uom_id,
-                    "location_id": location_id,
-                    "lot_id": lot_id,
-                    "package_id": package_id,
-                    "owner_id": owner_id,
-                    "stock_at_date": mov,
-                    "stock_now": qua,
-                    "diff_qty": dif,
-                }))
+                list_internal_quant.append(
+                    {
+                        "date": date,
+                        "product_id": product_id,
+                        "uom_id": uom_id,
+                        "location_id": location_id,
+                        "lot_id": lot_id,
+                        "package_id": package_id,
+                        "owner_id": owner_id,
+                        "stock_at_date": mov,
+                        "stock_now": qua,
+                        "diff_qty": dif,
+                    }
+                )
         return list_internal_quant

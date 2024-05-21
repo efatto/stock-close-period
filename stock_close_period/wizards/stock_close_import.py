@@ -4,17 +4,19 @@
 # @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-import logging
-import unicodecsv
 import base64
+import logging
+from datetime import datetime
 
-from datetime import *
+import unicodecsv
 
 from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 
 
 class StockCloseImportWizard(models.TransientModel):
@@ -28,7 +30,9 @@ class StockCloseImportWizard(models.TransientModel):
         products = {}
         for index, row in enumerate(lines):
             default_code = row["CODE"]
-            product_obj = self.env["product.product"].search([("default_code", "=", default_code)], limit=1)
+            product_obj = self.env["product.product"].search(
+                [("default_code", "=", default_code)], limit=1
+            )
             if not product_obj:
                 raise UserError(_("Product %s not found") % default_code)
             products[default_code] = product_obj[0]
@@ -49,20 +53,19 @@ class StockCloseImportWizard(models.TransientModel):
                 break
 
             parsed_data_lines = unicodecsv.DictReader(
-                file_to_import,
-                fieldnames=headers,
-                encoding="utf-8",
-                delimiter=";"
+                file_to_import, fieldnames=headers, encoding="utf-8", delimiter=";"
             )
 
             for index, row in enumerate(parsed_data_lines):
                 if index == 0:
                     continue
-                lines.append({
-                    "CODE": str(row["CODE"]),
-                    "COST": str(row["COST"]).replace(",", "."),
-                    "QTY": str(row["QTY"]).replace(",", "."),
-                })
+                lines.append(
+                    {
+                        "CODE": str(row["CODE"]),
+                        "COST": str(row["COST"]).replace(",", "."),
+                        "QTY": str(row["QTY"]).replace(",", "."),
+                    }
+                )
             products = self.load_products(lines)
             total = 0.0
             dp_qty = 4
@@ -72,14 +75,20 @@ class StockCloseImportWizard(models.TransientModel):
                 unit_cost = round(float(row["COST"]), dp_price)
                 qty = round(float(row["QTY"]), dp_qty)
                 total += unit_cost * qty
-                self.env["stock.close.period.line"].with_context(tracking_disable=True).create({
-                    "close_id": self.close_id.id,
-                    "product_id": product_id,
-                    "price_unit": unit_cost,
-                    "product_qty": qty,
-                    "product_uom_id": products[row["CODE"]].product_tmpl_id.uom_id.id,
-                    "evaluation_method": "",
-                })
+                self.env["stock.close.period.line"].with_context(
+                    tracking_disable=True
+                ).create(
+                    {
+                        "close_id": self.close_id.id,
+                        "product_id": product_id,
+                        "price_unit": unit_cost,
+                        "product_qty": qty,
+                        "product_uom_id": products[
+                            row["CODE"]
+                        ].product_tmpl_id.uom_id.id,
+                        "evaluation_method": "",
+                    }
+                )
 
             # set done close_id
             self.close_id.amount = total

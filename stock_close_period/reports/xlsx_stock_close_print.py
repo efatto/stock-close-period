@@ -33,7 +33,9 @@ class XlsxStockClosePeriod(models.AbstractModel):
         sheet.set_column(9, 9, 15)
         sheet.set_column(10, 10, 20)
 
-        title_style = workbook.add_format({"bold": False, "bg_color": "#C0C0C0", "bottom": 1})
+        title_style = workbook.add_format(
+            {"bold": False, "bg_color": "#C0C0C0", "bottom": 1}
+        )
         currency_format = workbook.add_format({"num_format": "€ #,##0.00"})
 
         # header
