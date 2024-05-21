@@ -30,12 +30,16 @@ class StockClosePeriodLine(models.Model):
         required=True,
     )
     product_name = fields.Char(related="product_id.name", store=True, readonly=True)
-    product_code = fields.Char(related="product_id.default_code", store=True, readonly=True)
+    product_code = fields.Char(
+        related="product_id.default_code", store=True, readonly=True
+    )
     product_uom_id = fields.Many2one(
         "uom.uom",
         string="UOM",
         required=True,
-        default=lambda self: self.env.ref("uom.product_uom_unit", raise_if_not_found=True),
+        default=lambda self: self.env.ref(
+            "uom.product_uom_unit", raise_if_not_found=True
+        ),
     )
     categ_name = fields.Char(
         string="Category Name",
@@ -43,23 +47,32 @@ class StockClosePeriodLine(models.Model):
         store=True,
         readonly=True,
     )
-    evaluation_method = fields.Selection([
-        ("purchase", "Purchase"),
-        ("standard", "Standard"),
-        ("manual", "Manual")
-    ], copy=False)
-    product_qty = fields.Float(string="End Quantity", digits="Product Unit of Measure", default=0)
+    evaluation_method = fields.Selection(
+        [("purchase", "Purchase"), ("standard", "Standard"), ("manual", "Manual")],
+        copy=False,
+    )
+    product_qty = fields.Float(
+        string="End Quantity", digits="Product Unit of Measure", default=0
+    )
     price_unit = fields.Float(string="End Average Price", digits="Product Price")
     inventory_amount = fields.Float(string="Inventory Amount", digits="Product Price")
-    inventory_qty = fields.Float(string="Inventory Quantity", digits="Product Unit of Measure")
+    inventory_qty = fields.Float(
+        string="Inventory Quantity", digits="Product Unit of Measure"
+    )
     cumulative_amount = fields.Float(string="Cumulative Amount", digits="Product Price")
-    cumulative_landed_cost = fields.Float(string="Cumulative Landed Cost", digits="Product Price")
-    cumulative_qty = fields.Float(string="Cumulative Quantity", digits="Product Unit of Measure")
+    cumulative_landed_cost = fields.Float(
+        string="Cumulative Landed Cost", digits="Product Price"
+    )
+    cumulative_qty = fields.Float(
+        string="Cumulative Quantity", digits="Product Unit of Measure"
+    )
     amount_line = fields.Float(compute="_compute_amount_line", digits="Product Price")
     location_id = fields.Many2one("stock.location", string="Location")
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
-    company_id = fields.Many2one("res.company", string="Company", default=lambda self: self.env.company)
+    company_id = fields.Many2one(
+        "res.company", string="Company", default=lambda self: self.env.company
+    )
 
     @api.depends("close_id.company_id")
     def _compute_company(self):
