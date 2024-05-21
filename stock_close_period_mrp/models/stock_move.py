@@ -79,7 +79,8 @@ class StockMoveLine(models.Model):
                         * line.product_qty
                     )
                 else:
-                    # If product in doesn't have price in close period and in route have Manufacture skip
+                    # If product in doesn't have price in close period and in route have
+                    # Manufacture skip
                     if (
                         self._get_standard_price(line.product_id, closing_id) == 0
                         and self.env.ref("mrp.route_warehouse0_manufacture").id

@@ -199,7 +199,7 @@ class Product(models.Model):
 
         # compute
         list_internal_quant = []
-        for key, qty in move.items():
+        for key, _qty in move.items():
             key_split = key.split("_")
             product_id = int(key_split[0])
             uom_id = self.env["product.product"].browse(product_id).uom_id.id

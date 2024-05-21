@@ -28,7 +28,7 @@ class StockCloseImportWizard(models.TransientModel):
 
     def load_products(self, lines):
         products = {}
-        for index, row in enumerate(lines):
+        for _index, row in enumerate(lines):
             default_code = row["CODE"]
             product_obj = self.env["product.product"].search(
                 [("default_code", "=", default_code)], limit=1
@@ -48,7 +48,7 @@ class StockCloseImportWizard(models.TransientModel):
             lines = []
             headers = False
 
-            for index, row in enumerate(reader):
+            for _index, row in enumerate(reader):
                 headers = row
                 break
 
@@ -70,7 +70,7 @@ class StockCloseImportWizard(models.TransientModel):
             total = 0.0
             dp_qty = 4
             dp_price = 5
-            for index, row in enumerate(lines):
+            for _index, row in enumerate(lines):
                 product_id = products[row["CODE"]].id
                 unit_cost = round(float(row["COST"]), dp_price)
                 qty = round(float(row["QTY"]), dp_qty)
