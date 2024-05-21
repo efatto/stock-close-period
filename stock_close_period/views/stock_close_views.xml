@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record id="stock_close_period_tree" model="ir.ui.view">
@@ -22,7 +22,10 @@
         <field name="name">stock.close.period.tree.manager.view.inherit</field>
         <field name="model">stock.close.period</field>
         <field name="inherit_id" ref="stock_close_period.stock_close_period_tree" />
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
+        />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">1</attribute>
@@ -59,8 +62,14 @@
     <record id="stock_close_period_line_tree_manager_view_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.line.tree.manager.view.inherit</field>
         <field name="model">stock.close.period.line</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_line_tree" />
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
+        <field
+            name="inherit_id"
+            ref="stock_close_period.stock_close_period_line_tree"
+        />
+        <field
+            name="groups_id"
+            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
+        />
         <field name="arch" type="xml">
             <xpath expr="//tree" position="attributes">
                 <attribute name="create">1</attribute>
@@ -83,12 +92,35 @@
         <field name="arch" type="xml">
             <search string="stock Close Period Lines">
                 <field name="product_id" />
-                <filter string="Qty 0" name="qty_zero" domain="[('product_qty','=',0)]" />
-                <filter string="Negative Qty" name="negative_qty" domain="[('product_qty','&lt;',0)]" />
+                <filter
+                    string="Qty 0"
+                    name="qty_zero"
+                    domain="[('product_qty','=',0)]"
+                />
+                <filter
+                    string="Negative Qty"
+                    name="negative_qty"
+                    domain="[('product_qty','&lt;',0)]"
+                />
                 <group expand="0" string="Group By">
-                    <filter string="Stock Close Period" name="close_period" domain="" context="{'group_by':'close_id'}" />
-                    <filter string="Location" name="location" domain="" context="{'group_by':'location_id'}" />
-                    <filter string="Product" name="product" domain="" context="{'group_by':'product_id'}" />
+                    <filter
+                        string="Stock Close Period"
+                        name="close_period"
+                        domain=""
+                        context="{'group_by':'close_id'}"
+                    />
+                    <filter
+                        string="Location"
+                        name="location"
+                        domain=""
+                        context="{'group_by':'location_id'}"
+                    />
+                    <filter
+                        string="Product"
+                        name="product"
+                        domain=""
+                        context="{'group_by':'product_id'}"
+                    />
                 </group>
             </search>
         </field>
@@ -100,32 +132,72 @@
         <field name="arch" type="xml">
             <form create="0" delete="0" edit="0" string="stock Close Period">
                 <header>
-                    <button name="action_start" states="draft" string="Start" type="object" class="oe_highlight"
-                            groups="stock_close_period.group_stock_close_period_manager" />
-                    <button name="action_recalculate_purchase" states="confirm" string="Compute Purchase" type="object"
-                            class="oe_highlight" groups="stock_close_period.group_stock_close_period_manager" />
-                    <button name="action_done" string="Validate" type="object" class="oe_highlight"
-                            groups="stock_close_period.group_stock_close_period_manager"
-                            attrs="{'invisible': [('state', 'not in', ['confirm'])]}" />
-                    <button name="action_cancel" states="confirm,done" string="Cancel" type="object"
-                            groups="stock_close_period.group_stock_close_period_manager" />
-                    <button name="action_set_to_draft" states="cancel" string="Set to Draft" type="object"
-                            groups="stock_close_period.group_stock_close_period_manager" />
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done" />
+                    <button
+                        name="action_start"
+                        states="draft"
+                        string="Start"
+                        type="object"
+                        class="oe_highlight"
+                        groups="stock_close_period.group_stock_close_period_manager"
+                    />
+                    <button
+                        name="action_recalculate_purchase"
+                        states="confirm"
+                        string="Compute Purchase"
+                        type="object"
+                        class="oe_highlight"
+                        groups="stock_close_period.group_stock_close_period_manager"
+                    />
+                    <button
+                        name="action_done"
+                        string="Validate"
+                        type="object"
+                        class="oe_highlight"
+                        groups="stock_close_period.group_stock_close_period_manager"
+                        attrs="{'invisible': [('state', 'not in', ['confirm'])]}"
+                    />
+                    <button
+                        name="action_cancel"
+                        states="confirm,done"
+                        string="Cancel"
+                        type="object"
+                        groups="stock_close_period.group_stock_close_period_manager"
+                    />
+                    <button
+                        name="action_set_to_draft"
+                        states="cancel"
+                        string="Set to Draft"
+                        type="object"
+                        groups="stock_close_period.group_stock_close_period_manager"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,confirm,done"
+                    />
                 </header>
                 <sheet>
                     <group>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" />
-                            <h1><field name="name" placeholder="e.g. Annual Closing YEAR" /></h1>
+                            <h1><field
+                                    name="name"
+                                    placeholder="e.g. Annual Closing YEAR"
+                                /></h1>
                         </div>
                         <group>
                             <field name="close_date" />
                             <label for="amount" />
                             <div class="o_row">
                                 <field name="amount" />
-                                <button type="object" name="action_recompute_amount" class="btn-secondary"
-                                        icon="fa-refresh" aria-label="Update amount" title="Update amount" />
+                                <button
+                                    type="object"
+                                    name="action_recompute_amount"
+                                    class="btn-secondary"
+                                    icon="fa-refresh"
+                                    aria-label="Update amount"
+                                    title="Update amount"
+                                />
                             </div>
                             <field name="last_closed_id" />
                             <field name="force_evaluation_method" />
@@ -161,7 +233,10 @@
         <field name="name">stock.close.period.form.manager.view.inherit</field>
         <field name="model">stock.close.period</field>
         <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
-        <field name="groups_id" eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]" />
+        <field
+            name="groups_id"
+            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
+        />
         <field name="arch" type="xml">
             <xpath expr="//form" position="attributes">
                 <attribute name="create">1</attribute>
@@ -175,7 +250,8 @@
         </field>
     </record>
 
-    <menuitem id="menu_stock_close_group"
+    <menuitem
+        id="menu_stock_close_group"
         name="Stock Close Period"
         parent="stock.menu_stock_root"
         sequence="5"
