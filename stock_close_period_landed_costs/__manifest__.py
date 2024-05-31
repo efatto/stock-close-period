@@ -17,8 +17,7 @@
         "stock_close_period",
         "stock_landed_costs",
     ],
-    "data": [
-    ],
+    "data": [],
     "installable": True,
     "application": False,
     "auto_install": False,
