@@ -90,7 +90,7 @@ class Product(models.Model):
             FROM
                 stock_move_line
             WHERE
-                stock_move_line.date >= '%s'
+                stock_move_line.date >= %s
                 AND stock_move_line.state = 'done'
                 AND stock_move_line.product_id = %s
                 AND stock_move_line.company_id = %s
@@ -148,7 +148,7 @@ class Product(models.Model):
             FROM
                 stock_move_line
             WHERE
-                stock_move_line.date >= '%s'
+                stock_move_line.date >= %s
                 AND stock_move_line.state='done'
                 AND stock_move_line.product_id = %s
                 AND stock_move_line.company_id = %s
