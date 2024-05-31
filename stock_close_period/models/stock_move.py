@@ -52,21 +52,8 @@ class StockMoveLine(models.Model):
         return start_qty, start_price
 
     def _get_additional_landed_cost_new(self, move_id, company_id):
-        svals = (
-            self.env["stock.valuation.adjustment.lines"]
-            .sudo()
-            .search(
-                [
-                    ("move_id", "=", move_id.id),
-                    ("cost_id.company_id", "=", company_id),
-                ]
-            )
-        )
-        if svals:
-            additional_landed_cost_new = sum(svals.mapped("additional_landed_cost"))
-        else:
-            additional_landed_cost_new = 0
-        return additional_landed_cost_new
+        # function meant to be overriden
+        return 0
 
     def _get_cost_stock_move_purchase_average(self, last_close_date, closing_line_id):
         product_id = closing_line_id.product_id
