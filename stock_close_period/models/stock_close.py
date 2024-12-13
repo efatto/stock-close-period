@@ -82,6 +82,10 @@ class StockClosePeriod(models.Model):
     company_id = fields.Many2one(
         "res.company", string="Company", default=lambda self: self.env.company
     )
+    bypass_negative_qty = fields.Boolean(
+        string="Bypass Negative Quantity",
+        help="Ignore lines with negative quantity.",
+    )
 
     def unlink(self):
         for closing in self:
@@ -237,7 +241,7 @@ class StockClosePeriod(models.Model):
 
     def action_recalculate_purchase(self):
         for closing in self:
-            if not closing._check_qty_available():
+            if not closing.bypass_negative_qty and not closing._check_qty_available():
                 raise UserError(
                     _(
                         "Is not possible continue the execution. There are product "
@@ -266,18 +270,14 @@ class StockClosePeriod(models.Model):
         for closing in self:
             closing.state = "done"
             closing.amount = sum(closing.mapped("line_ids.amount_line"))
-            self.env.cr.execute(
-                """
-                DELETE FROM
-                    stock_close_period_line
-                WHERE
-                    close_id = %s
-                    AND product_qty = 0
-                    AND price_unit = 0;
-                """,
-                closing.id,
-            )
-
+            if closing.bypass_negative_qty:
+                closing.line_ids.filtered(
+                    lambda x: x.product_qty <= 0 and x.price_unit == 0
+                ).unlink()
+            else:
+                closing.line_ids.filtered(
+                    lambda x: x.product_qty == 0 and x.price_unit == 0
+                ).unlink()
         return True
 
     def action_recompute_amount(self):
