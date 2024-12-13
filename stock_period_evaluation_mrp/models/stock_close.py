@@ -35,7 +35,7 @@ class StockClosePeriodInherit(models.Model):
 
     def action_recalculate_production(self):
         for closing in self:
-            if not closing._check_qty_available():
+            if not closing.bypass_negative_qty and not closing._check_qty_available():
                 raise UserError(
                     _(
                         "Is not possible continue the execution. There are product "
