@@ -176,7 +176,8 @@ class StockMoveLine(models.Model):
             [
                 ("close_id", "=", closing_id.id),
                 ("evaluation_method", "not in", ["manual"]),
-                ("price_unit", "=", 0),
+                ("product_qty", ">", 0),
+                # ("price_unit", "=", 0),
             ]
         )
 
@@ -240,7 +241,9 @@ class StockMoveLine(models.Model):
         # compute amount
         amount = 0
         for closing_line_id in closing_id.line_ids:
-            row_value = closing_line_id.product_qty * closing_line_id.price_unit
+            row_value = (
+                closing_line_id.product_qty if closing_line_id.product_qty > 0 else 0
+            ) * closing_line_id.price_unit
             amount += round(row_value, decimal)
 
         # set amount closing

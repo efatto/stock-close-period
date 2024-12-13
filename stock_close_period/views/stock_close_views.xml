@@ -204,6 +204,7 @@
                             <field name="force_archive" />
                             <field name="company_id" readonly="1" />
                             <field name="purchase_ok" />
+                            <field name="bypass_negative_qty" />
                         </group>
                     </group>
                     <notebook>
