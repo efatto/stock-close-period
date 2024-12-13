@@ -53,7 +53,7 @@ class Product(models.Model):
             product_id = row2[1]
             location_id = row2[2]
             lot_id = (
-                row2[3] if self.tracking != "serial" and row2[3] is not None else False
+                row2[3] if self.sudo().tracking != "serial" and row2[3] is not None else False
             )
             package_id = row2[4] if row2[4] and row2[4] is not None else False
             owner_id = row2[5] if row2[5] and row2[5] is not None else False
