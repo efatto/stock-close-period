@@ -113,16 +113,23 @@ class StockMoveLine(models.Model):
         closing_line_ids = self.env["stock.close.period.line"].search(
             [
                 ("close_id", "=", closing_id.id),
-                ("evaluation_method", "not in", ["manual"]),
-                ("price_unit", "=", 0),
+                ("evaluation_method", "!=", "manual"),
+                # ("product_qty", ">", 0),  # all lines must be here to compute costs
+                # ("price_unit", "=", 0),  # this was for elaborate only not already
+                # done lines, which we instead want to check always
             ]
         )
 
-        # all closing_line_ids ready to elaborate
-        for closing_line_id in closing_line_ids:
+        # proceed lines to be manufactured as they depend on the previous, starting
+        # from the inner child to the most external (purchased lines are already
+        # computed)
+        product_order = closing_line_ids.mapped("product_id")._get_product_order()
+        for closing_line_id in closing_line_ids.sorted(
+            key=lambda x: product_order[x.product_id.id]
+        ):
             product_id = closing_line_id.product_id
 
-            # se il prodotto ha una bom, deve processarlo perché tipo produzione
+            # skip if the product doesn't have a bom (it's purchased)
             if not self.env["mrp.bom"]._bom_find(product=product_id):
                 continue
 
