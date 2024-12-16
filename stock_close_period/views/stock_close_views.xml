@@ -221,6 +221,8 @@
                                     <field name="product_qty" />
                                     <field name="price_unit" />
                                     <field name="amount_line" />
+                                    <field name="cumulative_qty" />
+                                    <field name="cumulative_amount" />
                                 </tree>
                             </field>
                         </page>
