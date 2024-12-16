@@ -6,7 +6,7 @@
 
 import logging
 
-from odoo import fields, models
+from odoo import fields, models, api
 
 _logger = logging.getLogger(__name__)
 
@@ -51,10 +51,12 @@ class StockMoveLine(models.Model):
 
         return start_qty, start_price
 
+    @api.model
     def _get_additional_landed_cost_new(self, move_id, company_id):
         # function meant to be overriden
         return 0
 
+    @api.model
     def _get_cost_stock_move_purchase_average(self, last_close_date, closing_line_id):
         product_id = closing_line_id.product_id
         company_id = closing_line_id.company_id.id
@@ -147,6 +149,7 @@ class StockMoveLine(models.Model):
         """
         return True
 
+    @api.model
     def _search_same_product_value(self, closing_line_id):
         other_closing_line_id = self.env["stock.close.period.line"].search(
             [
@@ -166,6 +169,28 @@ class StockMoveLine(models.Model):
         closing_line_id.cumulative_qty = other_closing_line_id.cumulative_qty
         closing_line_id.evaluation_method = other_closing_line_id.evaluation_method
         self.env.cr.commit()  # pylint: disable=E8102
+
+    @api.model
+    def _evaluate_product(
+        self, closing_id, closing_line_id, last_close_date, product_id
+    ):
+        if (
+            closing_id.force_evaluation_method != "no_force"
+            and not closing_line_id.evaluation_method
+        ):
+            if closing_id.force_evaluation_method == "purchase":
+                self._get_cost_stock_move_purchase_average(
+                    last_close_date, closing_line_id
+                )
+            if closing_id.force_evaluation_method == "standard":
+                self._get_cost_stock_move_standard(closing_line_id)
+        else:
+            if product_id.categ_id.property_cost_method in ["average", "fifo"]:
+                self._get_cost_stock_move_purchase_average(
+                    last_close_date, closing_line_id
+                )
+            if product_id.categ_id.property_cost_method == "standard":
+                self._get_cost_stock_move_standard(closing_line_id)
 
     def _recompute_cost_stock_move_purchase(self, closing_id):
         _logger.info("[1/2] Start recompute cost product purchase")
@@ -212,23 +237,9 @@ class StockMoveLine(models.Model):
                 continue
             elaborated_products |= product_id
 
-            if (
-                closing_id.force_evaluation_method != "no_force"
-                and not closing_line_id.evaluation_method
-            ):
-                if closing_id.force_evaluation_method == "purchase":
-                    self._get_cost_stock_move_purchase_average(
-                        last_close_date, closing_line_id
-                    )
-                if closing_id.force_evaluation_method == "standard":
-                    self._get_cost_stock_move_standard(closing_line_id)
-            else:
-                if product_id.categ_id.property_cost_method in ["average", "fifo"]:
-                    self._get_cost_stock_move_purchase_average(
-                        last_close_date, closing_line_id
-                    )
-                if product_id.categ_id.property_cost_method == "standard":
-                    self._get_cost_stock_move_standard(closing_line_id)
+            self._evaluate_product(
+                closing_id, closing_line_id, last_close_date, product_id
+            )
 
             self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish recompute average cost product")
