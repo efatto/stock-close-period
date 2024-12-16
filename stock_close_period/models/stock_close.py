@@ -109,49 +109,25 @@ class StockClosePeriod(models.Model):
 
     def _get_product_lines(self):
         self.ensure_one()
-
-        # add all products active not services type
-        self.env.cr.execute(
-            """
-            INSERT INTO
-                stock_close_period_line(
-                    close_id,
-                    product_id,
-                    product_code,
-                    product_name,
-                    product_uom_id,
-                    categ_name,
-                    product_qty,
-                    price_unit,
-                    company_id
+        # add all products active or not, of not service type
+        self.line_ids = [
+            (0, 0, dict(
+                    close_id=self.id,
+                    product_id=product.id,
+                    product_code=product.default_code,
+                    product_name=product.name,
+                    product_uom_id=product.uom_id.id,
+                    categ_name=product.categ_id.complete_name,
+                    product_qty=0,
+                    price_unit=0,
+                    company_id=product.company_id and product.company_id.id or False,
                 )
-            SELECT
-                %s AS close_id,
-                product_product.id AS product_id,
-                product_template.default_code AS product_code,
-                product_template.name AS product_name,
-                product_template.uom_id AS product_uom,
-                product_category.complete_name AS complete_name,
-                0 AS product_qty,
-                0 AS price_unit,
-                %s AS company_id
-            FROM
-                product_template,
-                product_product,
-                product_category
-            WHERE
-                product_template.type != 'service'
-                AND product_product.product_tmpl_id = product_template.id
-                AND product_template.categ_id = product_category.id
-                AND (
-                    product_template.company_id = %s
-                    OR product_template.company_id IS NULL
-                )
-            ORDER BY
-                product_product.id;
-        """,
-            (self.id, self.company_id.id, self.company_id.id),
-        )
+            ) for product in self.env["product.product"].with_context(
+                active_test=False
+            ).search([
+                ("type", "!=", "service"),
+            ])
+        ]
 
         # get quantity on end period for each product
         for closing_line_id in self.line_ids:
