@@ -201,7 +201,8 @@ class StockMoveLine(models.Model):
             [
                 ("close_id", "=", closing_id.id),
                 ("evaluation_method", "not in", ["manual"]),
-                ("product_qty", ">", 0),
+                # ("product_qty", ">", 0),  # all products must be present to compute
+                # other lines values
                 # ("price_unit", "=", 0),
             ]
         )
