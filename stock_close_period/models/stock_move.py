@@ -68,8 +68,9 @@ class StockMoveLine(models.Model):
                 ("product_qty", ">", 0),
                 ("product_id", "=", product_id.id),
                 ("date", ">", last_close_date),
+                # ("date", "<=", closing_line_id.close_id.close_date),
                 ("active", ">=", 0),
-                ("company_id", "=", company_id),
+                # ("company_id", "=", company_id),
             ],
             order="date",
         )
