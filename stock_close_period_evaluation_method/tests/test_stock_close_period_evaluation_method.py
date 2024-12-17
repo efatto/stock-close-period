@@ -67,3 +67,17 @@ class TestPicking(TestCommon):
         picking = purchase_order.picking_ids
         self.picking = picking
         self._transfer_picking_with_dates(date_backdating)
+
+        stock_close_period_form = Form(
+            self.env["stock.close.period"].with_user(self.test_user))
+        stock_close_period_form.force_evaluation_method = "lifo"
+        stock_close_period_form.name = "Stock close evaluation"
+        stock_close_period = stock_close_period_form.save()
+        stock_close_period.action_start()
+        self.assertTrue(stock_close_period.line_ids)
+        stock_close_line = stock_close_period.line_ids.filtered(
+            lambda x: x.product_id == self.product
+        )
+        self.assertEqual(stock_close_line.product_qty, 10)
+        stock_close_period.action_recalculate_purchase()
+        self.assertEqual(stock_close_line.price_unit, 5)
