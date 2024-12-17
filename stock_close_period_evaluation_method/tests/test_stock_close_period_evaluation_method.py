@@ -137,3 +137,9 @@ class TestPicking(TestCommon):
             product_qty=30, days_backdating=80)
         stock_close_period1.action_recalculate_purchase()
         self.assertEqual(stock_close_line1.price_unit, 5)
+
+        self._create_purchase_order_backdate(
+            product_qty=15, price_unit=12, days_backdating=70)
+        stock_close_period1.action_recalculate_purchase()
+        self.assertEqual(stock_close_line1.price_unit, 9.2)
+
