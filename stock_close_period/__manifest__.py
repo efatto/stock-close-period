@@ -17,6 +17,7 @@
         "stock",
         "purchase_stock",
         "stock_account",
+        # "stock_move_backdating",  # for tests
         "report_xlsx",
     ],
     "external_dependencies": {

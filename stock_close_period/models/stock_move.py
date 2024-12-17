@@ -59,7 +59,7 @@ class StockMoveLine(models.Model):
     @api.model
     def _get_cost_stock_move_purchase_average(self, last_close_date, closing_line_id):
         product_id = closing_line_id.product_id
-        company_id = closing_line_id.company_id.id
+        company_id = closing_line_id.close_id.company_id.id
 
         # get all moves
         move_ids = self.env["stock.move"].search(
@@ -68,9 +68,9 @@ class StockMoveLine(models.Model):
                 ("product_qty", ">", 0),
                 ("product_id", "=", product_id.id),
                 ("date", ">", last_close_date),
-                # ("date", "<=", closing_line_id.close_id.close_date),
+                ("date", "<=", closing_line_id.close_id.close_date),
                 ("active", ">=", 0),
-                # ("company_id", "=", company_id),
+                ("company_id", "=", company_id),
             ],
             order="date",
         )
