@@ -9,6 +9,6 @@ class StockClosePeriod(models.Model):
             ("fifo", "Compute based FIFO"),
             ("lifo", "Compute based LIFO"),
         ],
-        ondelete={'fifo': 'set default', 'lifo': 'set default'},
+        ondelete={"fifo": "set default", "lifo": "set default"},
         help="Force Evaluation method will be used only for purchase costs computation.",
     )
