@@ -9,7 +9,10 @@
     "website": "https://github.com/sergiocorato/stock-close-period",
     "license": "AGPL-3",
     "depends": [
+        "purchase_stock",  # for tests
+        "sale_stock",  # for tests
         "stock_close_period",
+        "stock_move_backdating",  # for tests
     ],
     "data": [],
     "installable": True,
