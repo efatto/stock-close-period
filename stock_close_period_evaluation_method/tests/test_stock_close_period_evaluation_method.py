@@ -62,8 +62,8 @@ class TestPicking(TestCommon):
         self.assertEqual(
             len(purchase_order.order_line), 1, msg="Order line was not created"
         )
-        date_backdating = datetime.now() - timedelta(days=365)
+        date_backdating = self._get_datetime_backdating(365)
         self.assertEqual(len(purchase_order.picking_ids), 1)
         picking = purchase_order.picking_ids
-        self._create_wizard(date_backdating, picking)
-        picking._action_done()
+        self.picking = picking
+        self._transfer_picking_with_dates(date_backdating)
