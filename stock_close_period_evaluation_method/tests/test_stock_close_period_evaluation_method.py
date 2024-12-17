@@ -12,8 +12,8 @@ class TestPicking(TestCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.partner = cls.env.ref("base.res_partner_2")
-        cls.partner.customer_rank = 1
+        cls.customer = cls.env.ref("base.res_partner_2")
+        cls.customer.customer_rank = 1
         cls.buy_route = cls.env.ref("purchase_stock.route_warehouse0_buy")
         cls.vendor = cls.env.ref("base.res_partner_3")
         supplierinfo = cls.env["product.supplierinfo"].create(
@@ -70,6 +70,24 @@ class TestPicking(TestCommon):
         self.picking = picking
         self._transfer_picking_with_dates(date_backdating)
 
+    def _create_sale_order_backdate(self, product_qty, days_backdating):
+        date_backdating = self._get_datetime_backdating(days_backdating)
+        sale_order_form = Form(self.env["sale.order"].with_user(self.test_user))
+        sale_order_form.partner_id = self.customer
+        with sale_order_form.order_line.new() as order_line:
+            order_line.product_id = self.product
+            order_line.product_uom_qty = product_qty
+            order_line.price_unit = 100
+        sale_order = sale_order_form.save()
+        sale_order.action_confirm()
+        self.assertEqual(
+            len(sale_order.order_line), 1, msg="Order line was not created"
+        )
+        self.assertEqual(len(sale_order.picking_ids), 1)
+        picking = sale_order.picking_ids
+        self.picking = picking
+        self._transfer_picking_with_dates(date_backdating)
+
     def test_00_stock_close(self):
         self._create_purchase_order_backdate(
             product_qty=10, price_unit=5, days_backdating=365)
@@ -114,3 +132,8 @@ class TestPicking(TestCommon):
         self.assertEqual(stock_close_line1.product_qty, 40)
         stock_close_period1.action_recalculate_purchase()
         self.assertEqual(stock_close_line1.price_unit, 6.75)
+
+        self._create_sale_order_backdate(
+            product_qty=30, days_backdating=80)
+        stock_close_period1.action_recalculate_purchase()
+        self.assertEqual(stock_close_line1.price_unit, 5)
