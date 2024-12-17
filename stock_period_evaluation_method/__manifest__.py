@@ -6,10 +6,13 @@
     "version": "14.0.1.0.0",
     "category": "Stock",
     "author": "Sergio Corato",
-    "website": "https://github.com/sergiocorato/stock-close-period",
+    "website": "https://github.com/DinamicheAziendali/stock_close_period",
     "license": "AGPL-3",
     "depends": [
+        "purchase_stock",  # for tests
+        "sale_stock",  # for tests
         "stock_close_period",
+        "stock_move_backdating",  # for tests
     ],
     "data": [],
     "installable": True,
