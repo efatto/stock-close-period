@@ -111,7 +111,10 @@ class StockClosePeriod(models.Model):
         self.ensure_one()
         # add all products active or not, of not service type
         self.line_ids = [
-            (0, 0, dict(
+            (
+                0,
+                0,
+                dict(
                     close_id=self.id,
                     product_id=product.id,
                     product_code=product.default_code,
@@ -121,12 +124,15 @@ class StockClosePeriod(models.Model):
                     product_qty=0,
                     price_unit=0,
                     company_id=product.company_id and product.company_id.id or False,
-                )
-            ) for product in self.env["product.product"].with_context(
-                active_test=False
-            ).search([
-                ("type", "!=", "service"),
-            ])
+                ),
+            )
+            for product in self.env["product.product"]
+            .with_context(active_test=False)
+            .search(
+                [
+                    ("type", "!=", "service"),
+                ]
+            )
         ]
 
         # get quantity on end period for each product

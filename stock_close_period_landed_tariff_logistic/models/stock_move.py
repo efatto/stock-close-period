@@ -25,7 +25,9 @@ class StockMoveLine(models.Model):
         )
         margin_percentage += seller.currency_id.change_charge_percentage
         if self.product_id.intrastat_code_id.tariff_id:
-            margin_percentage += self.product_id.intrastat_code_id.tariff_id.tariff_percentage
+            margin_percentage += (
+                self.product_id.intrastat_code_id.tariff_id.tariff_percentage
+            )
         if margin_percentage:
             price_unit *= 1 + margin_percentage / 100.0
         additional_landed_cost_new += price_unit

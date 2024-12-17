@@ -6,7 +6,7 @@
 
 import logging
 
-from odoo import fields, models, api
+from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
@@ -243,7 +243,7 @@ class StockMoveLine(models.Model):
                 closing_id, closing_line_id, last_close_date, product_id
             )
 
-            self.env.cr.commit()  # pylint: disable=E8102
+            # self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish recompute average cost product")
 
     def _write_results(self, closing_id):
