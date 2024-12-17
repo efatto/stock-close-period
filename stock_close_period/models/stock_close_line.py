@@ -71,7 +71,10 @@ class StockClosePeriodLine(models.Model):
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
     company_id = fields.Many2one(
-        "res.company", string="Company", default=lambda self: self.env.company
+        "res.company",
+        related="close_id.company_id",
+        string="Company",
+        store=True,
     )
 
     @api.depends("close_id.company_id")
