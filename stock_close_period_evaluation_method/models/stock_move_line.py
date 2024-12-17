@@ -1,4 +1,4 @@
-from odoo import models, api, fields
+from odoo import api, fields, models
 
 
 class StockMoveLine(models.Model):
@@ -15,8 +15,8 @@ class StockMoveLine(models.Model):
             closing_line_id.close_id, product_id.id, company_id
         )
         res = self.price_calculation(
-            closing_line_id, closing_id.force_evaluation_method,
-            start_qty, start_price)
+            closing_line_id, closing_id.force_evaluation_method, start_qty, start_price
+        )
         cumulative_amount = 0
         cumulative_qty = 0
         qty_moved = 0
@@ -56,22 +56,17 @@ class StockMoveLine(models.Model):
             closing_line_id.cumulative_qty = cumulative_qty
             closing_line_id.evaluation_method = "purchase"
 
-
     @api.model
     def _evaluate_product(
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
         if closing_id.force_evaluation_method == "lifo":
-            self._get_cost_stock_move_lifo(
-                last_close_date, closing_line_id, closing_id
-            )
+            self._get_cost_stock_move_lifo(last_close_date, closing_line_id, closing_id)
         elif (
-            closing_id.force_evaluation_method == "fifo" or
-            product_id.categ_id.property_cost_method == "fifo"
+            closing_id.force_evaluation_method == "fifo"
+            or product_id.categ_id.property_cost_method == "fifo"
         ):
-            self._get_cost_stock_move_fifo(
-                last_close_date, closing_line_id
-            )
+            self._get_cost_stock_move_fifo(last_close_date, closing_line_id)
         else:
             super()._evaluate_product(
                 closing_id, closing_line_id, last_close_date, product_id
@@ -242,8 +237,16 @@ class StockMoveLine(models.Model):
 
     @staticmethod
     def update_tuple(
-        qty_to_be_evaluated, product_qty, tuples, move, price_unit, qty_from, qty_at_date,
-        valuation_type, start_qty, start_price
+        qty_to_be_evaluated,
+        product_qty,
+        tuples,
+        move,
+        price_unit,
+        qty_from,
+        qty_at_date,
+        valuation_type,
+        start_qty,
+        start_price,
     ):
         if valuation_type == "fifo":
             if qty_to_be_evaluated - product_qty >= 0:

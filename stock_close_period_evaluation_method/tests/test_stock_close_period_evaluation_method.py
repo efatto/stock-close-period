@@ -1,8 +1,8 @@
 # Copyright 2024 Sergio Corato <https://github.com/sergiocorato>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
-from datetime import datetime, timedelta
 
 from odoo.tests.common import Form
+
 from odoo.addons.stock_move_backdating.tests.common import TestCommon
 
 
