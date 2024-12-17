@@ -50,15 +50,29 @@ class TestPicking(TestCommon):
             }
         )
 
-    def test_00_purchase_order(self):
+    def _create_purchase_order(self, product_qty, price_unit):
         purchase_order_form = Form(self.env["purchase.order"].with_user(self.test_user))
         purchase_order_form.partner_id = self.vendor
         with purchase_order_form.order_line.new() as order_line:
             order_line.product_id = self.product
-            order_line.product_qty = 10
-            order_line.price_unit = 5
+            order_line.product_qty = product_qty
+            order_line.price_unit = price_unit
         purchase_order = purchase_order_form.save()
         purchase_order.button_confirm()
+        return purchase_order
+
+    def test_00_purchase_order(self):
+        purchase_order = self._create_purchase_order(product_qty=10, price_unit=5)
+        self.assertEqual(
+            len(purchase_order.order_line), 1, msg="Order line was not created"
+        )
+        date_backdating = self._get_datetime_backdating(365)
+        self.assertEqual(len(purchase_order.picking_ids), 1)
+        picking = purchase_order.picking_ids
+        self.picking = picking
+        self._transfer_picking_with_dates(date_backdating)
+
+        purchase_order = self._create_purchase_order(product_qty=10, price_unit=5)
         self.assertEqual(
             len(purchase_order.order_line), 1, msg="Order line was not created"
         )
@@ -78,6 +92,6 @@ class TestPicking(TestCommon):
         stock_close_line = stock_close_period.line_ids.filtered(
             lambda x: x.product_id == self.product
         )
-        self.assertEqual(stock_close_line.product_qty, 10)
+        self.assertEqual(stock_close_line.product_qty, 20)
         stock_close_period.action_recalculate_purchase()
         self.assertEqual(stock_close_line.price_unit, 5)
