@@ -45,7 +45,7 @@ class StockMoveLine(models.Model):
         #     cumulative_landed_cost += additional_landed_cost_new
 
         if price_unit == 0:
-            closing_line_id.price_unit = product_id.standard_price
+            closing_line_id.price_unit = product_id._get_cost()
             closing_line_id.evaluation_method = "standard"
         else:
             closing_line_id.price_unit = price_unit
@@ -192,7 +192,7 @@ class StockMoveLine(models.Model):
                     # Get price from product, move is a production or a sale or an
                     # inventory or not linked to a purchase
                     # (income move created and even invoiced, but price is not valid)
-                    price_unit = move.product_id.standard_price
+                    price_unit = move.product_id._get_cost()
 
                 qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
                     qty_to_be_evaluated,
@@ -209,7 +209,7 @@ class StockMoveLine(models.Model):
                 if flag:
                     break
             if not move.move_line_ids:
-                price_unit = move.product_id.standard_price
+                price_unit = move.product_id._get_cost()
                 qty_from = move.product_qty
                 product_qty = uom_from._compute_quantity(
                     qty_from, move.product_id.uom_id
