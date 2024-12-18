@@ -48,7 +48,7 @@ class StockClosePeriod(models.Model):
         readonly=True,
         required=True,
         default=fields.Date.context_today,
-        states={"draft": [("readonly", False)], "confirm": [("readonly", False)]},
+        states={"draft": [("readonly", False)]},
         help="The date that will be used for the store the product quantity and average cost.",
     )
     amount = fields.Float(string="Stock Amount Value", readonly=True, copy=False)
