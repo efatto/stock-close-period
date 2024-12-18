@@ -15,6 +15,11 @@
         <field
             name="report_file"
         >stock_close_period.report_xlsx_stock_close_print</field>
+        <field name="print_report_name">
+            (
+            ('Stock Close Period ' + object.name.replace('/',''))
+            )
+        </field>
     </record>
 
 </odoo>
