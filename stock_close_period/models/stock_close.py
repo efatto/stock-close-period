@@ -226,8 +226,8 @@ class StockClosePeriod(models.Model):
             if not closing.bypass_negative_qty and not closing._check_qty_available():
                 raise UserError(
                     _(
-                        "Is not possible continue the execution. There are product "
-                        "with quantities < 0."
+                        "It's not possible to continue the execution."
+                        "There are products with quantities < 0."
                     )
                 )
 
