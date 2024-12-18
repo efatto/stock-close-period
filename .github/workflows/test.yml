@@ -51,6 +51,14 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install stock_move_backdating module not yet merged
+        run: pip3 install -e "git+https://github.com/efatto/stock-logistics-workflow@14.0-fix-stock_move_backdating-test#egg=odoo14-addon-stock_move_backdating&subdirectory=setup/stock_move_backdating"
+      - name: Install l10n_it_intrastat_tariff module from e-efatto repo
+        run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-l10n_it_intrastat_tariff&subdirectory=setup/l10n_it_intrastat_tariff"
+      - name: Install res_country_logistic_charge module from e-efatto repo
+        run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-res_country_logistic_charge&subdirectory=setup/res_country_logistic_charge"
+      - name: Install res_currency_change_charge module from e-efatto repo
+        run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-res_currency_change_charge&subdirectory=setup/res_currency_change_charge"
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
