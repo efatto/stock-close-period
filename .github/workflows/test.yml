@@ -59,6 +59,8 @@ jobs:
         run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-res_country_logistic_charge&subdirectory=setup/res_country_logistic_charge"
       - name: Install res_currency_change_charge module from e-efatto repo
         run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-res_currency_change_charge&subdirectory=setup/res_currency_change_charge"
+      - name: Install product_managed_replenishment_cost module from e-efatto repo
+        run: pip3 install -e "git+https://github.com/efatto/e-efatto@14.0#egg=odoo14-addon-product_managed_replenishment_cost&subdirectory=setup/product_managed_replenishment_cost"
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
