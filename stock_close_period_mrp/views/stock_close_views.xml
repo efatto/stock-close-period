@@ -53,6 +53,14 @@
             >
                 <field name="production_ok" />
             </xpath>
+            <xpath
+                expr="//field[@name='force_evaluation_method']"
+                position="attributes"
+            >
+                <attribute name="attrs">
+                    {'readonly': ['|', ('purchase_ok', '=', True), ('production_ok', '=', True)]}
+                </attribute>
+            </xpath>
         </field>
     </record>
 

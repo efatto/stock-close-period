@@ -200,7 +200,10 @@
                                 />
                             </div>
                             <field name="last_closed_id" />
-                            <field name="force_evaluation_method" />
+                            <field
+                                name="force_evaluation_method"
+                                attrs="{'readonly': [('purchase_ok', '=', True)]}"
+                            />
                             <field name="force_archive" />
                             <field name="company_id" readonly="1" />
                             <field name="purchase_ok" />
