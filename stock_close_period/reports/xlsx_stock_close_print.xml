@@ -3,7 +3,11 @@
 
     <record id="report_xlsx_stock_close_print" model="ir.actions.report">
         <field name="name">Export Stock Close Period to XLSX</field>
-        <field name="model">stock.close.period.line</field>
+        <field name="model">stock.close.period</field>
+        <field
+            name="binding_model_id"
+            ref="stock_close_period.model_stock_close_period"
+        />
         <field name="report_type">xlsx</field>
         <field
             name="report_name"
