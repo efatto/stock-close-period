@@ -9,15 +9,16 @@ class StockMoveLine(models.Model):
             move_id=move_id, company_id=company_id
         )
         # add tariff cost on country group
-        seller = self.product_id.seller_ids[0]
         price_unit = 0.0
         margin_percentage = 0.0
-        margin_percentage += sum(
-            seller.name.country_id.mapped(
-                "country_group_ids.logistic_charge_percentage"
+        if self.product_id.seller_ids:
+            seller = self.product_id.seller_ids[0]
+            margin_percentage += sum(
+                seller.name.country_id.mapped(
+                    "country_group_ids.logistic_charge_percentage"
+                )
             )
-        )
-        margin_percentage += seller.currency_id.change_charge_percentage
+            margin_percentage += seller.currency_id.change_charge_percentage
         if self.product_id.intrastat_code_id.tariff_id:
             margin_percentage += (
                 self.product_id.intrastat_code_id.tariff_id.tariff_percentage
