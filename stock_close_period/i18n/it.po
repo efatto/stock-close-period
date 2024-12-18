@@ -464,11 +464,6 @@ msgid "Stock Close Print"
 msgstr "Stampa chiusura di magazzino"
 
 #. module: stock_close_period
-#: model:ir.model,name:stock_close_period.model_stock_close_print_wizard
-msgid "Stock Close Print Wizard"
-msgstr "Wizard stampa chiusura di magazzino"
-
-#. module: stock_close_period
 #: model:ir.model,name:stock_close_period.model_stock_move
 msgid "Stock Move"
 msgstr "Movimento di magazzino"
