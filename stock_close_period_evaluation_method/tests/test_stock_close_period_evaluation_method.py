@@ -88,7 +88,16 @@ class TestPicking(TestCommon):
         self.picking = picking
         self._transfer_picking_with_dates(date_backdating)
 
-    def test_00_stock_close(self):
+    def _refresh_close_period(self, stock_close_period):
+        stock_close_period.action_cancel()
+        stock_close_period.action_set_to_draft()
+        stock_close_period.action_start()
+        stock_close_line = stock_close_period.line_ids.filtered(
+            lambda x: x.product_id == self.product
+        )
+        return stock_close_line
+
+    def test_00_stock_close_lifo(self):
         self._create_purchase_order_backdate(
             product_qty=10, price_unit=5, days_backdating=365)
         self._create_purchase_order_backdate(
@@ -120,8 +129,8 @@ class TestPicking(TestCommon):
         stock_close_period_form1 = Form(
             self.env["stock.close.period"].with_user(self.test_user))
         stock_close_period_form1.force_evaluation_method = "lifo"
-        stock_close_period_form1.name = "Stock close evaluation"
-        stock_close_period_form1.close_date = fields.Date.today() + timedelta(days=-10)
+        stock_close_period_form1.name = "Stock close evaluation 1"
+        stock_close_period_form1.close_date = fields.Date.today()
         stock_close_period_form1.last_closed_id = stock_close_period
         stock_close_period1 = stock_close_period_form1.save()
         stock_close_period1.action_start()
@@ -129,17 +138,33 @@ class TestPicking(TestCommon):
         stock_close_line1 = stock_close_period1.line_ids.filtered(
             lambda x: x.product_id == self.product
         )
+
         self.assertEqual(stock_close_line1.product_qty, 40)
         stock_close_period1.action_recalculate_purchase()
         self.assertEqual(stock_close_line1.price_unit, 6.75)
 
-        self._create_sale_order_backdate(
-            product_qty=30, days_backdating=80)
+        self._create_sale_order_backdate(product_qty=30, days_backdating=80)
+        stock_close_line1 = self._refresh_close_period(stock_close_period1)
+        self.assertEqual(stock_close_line1.product_qty, 10)
         stock_close_period1.action_recalculate_purchase()
-        self.assertEqual(stock_close_line1.price_unit, 5)
+        self.assertAlmostEqual(stock_close_line1.price_unit, 5)
 
         self._create_purchase_order_backdate(
             product_qty=15, price_unit=12, days_backdating=70)
+        stock_close_line1 = self._refresh_close_period(stock_close_period1)
+        self.assertEqual(stock_close_line1.product_qty, 25)
         stock_close_period1.action_recalculate_purchase()
-        self.assertEqual(stock_close_line1.price_unit, 9.2)
+        self.assertAlmostEqual(stock_close_line1.price_unit, 9.2)
 
+        self._create_sale_order_backdate(product_qty=5, days_backdating=60)
+        stock_close_line1 = self._refresh_close_period(stock_close_period1)
+        self.assertEqual(stock_close_line1.product_qty, 20)
+        stock_close_period1.action_recalculate_purchase()
+        self.assertAlmostEqual(stock_close_line1.price_unit, 8.5)
+
+        self._create_purchase_order_backdate(
+            product_qty=10, price_unit=15, days_backdating=50)
+        stock_close_line1 = self._refresh_close_period(stock_close_period1)
+        self.assertEqual(stock_close_line1.product_qty, 30)
+        stock_close_period1.action_recalculate_purchase()
+        self.assertAlmostEqual(stock_close_line1.price_unit, 10.67)
