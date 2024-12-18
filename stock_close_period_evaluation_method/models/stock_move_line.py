@@ -203,8 +203,6 @@ class StockMoveLine(models.Model):
                     qty_from,
                     qty_at_date,
                     valuation_type,
-                    start_qty,
-                    start_price,
                 )
                 if flag:
                     break
@@ -223,8 +221,6 @@ class StockMoveLine(models.Model):
                     qty_from,
                     qty_at_date,
                     valuation_type,
-                    start_qty,
-                    start_price,
                 )
             if flag:
                 break
@@ -245,8 +241,6 @@ class StockMoveLine(models.Model):
         qty_from,
         qty_at_date,
         valuation_type,
-        start_qty,
-        start_price,
     ):
         if valuation_type == "fifo":
             if qty_to_be_evaluated - product_qty >= 0:
