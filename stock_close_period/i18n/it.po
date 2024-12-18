@@ -6,14 +6,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-18 14:30+0000\n"
-"PO-Revision-Date: 2024-12-18 14:30+0000\n"
+"POT-Creation-Date: 2024-12-18 15:23+0000\n"
+"PO-Revision-Date: 2024-12-18 15:23+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: stock_close_period
+#: model:ir.actions.report,print_report_name:stock_close_period.report_xlsx_stock_close_print
+msgid ""
+"\n"
+"            (\n"
+"            ('Stock Close Period ' + object.name.replace('/',''))\n"
+"            )\n"
+"        "
+msgstr ""
+"\n"
+"            (\n"
+"            ('Chiusura di magazzino ' + object.name.replace('/',''))\n"
+"            )\n"
+"        "
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move__active
@@ -186,7 +201,8 @@ msgstr "Forza metodo di valutazione"
 msgid ""
 "Force Evaluation method will be used only for purchase costs computation."
 msgstr ""
-"Forza metodo di valutazione viene utilizzato solo per calcolo costi da acquisti."
+"Forza metodo di valutazione viene utilizzato solo per calcolo costi su "
+"acquisti."
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_line_search
@@ -243,11 +259,11 @@ msgstr "Quantità inventario"
 #: code:addons/stock_close_period/models/stock_close.py:0
 #, python-format
 msgid ""
-"Is not possible continue the execution. There are product with quantities < "
-"0."
+"It's not possible to continue the execution. "
+"There are products with quantities < 0."
 msgstr ""
-"Non è possibile continuare la valorizzazione. Ci sono prodotti con quantità "
-"< 0."
+"Non è possibile continuare la valorizzazione. "
+"Ci sono prodotti con quantità < 0."
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__last_closed_id
