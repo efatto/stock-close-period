@@ -253,9 +253,7 @@ class StockClosePeriod(models.Model):
             closing.state = "done"
             closing.amount = sum(closing.mapped("line_ids.amount_line"))
             if closing.bypass_negative_qty:
-                closing.line_ids.filtered(
-                    lambda x: x.product_qty <= 0
-                ).unlink()
+                closing.line_ids.filtered(lambda x: x.product_qty <= 0).unlink()
             else:
                 closing.line_ids.filtered(
                     lambda x: x.product_qty == 0 and x.price_unit == 0

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-25 10:29+0000\n"
-"PO-Revision-Date: 2023-09-25 10:29+0000\n"
+"POT-Creation-Date: 2024-12-18 14:30+0000\n"
+"PO-Revision-Date: 2024-12-18 14:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -27,8 +27,23 @@ msgid "Amount Line"
 msgstr "Valore Riga"
 
 #. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_product_product__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_report_stock_close_period_report_xlsx_stock_close_print__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__assigned_attachment_ids
+msgid "Assigned Attachments"
+msgstr "Allegati assegnati"
+
+#. module: stock_close_period
+#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__bypass_negative_qty
+msgid "Bypass Negative Quantity"
+msgstr "Ignora quantità negative"
+
+#. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_form
-#: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_print_wizard
 msgid "Cancel"
 msgstr "Annulla"
 
@@ -49,19 +64,9 @@ msgid "Category Name"
 msgstr "Nome categoria"
 
 #. module: stock_close_period
-#: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_print_wizard
-msgid "Choose Close Period"
-msgstr "Scegli la chiusra"
-
-#. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__close_date
 msgid "Close Date"
 msgstr "Data di chiusura"
-
-#. module: stock_close_period
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__close_name
-msgid "Close Period"
-msgstr "Periodo di chiusura"
 
 #. module: stock_close_period
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__company_id
@@ -69,11 +74,6 @@ msgstr "Periodo di chiusura"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__company_id
 msgid "Company"
 msgstr "Azienda"
-
-#. module: stock_close_period
-#: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_print_wizard
-msgid "Compute"
-msgstr "Calcola"
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_form
@@ -99,7 +99,6 @@ msgstr "Calcola in base al costo medio di acquisto"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__create_uid
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__create_uid
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__create_uid
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__create_uid
 msgid "Created by"
 msgstr "Creato da"
 
@@ -107,7 +106,6 @@ msgstr "Creato da"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__create_date
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__create_date
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__create_date
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__create_date
 msgid "Created on"
 msgstr "Creato il"
 
@@ -132,7 +130,6 @@ msgstr "Quantità cumulativa"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__display_name
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move__display_name
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__display_name
 msgid "Display Name"
@@ -186,9 +183,10 @@ msgstr "Forza metodo di valutazione"
 
 #. module: stock_close_period
 #: model:ir.model.fields,help:stock_close_period.field_stock_close_period__force_evaluation_method
-msgid "Force Evaluation method will be used only for compute purchase costs."
+msgid ""
+"Force Evaluation method will be used only for purchase costs computation."
 msgstr ""
-"Forza metodo di valutazione utilizzato solo per calcolo costi acquisti"
+"Forza metodo di valutazione viene utilizzato solo per calcolo costi da acquisti."
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_period_line_search
@@ -201,11 +199,15 @@ msgstr "Raggruppa per"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__id
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move__id
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line__id
 msgid "ID"
 msgstr ""
+
+#. module: stock_close_period
+#: model:ir.model.fields,help:stock_close_period.field_stock_close_period__bypass_negative_qty
+msgid "Ignore lines with negative quantity."
+msgstr "Ignora le righe con quantità negative."
 
 #. module: stock_close_period
 #: model_terms:ir.ui.view,arch_db:stock_close_period.stock_close_import_wizard
@@ -258,7 +260,6 @@ msgstr "Ultima chiusura"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line____last_update
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move____last_update
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_move_line____last_update
 msgid "Last Modified on"
@@ -268,7 +269,6 @@ msgstr "Ultima modifica il"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__write_uid
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__write_uid
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__write_uid
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__write_uid
 msgid "Last Updated by"
 msgstr "Ultimo aggiornamento di"
 
@@ -276,7 +276,6 @@ msgstr "Ultimo aggiornamento di"
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_import_wizard__write_date
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period__write_date
 #: model:ir.model.fields,field_description:stock_close_period.field_stock_close_period_line__write_date
-#: model:ir.model.fields,field_description:stock_close_period.field_stock_close_print_wizard__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
 
@@ -458,12 +457,6 @@ msgid "Stock Close Period Line"
 msgstr "Riga chiusura di magazzino"
 
 #. module: stock_close_period
-#: model:ir.actions.act_window,name:stock_close_period.action_stock_close_print_wizard
-#: model:ir.ui.menu,name:stock_close_period.menu_stock_close_print_wizard
-msgid "Stock Close Print"
-msgstr "Stampa chiusura di magazzino"
-
-#. module: stock_close_period
 #: model:ir.model,name:stock_close_period.model_stock_move
 msgid "Stock Move"
 msgstr "Movimento di magazzino"
@@ -474,6 +467,12 @@ msgid ""
 "The date that will be used for the store the product quantity and average "
 "cost."
 msgstr "Data utilizzata per memorizzare giacenza e costo medio dei prodotti"
+
+#. module: stock_close_period
+#: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
+#, python-format
+msgid "Total"
+msgstr "Totale"
 
 #. module: stock_close_period
 #: code:addons/stock_close_period/reports/xlsx_stock_close_print.py:0
