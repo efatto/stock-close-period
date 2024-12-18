@@ -251,7 +251,7 @@ class TestPicking(TestCommon):
         stock_close_line1 = self._refresh_close_period(stock_close_period1)
         self.assertEqual(stock_close_line1.product_qty, 20)
         stock_close_period1.action_recalculate_purchase()
-        # self.assertAlmostEqual(stock_close_line1.price_unit, 11)
+        self.assertAlmostEqual(stock_close_line1.price_unit, 11.5)
 
         self._create_purchase_order_backdate(
             product_qty=10, price_unit=15, days_backdating=50
@@ -259,4 +259,4 @@ class TestPicking(TestCommon):
         stock_close_line1 = self._refresh_close_period(stock_close_period1)
         self.assertEqual(stock_close_line1.product_qty, 30)
         stock_close_period1.action_recalculate_purchase()
-        # self.assertAlmostEqual(stock_close_line1.price_unit, 12.33)
+        self.assertAlmostEqual(stock_close_line1.price_unit, 12.67)
