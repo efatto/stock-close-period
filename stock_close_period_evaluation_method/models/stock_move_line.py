@@ -4,10 +4,7 @@ from odoo import api, fields, models
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    def _get_cost_stock_move_fifo(self, closing_line_id):
-        pass
-
-    def _get_cost_stock_move_lifo(self, closing_line_id):
+    def _get_cost_stock_move_lifo_fifo(self, closing_line_id, evaluation_method=False):
         product_id = closing_line_id.product_id
         company_id = closing_line_id.company_id.id
         # get start data from last close
@@ -16,7 +13,7 @@ class StockMoveLine(models.Model):
         )
         res = self.price_calculation(
             closing_line_id,
-            closing_line_id.close_id.force_evaluation_method,
+            evaluation_method or closing_line_id.close_id.force_evaluation_method,
             start_qty,
             start_price,
         )
@@ -63,13 +60,10 @@ class StockMoveLine(models.Model):
     def _evaluate_product(
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
-        if closing_id.force_evaluation_method == "lifo":
-            self._get_cost_stock_move_lifo(closing_line_id)
-        elif (
-            closing_id.force_evaluation_method == "fifo"
-            or product_id.categ_id.property_cost_method == "fifo"
-        ):
-            self._get_cost_stock_move_fifo(closing_line_id)
+        if closing_id.force_evaluation_method in ["lifo", "fifo"]:
+            self._get_cost_stock_move_lifo_fifo(closing_line_id)
+        elif product_id.categ_id.property_cost_method == "fifo":
+            self._get_cost_stock_move_lifo_fifo(closing_line_id, "fifo")
         else:
             super()._evaluate_product(
                 closing_id, closing_line_id, last_close_date, product_id
@@ -262,7 +256,8 @@ class StockMoveLine(models.Model):
         elif valuation_type == "lifo":
             # create a tuple for every move which is an income (purchase or inventory)
             # not used for an outgoing with these values:
-            # [(product.id, qty outgoing for this move, cost of purchased product, qty moved)]
+            # [(product.id, qty outgoing for this move, cost of purchased product,
+            # qty moved)]
             # sale
             if (
                 move.location_id.usage == "internal"
