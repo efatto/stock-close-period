@@ -169,7 +169,7 @@ class StockMoveLine(models.Model):
         )
         closing_line_id.cumulative_qty = other_closing_line_id.cumulative_qty
         closing_line_id.evaluation_method = other_closing_line_id.evaluation_method
-        self.env.cr.commit()  # pylint: disable=E8102
+        # self.env.cr.commit()  # pylint: disable=E8102
 
     @api.model
     def _evaluate_product(
