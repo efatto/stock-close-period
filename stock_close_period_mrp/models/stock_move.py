@@ -103,7 +103,7 @@ class StockMoveLine(models.Model):
                 closing_line_id.evaluation_method = "production"
 
         if not skip and closing_line_id.price_unit == 0:
-            closing_line_id.price_unit = product_id.standard_price
+            closing_line_id.price_unit = product_id._get_cost()
             closing_line_id.evaluation_method = "standard"
 
     def _recompute_cost_stock_move_production(self, closing_id):
