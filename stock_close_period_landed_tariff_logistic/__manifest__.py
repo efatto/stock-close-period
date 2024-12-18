@@ -9,9 +9,8 @@
     "summary": "Glue module with Stock Close Period and Stock Landed Costs",
     "version": "14.0.1.0.0",
     "category": "Stock",
-    "author": "Pordenone Linux User Group (PNLUG), Odoo Community Association (OCA),"
-    "DinamicheAziendali",
-    "website": "https://github.com/DinamicheAziendali/stock_close_period",
+    "author": "Sergio Corato",
+    "website": "https://github.com/efatto/stock-close-period",
     "license": "AGPL-3",
     "depends": [
         "stock_close_period",

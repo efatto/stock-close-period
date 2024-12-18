@@ -1,8 +1,8 @@
 
 <!-- /!\ Non OCA Context : Set here the badge of your runbot / runboat instance. -->
-[![Pre-commit Status](https://github.com/DinamicheAziendali/stock_close_period/actions/workflows/pre-commit.yml/badge.svg?branch=14.0)](https://github.com/DinamicheAziendali/stock_close_period/actions/workflows/pre-commit.yml?query=branch%3A14.0)
-[![Build Status](https://github.com/DinamicheAziendali/stock_close_period/actions/workflows/test.yml/badge.svg?branch=14.0)](https://github.com/DinamicheAziendali/stock_close_period/actions/workflows/test.yml?query=branch%3A14.0)
-[![codecov](https://codecov.io/gh/DinamicheAziendali/stock_close_period/branch/14.0/graph/badge.svg)](https://codecov.io/gh/DinamicheAziendali/stock_close_period)
+[![Pre-commit Status](https://github.com/efatto/stock-close-period/actions/workflows/pre-commit.yml/badge.svg?branch=14.0)](https://github.com/efatto/stock-close-period/actions/workflows/pre-commit.yml?query=branch%3A14.0)
+[![Build Status](https://github.com/efatto/stock-close-period/actions/workflows/test.yml/badge.svg?branch=14.0)](https://github.com/efatto/stock-close-period/actions/workflows/test.yml?query=branch%3A14.0)
+[![codecov](https://codecov.io/gh/efatto/stock-close-period/branch/14.0/graph/badge.svg)](https://codecov.io/gh/efatto/stock-close-period)
 <!-- /!\ Non OCA Context : Set here the badge of your translation instance. -->
 
 <!-- /!\ do not modify above this line -->
