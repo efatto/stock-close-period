@@ -67,6 +67,21 @@ Nel caso sia installata l'app produzione, avviare il calcolo dei manufatti con q
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/calcola_produzione.png
     :alt: Calcola produzione
 
+Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che sono stati eseguiti correttamente:
+
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/flag.png
+    :alt: Flag
+
+Si può quindi validare la chiusura (che si può sempre riportare a bozza e rifare) con questo bottone, che provvede anche ad eliminare le righe con quantità negativa o pari a zero:
+
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/valida.png
+    :alt: Valida
+
+È infine possibile esportare un report in xlsx:
+
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/esporta.png
+    :alt: Esporta
+
 Bug Tracker
 ===========
 
