@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0+e\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-25 10:30+0000\n"
-"PO-Revision-Date: 2023-09-25 10:30+0000\n"
+"POT-Creation-Date: 2024-12-18 14:36+0000\n"
+"PO-Revision-Date: 2024-12-18 14:36+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_close_period_mrp
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_product_product__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period_line__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_move_line__assigned_attachment_ids
+msgid "Assigned Attachments"
+msgstr "Allegati assegnati"
+
+#. module: stock_close_period_mrp
 #: model_terms:ir.ui.view,arch_db:stock_close_period_mrp.stock_close_period_form_inherit
 msgid "Compute Production"
 msgstr "Calcola produzione"
 
 #. module: stock_close_period_mrp
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_product_product__display_name
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period__display_name
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period_line__display_name
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_move_line__display_name
@@ -47,6 +56,7 @@ msgstr ""
 "dalla distinta base."
 
 #. module: stock_close_period_mrp
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_product_product__id
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period__id
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period_line__id
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_move_line__id
@@ -63,6 +73,7 @@ msgstr "Non è possibile continuare la valorizzazione. Ci sono prodotti con "
 "quantità < 0."
 
 #. module: stock_close_period_mrp
+#: model:ir.model.fields,field_description:stock_close_period_mrp.field_product_product____last_update
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period____last_update
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_close_period_line____last_update
 #: model:ir.model.fields,field_description:stock_close_period_mrp.field_stock_move_line____last_update
@@ -75,9 +86,14 @@ msgid "Marks if action 'Compute Production' is processed."
 msgstr "Indica se azione 'Calcola produzione' è stata eseguita."
 
 #. module: stock_close_period_mrp
+#: model:ir.model,name:stock_close_period_mrp.model_product_product
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: stock_close_period_mrp
 #: model:ir.model,name:stock_close_period_mrp.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
-msgstr "Movimenti del prodotto (riga movimento magazzino)"
+msgstr "Movimenti prodotto (riga movimento magazzino)"
 
 #. module: stock_close_period_mrp
 #: model:ir.model.fields.selection,name:stock_close_period_mrp.selection__stock_close_period_line__evaluation_method__production
