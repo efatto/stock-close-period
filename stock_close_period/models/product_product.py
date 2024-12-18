@@ -12,6 +12,11 @@ from odoo import models
 class Product(models.Model):
     _inherit = "product.product"
 
+    def _get_cost(self):
+        # overridable method to customize cost used for evaluation
+        self.ensure_one()
+        return self.standard_price
+
     def _compute_qty_available(self, to_date):
         res = self._compute_quantities_available(to_date)
         return res
