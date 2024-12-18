@@ -28,7 +28,8 @@ class TestPicking(TestCommon):
             [
                 {
                     "name": "Product Test",
-                    "standard_price": 50.0,
+                    "standard_price": 55.0,
+                    "direct_cost": 50.0,
                     "type": "product",
                     "seller_ids": [(6, 0, [supplierinfo.id])],
                     "route_ids": [(6, 0, [cls.buy_route.id])],
