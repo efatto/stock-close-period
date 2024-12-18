@@ -4,10 +4,10 @@ from odoo import api, fields, models
 class StockMoveLine(models.Model):
     _inherit = "stock.move.line"
 
-    def _get_cost_stock_move_fifo(self, last_close_date, closing_line_id):
+    def _get_cost_stock_move_fifo(self, closing_line_id):
         pass
 
-    def _get_cost_stock_move_lifo(self, last_close_date, closing_line_id, closing_id):
+    def _get_cost_stock_move_lifo(self, closing_line_id):
         product_id = closing_line_id.product_id
         company_id = closing_line_id.company_id.id
         # get start data from last close
@@ -15,7 +15,10 @@ class StockMoveLine(models.Model):
             closing_line_id.close_id, product_id.id, company_id
         )
         res = self.price_calculation(
-            closing_line_id, closing_id.force_evaluation_method, start_qty, start_price
+            closing_line_id,
+            closing_line_id.close_id.force_evaluation_method,
+            start_qty,
+            start_price,
         )
         cumulative_amount = 0
         cumulative_qty = 0
@@ -61,12 +64,12 @@ class StockMoveLine(models.Model):
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
         if closing_id.force_evaluation_method == "lifo":
-            self._get_cost_stock_move_lifo(last_close_date, closing_line_id, closing_id)
+            self._get_cost_stock_move_lifo(closing_line_id)
         elif (
             closing_id.force_evaluation_method == "fifo"
             or product_id.categ_id.property_cost_method == "fifo"
         ):
-            self._get_cost_stock_move_fifo(last_close_date, closing_line_id)
+            self._get_cost_stock_move_fifo(closing_line_id)
         else:
             super()._evaluate_product(
                 closing_id, closing_line_id, last_close_date, product_id
