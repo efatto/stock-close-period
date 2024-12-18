@@ -161,13 +161,22 @@ class StockMoveLine(models.Model):
                         # In real life, all move lines related to an 1 invoice line
                         # should be in the same state and have the same date
                         inv_line = move.purchase_line_id.invoice_lines[0]
+                        # add a check for bad inserted values in invoices (like invoice
+                        # a lot of purchased products with 1 in quantity)
+                        inv_quantity = inv_line.quantity
+                        total_inv_quantity = sum(
+                            move.purchase_line_id.invoice_lines.mapped("quantity")
+                        )
+                        purchase_quantity = move.purchase_line_id.product_uom_qty
+                        if inv_quantity < purchase_quantity > total_inv_quantity:
+                            inv_quantity = purchase_quantity
                         invoice = inv_line.move_id
                         price_unit = invoice.currency_id._convert(
                             inv_line.price_subtotal,
                             invoice.company_id.currency_id,
                             invoice.company_id,
                             invoice.date or fields.Date.today(),
-                        ) / (inv_line.quantity if inv_line.quantity != 0 else 1)
+                        ) / (inv_quantity or 1)
                     else:
                         # get price from purchase line
                         purchase = move.purchase_line_id.order_id
