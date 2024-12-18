@@ -128,7 +128,7 @@ class StockMoveLine(models.Model):
             price_unit = 0
 
         if price_unit == 0:
-            closing_line_id.price_unit = product_id.standard_price
+            closing_line_id.price_unit = product_id._get_cost()
             closing_line_id.evaluation_method = "standard"
         else:
             closing_line_id.price_unit = price_unit
@@ -140,7 +140,7 @@ class StockMoveLine(models.Model):
             closing_line_id.evaluation_method = "purchase"
 
     def _get_cost_stock_move_standard(self, closing_line_id):
-        closing_line_id.price_unit = closing_line_id.product_id.standard_price
+        closing_line_id.price_unit = closing_line_id.product_id._get_cost()
         closing_line_id.evaluation_method = "standard"
 
     def _check_consistency(self, closing_line_id):
