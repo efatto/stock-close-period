@@ -4,8 +4,9 @@
 # @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
-from odoo import _, models
 from xlsxwriter.utility import xl_rowcol_to_cell
+
+from odoo import _, models
 
 
 class XlsxStockClosePeriod(models.AbstractModel):
@@ -40,8 +41,13 @@ class XlsxStockClosePeriod(models.AbstractModel):
         )
         currency_format = workbook.add_format({"num_format": "€ #,##0.00"})
         currency_format_title = workbook.add_format(
-            {"num_format": "€ #,##0.00", "bold": False, "bg_color": "#C0C0C0",
-             "bottom": 1})
+            {
+                "num_format": "€ #,##0.00",
+                "bold": False,
+                "bg_color": "#C0C0C0",
+                "bottom": 1,
+            }
+        )
 
         # header
         sheet_title = [
@@ -77,15 +83,14 @@ class XlsxStockClosePeriod(models.AbstractModel):
             sheet.write(i, 9, row.price_unit, currency_format)
             sheet.write(i, 10, total_price, currency_format)
             i += 1
-        sheet.write(
-            i, 9, _("Total"), title_style
-        )
+        sheet.write(i, 9, _("Total"), title_style)
         sheet.write_formula(
             i,
             10,
-            "=SUM(%s:%s)" % (
+            "=SUM(%s:%s)"
+            % (
                 xl_rowcol_to_cell(1, 10),
-                xl_rowcol_to_cell(i-1, 10),
+                xl_rowcol_to_cell(i - 1, 10),
             ),
             currency_format_title,
             "",
