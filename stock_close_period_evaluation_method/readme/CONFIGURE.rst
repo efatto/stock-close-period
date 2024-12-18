@@ -1,0 +1,34 @@
+La chiusura di magazzino è accessibile dal menu:
+
+.. image:: ../static/description/menu_chiusura.png
+    :alt: Menu chiusura
+
+Qui è possibile creare la chiusura dalla prima voce:
+
+.. image:: ../static/description/crea_chiusura.png
+    :alt: Crea chiusura
+
+In questa maschera è necessario inserire il nome, la data in cui verrà calcolata la giacenza dei prodotti e il metodo di valuzione a scelta tra i seguenti:
+
+.. image:: ../static/description/metodi_valutazione.png
+    :alt: Metodi valutazione
+
+È possibile impostare di ignorare le quantità negative a magazzino, nel caso sia necessario (tenendo conto che vanno comunque sistemate):
+
+.. image:: ../static/description/ignora_negativi.png
+    :alt: Ignora quantità negative
+
+Si può quindi avviare la procedura con il seguente bottone, che calcola le giacenze dei prodotti alla data indicata:
+
+.. image:: ../static/description/inizia.png
+    :alt: Inizia
+
+Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare):
+
+.. image:: ../static/description/calcola_acquisti.png
+    :alt: Calcola acquisti
+
+Nel caso sia installata l'app produzione, avviare il calcolo dei manufatti con questo bottone (anche questo impiegherà del tempo):
+
+.. image:: ../static/description/calcola_produzione.png
+    :alt: Calcola produzione
