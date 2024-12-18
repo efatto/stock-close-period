@@ -68,7 +68,8 @@ class StockClosePeriod(models.Model):
         "stock.close.period",
         string="Last Closed",
         copy=False,
-        states={"done": [("readonly", True)]},
+        readonly=True,
+        states={"draft": [("readonly", False)]},
     )
     force_archive = fields.Boolean(
         default=False,
