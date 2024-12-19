@@ -32,22 +32,14 @@ class StockMoveLine(models.Model):
 
         if closing_id.last_closed_id:
             last_closed_id = closing_id.last_closed_id
-        else:
-            last_closed_id = self.env["stock.close.period"].search(
-                [("state", "=", "done"), ("company_id", "=", company_id)],
-                order="close_date desc",
+            # search product
+            closing_line_id = self.env["stock.close.period.line"].search(
+                [("close_id", "=", last_closed_id.id), ("product_id", "=", product_id)],
                 limit=1,
             )
-
-        # search product
-        closing_line_id = self.env["stock.close.period.line"].search(
-            [("close_id", "=", last_closed_id.id), ("product_id", "=", product_id)],
-            limit=1,
-        )
-
-        if closing_line_id:
-            start_qty = closing_line_id.product_qty
-            start_price = closing_line_id.price_unit
+            if closing_line_id:
+                start_qty = closing_line_id.product_qty
+                start_price = closing_line_id.price_unit
 
         return start_qty, start_price
 
@@ -195,7 +187,6 @@ class StockMoveLine(models.Model):
 
     def _recompute_cost_stock_move_purchase(self, closing_id):
         _logger.info("[1/2] Start recompute cost product purchase")
-        company_id = closing_id.company_id.id
 
         # search only lines not elaborated
         closing_line_ids = self.env["stock.close.period.line"].search(
@@ -211,15 +202,7 @@ class StockMoveLine(models.Model):
         # get last close
         if closing_id.last_closed_id:
             last_closed_id = closing_id.last_closed_id
-        else:
-            last_closed_id = self.env["stock.close.period"].search(
-                [("state", "=", "done"), ("company_id", "=", company_id)],
-                order="close_date desc",
-                limit=1,
-            )
-
-        # get last close date
-        if last_closed_id:
+            # get last close date
             last_close_date = last_closed_id.close_date
         else:
             last_close_date = (
