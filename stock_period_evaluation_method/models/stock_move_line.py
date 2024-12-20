@@ -190,10 +190,15 @@ class StockMoveLine(models.Model):
                             if move.purchase_line_id.product_qty != 0
                             else 1
                         )
-                if (
-                    move.location_id.usage == "internal"
-                    and move.location_dest_id.usage != "internal"
-                    and not price_unit
+                if not price_unit and (
+                    (
+                        move.location_id.usage == "internal"
+                        and move.location_dest_id.usage != "internal"
+                    )
+                    or (
+                        move.location_id.usage == "inventory"
+                        and move.location_dest_id.usage == "internal"
+                    )
                 ):
                     # Get price from product, move is a production or a sale or an
                     # inventory or not linked to a purchase
