@@ -38,7 +38,7 @@ Usage
 =====
 
 Close period production recompute
----------------------------------
+=================================
 
 In the close period record there is a new button to recompute product prices on BOM values and time spent:
 
@@ -75,6 +75,14 @@ Authors
 * Pordenone Linux User Group (PNLUG)
 * DinamicheAziendali
 * Sergio Corato
+
+Contributors
+~~~~~~~~~~~~
+
+* Dinamiche Aziendali Srl (<https://www.dinamicheaziendali.it/>)
+* @author: Marco Calcagni <mcalcagni@dinamicheaziendali.it>
+* @author: Giuseppe Borruso <gborruso@dinamicheaziendali.it>
+* Sergio Corato <https://github.com/sergiocorato>
 
 Maintainers
 ~~~~~~~~~~~

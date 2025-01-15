@@ -1,5 +1,5 @@
 Close period production recompute
----------------------------------
+=================================
 
 In the close period record there is a new button to recompute product prices on BOM values and time spent:
 
