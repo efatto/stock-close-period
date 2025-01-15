@@ -1,1 +1,1 @@
-These module don't need configuration
+This module doesn't need configuration.
