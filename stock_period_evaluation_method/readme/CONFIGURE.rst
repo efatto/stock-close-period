@@ -23,7 +23,7 @@ Si può quindi avviare la procedura con il seguente bottone, che calcola le giac
 .. image:: ../static/description/inizia.png
     :alt: Inizia
 
-Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare):
+Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare). Il calcolo del costo prende il prezzo dalla fattura collegata all'ordine, se esiste ed è validata, altrimenti dall'ordine, infine dal prodotto.
 
 .. image:: ../static/description/calcola_acquisti.png
     :alt: Calcola acquisti
