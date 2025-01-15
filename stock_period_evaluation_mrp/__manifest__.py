@@ -9,8 +9,7 @@
     "summary": "Stock Close Period - MRP",
     "version": "14.0.1.0.0",
     "category": "Stock",
-    "author": "Pordenone Linux User Group (PNLUG), Odoo Community Association (OCA),"
-    "DinamicheAziendali, Sergio Corato",
+    "author": "Pordenone Linux User Group (PNLUG), DinamicheAziendali, Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
     "license": "AGPL-3",
     "depends": [
