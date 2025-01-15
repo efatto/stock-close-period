@@ -41,7 +41,7 @@ class StockMoveLine(models.Model):
     def _get_cost_stock_move_production(self, closing_line_id):
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
-        bom = self.env["mrp.bom"]._bom_find(product=product_id)
+        bom = self.env["mrp.bom"].sudo()._bom_find(product=product_id)
         skip = False
 
         if bom:
