@@ -395,11 +395,13 @@ ul.auto-toc {
 <div class="section" id="close-period-production-recompute">
 <h1><a class="toc-backref" href="#toc-entry-3">Close period production recompute</a></h1>
 <p>In the close period record there is a new button to recompute product prices on BOM values and time spent:</p>
-<img alt="Compute BOM prices" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute.png" />
+<img alt="Compute BOM prices" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute_production_price.png" />
 <p>This value is computed with this formula:</p>
 <ul class="simple">
-<li>duration expected = time start + time stop + (time cycle * time efficiency / 100)</li>
+<li>duration expected = time start + time stop + (sum of time cycle * time efficiency / 100)</li>
 <li>price of operations = duration expected / 60 * hour cost of workcenter</li>
+<li>price of components = sum of components * quantity * price (recursive)</li>
+<li>total price = price of operations + price of components</li>
 </ul>
 <p>It is possible to get product prices from standard price, without computation, by flagging the option “Force Standard Price”:</p>
 <img alt="Force Standard Price" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/force_standard_price.png" />

@@ -42,14 +42,15 @@ Close period production recompute
 
 In the close period record there is a new button to recompute product prices on BOM values and time spent:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute.png
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute_production_price.png
     :alt: Compute BOM prices
 
 This value is computed with this formula:
 
-- duration expected = time start + time stop + (time cycle * time efficiency / 100)
+- duration expected = time start + time stop + (sum of time cycle * time efficiency / 100)
 - price of operations = duration expected / 60 * hour cost of workcenter
-
+- price of components = sum of components * quantity * price (recursive)
+- total price = price of operations + price of components
 
 It is possible to get product prices from standard price, without computation, by flagging the option "Force Standard Price":
 
