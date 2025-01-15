@@ -8,7 +8,7 @@ class ProductProduct(models.Model):
         if product_order is None:
             product_order = {}
         for product in self:
-            bom = self.env["mrp.bom"]._bom_find(product=product)
+            bom = self.env["mrp.bom"].sudo()._bom_find(product=product)
             if bom:
                 if any(x.child_bom_id for x in bom.bom_line_ids):
                     for child_bom_product in bom.bom_line_ids.filtered(
