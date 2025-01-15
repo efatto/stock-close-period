@@ -22,51 +22,39 @@ Stock Close Period - MRP
 
 |badge1| |badge2| |badge3|
 
-This module add new price calculation
-
+This module add option to compute product price from BOM.
 
 **Table of contents**
 
 .. contents::
    :local:
 
-Installation
-============
-
-Install with standard method
-
 Configuration
 =============
 
-These module don't need configuration
+This module doesn't need configuration.
 
 Usage
 =====
 
-Close period
+Close period production recompute
+---------------------------------
 
-* Go to
-* Go to
-* Select a date
-* Click «»
+In the close period record there is a new button to recompute product prices on BOM values and time spent:
 
-Known issues / Roadmap
-======================
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute.png
+    :alt: Compute BOM prices
 
-*
+This value is computed with this formula:
 
-Changelog
-=========
+- duration expected = time start + time stop + (time cycle * time efficiency / 100)
+- price of operations = duration expected / 60 * hour cost of workcenter
 
-11.0.2.0.0 (2020-08-26)
-~~~~~~~~~~~~~~~~~~~~~~~
 
-* depends mrp_bom_structure_report
+It is possible to get product prices from standard price, without computation, by flagging the option "Force Standard Price":
 
-11.0.1.0.0 (2020-08-01)
-~~~~~~~~~~~~~~~~~~~~~~~
-
-* [INI] Initial develop
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/force_standard_price.png
+    :alt: Force Standard Price
 
 Bug Tracker
 ===========
@@ -87,21 +75,6 @@ Authors
 * Pordenone Linux User Group (PNLUG)
 * DinamicheAziendali
 * Sergio Corato
-
-Other credits
-~~~~~~~~~~~~~
-
-.. image:: https://odoo-community.org/logo.png
-   :alt: Odoo Community Association
-   :target: https://odoo-community.org
-
-This module is maintained by the OCA.
-
-OCA, or the Odoo Community Association, is a nonprofit organization whose
-mission is to support the collaborative development of Odoo features and
-promote its widespread use.
-
-To contribute to this module, please visit http://odoo-community.org.
 
 Maintainers
 ~~~~~~~~~~~
