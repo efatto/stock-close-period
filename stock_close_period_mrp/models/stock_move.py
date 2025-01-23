@@ -56,6 +56,7 @@ class StockMoveLine(models.Model):
                     ("product_tmpl_id", "in", product_id.mapped("product_tmpl_id").ids),
                 ]
             )
+            total += product_id._get_extra_cost(bom)
             for opt in bom.operation_ids:
                 duration_expected = (
                     opt.workcenter_id.time_start
