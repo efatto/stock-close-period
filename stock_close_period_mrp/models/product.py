@@ -24,3 +24,7 @@ class ProductProduct(models.Model):
                 sequence = (max(product_order.values() or [0])) + 1
                 product_order.update({product.id: sequence})
         return product_order
+
+    def _get_extra_cost(self, bom):
+        # overridable method
+        return 0
