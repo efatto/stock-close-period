@@ -13,7 +13,7 @@
         "sale_stock",  # for tests
         "stock_close_period",
         "stock_close_period_direct_cost",
-        "stock_move_backdating",  # for tests
+        # "stock_move_backdating",  # for tests
     ],
     "data": [],
     "installable": True,
