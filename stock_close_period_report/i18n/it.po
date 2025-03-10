@@ -1,0 +1,244 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* stock_close_period_report
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-12 11:12+0000\n"
+"PO-Revision-Date: 2025-03-12 11:12+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: stock_close_period_report
+#: model:ir.actions.report,print_report_name:stock_close_period_report.xlsx_stock_close_product
+msgid ""
+"\n"
+"            'Stock Close Product %s' % object.name.replace('/','')\n"
+"        "
+msgstr ""
+"\n"
+"            'Chiusura di magazzino con movimenti %s' % object.name.replace('/','')\n"
+"        "
+
+#. module: stock_close_period_report
+#: model:ir.actions.report,print_report_name:stock_close_period_report.action_stock_close_product_report
+msgid "'Stock Close Product %s' % object.name.replace('/','')"
+msgstr "'Chiusura di magazzino con movimenti %s' % object.name.replace('/','')"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.document_layout
+msgid "<span>Fiscalcode:</span>"
+msgstr "<span>Codice Fiscale:</span>"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.document_layout
+msgid "<span>VAT:</span>"
+msgstr "<span>P.IVA:</span>"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "<strong>Totals</strong>"
+msgstr "<strong>Totali</strong>"
+
+#. module: stock_close_period_report
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_report_product_print__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_xlsx_stock_close_product__assigned_attachment_ids
+msgid "Assigned Attachments"
+msgstr "Allegati assegnati"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Date"
+msgstr "Data"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Description:"
+msgstr "Descrizione:"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Destination"
+msgstr "Destinazione"
+
+#. module: stock_close_period_report
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_report_product_print__display_name
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_xlsx_stock_close_product__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "Evaluation Method"
+msgstr "Metodo di valutazione"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Evaluation method:"
+msgstr "Metodo di valutazione:"
+
+#. module: stock_close_period_report
+#: model:ir.actions.report,name:stock_close_period_report.xlsx_stock_close_product
+msgid "Export Stock Close Product Moves to XLSX"
+msgstr "Esporta i movimenti chiusura in XLSX"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "Final Evaluation"
+msgstr "Valutazione finale"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Final Quantity"
+msgstr "Quantità finale"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Final Quantity:"
+msgstr "Quantità finale:"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Final Value:"
+msgstr "Valore finale:"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "General Total"
+msgstr "Totale generale"
+
+#. module: stock_close_period_report
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_report_product_print__id
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_xlsx_stock_close_product__id
+msgid "ID"
+msgstr ""
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "Initial Quantity"
+msgstr "Quantità iniziale"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Initial Quantity:"
+msgstr "Quantità iniziale:"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "Initial Value"
+msgstr "Valore iniziale"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Initial Value:"
+msgstr "Valore iniziale:"
+
+#. module: stock_close_period_report
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_report_product_print____last_update
+#: model:ir.model.fields,field_description:stock_close_period_report.field_report_stock_close_period_report_xlsx_stock_close_product____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Origin"
+msgstr "Origine"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.document_layout
+msgid "Pag:"
+msgstr ""
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Product Code:"
+msgstr "Codice prodotto:"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Purchase Amount"
+msgstr "Valore acquisto"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Quantity IN"
+msgstr "Quantità ingresso"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Quantity OUT"
+msgstr "Quantità uscita"
+
+#. module: stock_close_period_report
+#: model:ir.model,name:stock_close_period_report.model_report_stock_close_period_report_xlsx_stock_close_product
+msgid "Report Stock Close Product XLSX"
+msgstr "Stampa valutazione magazzino con movimenti in XLSX"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Stock Close Period Product"
+msgstr "Valutazione magazzino con movimenti"
+
+#. module: stock_close_period_report
+#: model:ir.model,name:stock_close_period_report.model_report_stock_close_period_report_report_product_print
+msgid "Stock Close Period Product Report"
+msgstr "Stampa valutazione magazzino con movimenti"
+
+#. module: stock_close_period_report
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+msgid "Stock Close Product"
+msgstr "Valutazione magazzino con movimenti"
+
+#. module: stock_close_period_report
+#: model:ir.actions.report,name:stock_close_period_report.action_stock_close_product_report
+msgid "Stock Close Product Report"
+msgstr "Stampa valutazione magazzino con movimenti"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#, python-format
+msgid "Totals"
+msgstr "Totali"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "Transfer type"
+msgstr "Tipo di movimento"
+
+#. module: stock_close_period_report
+#: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
+#: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
+#, python-format
+msgid "UoM"
+msgstr "U.M."
