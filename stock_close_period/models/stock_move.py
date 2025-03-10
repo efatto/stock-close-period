@@ -199,17 +199,7 @@ class StockMoveLine(models.Model):
             ]
         )
 
-        # get last close
-        if closing_id.last_closed_id:
-            last_closed_id = closing_id.last_closed_id
-            # get last close date
-            last_close_date = last_closed_id.close_date
-        else:
-            last_close_date = (
-                self.env["ir.config_parameter"]
-                .sudo()
-                .get_param("stock_close_period.last_close_date")
-            )
+        last_close_date = closing_id.last_close_date
 
         # all closing line ready to elaborate
         elaborated_products = self.env["product.product"]
