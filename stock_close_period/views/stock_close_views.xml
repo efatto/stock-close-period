@@ -208,6 +208,7 @@
                             <field name="company_id" readonly="1" />
                             <field name="purchase_ok" />
                             <field name="bypass_negative_qty" />
+                            <field name="no_recompute_lines" />
                         </group>
                     </group>
                     <notebook>
