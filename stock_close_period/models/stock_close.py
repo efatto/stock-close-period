@@ -7,7 +7,7 @@
 import logging
 from datetime import datetime
 
-from odoo import _, fields, models
+from odoo import _, fields, models, api
 from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,13 @@ class StockClosePeriod(models.Model):
         required=True,
         default=fields.Date.context_today,
         states={"draft": [("readonly", False)]},
-        help="The date that will be used for the store the product quantity and average cost.",
+        help="The date that will be used for the store the product quantity and average"
+             " cost.",
+    )
+    last_close_date = fields.Date(
+        string="Last Close Date",
+        compute="_compute_last_close_date",
+        store=True,
     )
     amount = fields.Float(string="Stock Amount Value", readonly=True, copy=False)
     work_start = fields.Datetime(readonly=True, default=fields.Datetime.now)
@@ -166,6 +172,18 @@ class StockClosePeriod(models.Model):
                         }
                     )
                 count += 1
+
+    @api.depends("last_closed_id.close_date")
+    def _compute_last_close_date(self):
+        for close in self:
+            last_close_date = close.last_closed_id.close_date
+            if not last_close_date:
+                last_close_date = (
+                    self.env["ir.config_parameter"]
+                    .sudo()
+                    .get_param("stock_close_period.last_close_date")
+                )
+            close.last_close_date = last_close_date
 
     def action_start(self):
         for closing in self.filtered(lambda x: x.state not in ("done", "cancel")):
