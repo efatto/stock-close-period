@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <template id="report_product_print">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-set="title">Stock Close Product <t t-esc="o.name" /></t>
+                <t t-call="stock_close_period_report.document_layout">
+                    <div class="page">
+                        <table style="width:100%; font-size: x-small;" cellspacing="0">
+                            <thead>
+                                <tr style="page-break-inside: avoid">
+                                    <th class="left_with_line">Date</th>
+                                    <th class="left_with_line">Transfer type</th>
+                                    <th class="left_with_line">Origin</th>
+                                    <th class="left_with_line">Destination</th>
+                                    <th class="right_with_line">Purchase Amount</th>
+                                    <th class="right_with_line">UoM</th>
+                                    <th class="right_with_line">Quantity IN</th>
+                                    <th class="right_with_line">Quantity OUT</th>
+                                    <th class="right_with_line">Final Quantity</th>
+                                </tr>
+                            </thead>
+
+                            <t t-set="product_value" t-value="0" />
+                            <tbody>
+                                <t t-foreach="o.line_ids" t-as="close_line">
+                                    <tr
+                                        style="page-break-inside: avoid; border:1px solid #fff;"
+                                    >
+                                        <td colspan="6"><strong><div
+                                                    t-field="close_line.product_id.display_name"
+                                                /></strong></td>
+                                        <td
+                                            class="right_with_line"
+                                        >Evaluation Method<div
+                                                style="page-break-inside: avoid"
+                                                t-field="close_line.evaluation_method"
+                                            /></td>
+                                        <td class="right_with_line">Initial Value<div
+                                                style="page-break-inside: avoid"
+                                                t-field="close_line.inventory_amount"
+                                            /></td>
+                                        <td class="right_with_line">Initial Quantity<div
+                                                style="page-break-inside: avoid"
+                                                t-field="close_line.inventory_qty"
+                                            /></td>
+                                    </tr>
+                                    <t t-set="in_qty" t-value="0.0" />
+                                    <t t-set="out_qty" t-value="0.0" />
+<!--                                    todo show initial values-->
+                                    <t t-foreach="get_moves(close_line)" t-as="move">
+                                        <t
+                                            t-set="move_type"
+                                            t-value="'in' if move.location_id.usage != 'internal' and move.location_dest_id.usage == 'internal' else 'out'"
+                                        />
+                                        <tr
+                                            style="page-break-inside: avoid; border:1px solid #fff;"
+                                        >
+                                            <td class="left_with_line"><div
+                                                    style="page-break-inside: avoid"
+                                                    t-field="move.date"
+                                                    t-options='{"widget": "date", "format": "dd/MM/Y"}'
+                                                /></td>
+                                            <td class="left_with_line"><div
+                                                    style="page-break-inside: avoid"
+                                                    t-esc="move_type.upper()"
+                                                /></td>
+                                            <td class="left_with_line"><div
+                                                    style="page-break-inside: avoid"
+                                                    t-field="move.location_id.name"
+                                                /></td>
+                                            <td class="left_with_line"><div
+                                                    style="page-break-inside: avoid"
+                                                    t-field="move.location_dest_id.name"
+                                                /></td>
+                                            <td class="right_with_line">
+                                                <t t-if="move.purchase_line_id">
+                                                    <div
+                                                        style="page-break-inside: avoid"
+                                                        t-field="move.purchase_line_id.price_subtotal"
+                                                    />
+                                                </t>
+                                            </td>
+                                            <td class="right_with_line"><div
+                                                    style="page-break-inside: avoid"
+                                                    t-field="move.product_uom.name"
+                                                /></td>
+                                            <td class="right_with_line">
+                                                <t t-if="move_type == 'in'">
+                                                    <t
+                                                        t-set="in_qty"
+                                                        t-value="in_qty + move.quantity_done"
+                                                    />
+                                                    <div
+                                                        style="page-break-inside: avoid"
+                                                        t-field="move.quantity_done"
+                                                    />
+                                                </t>
+                                            </td>
+                                            <td class="right_with_line">
+                                                <t t-if="move_type == 'out'">
+                                                    <t
+                                                        t-set="out_qty"
+                                                        t-value="out_qty + move.quantity_done"
+                                                    />
+                                                    <div
+                                                        style="page-break-inside: avoid"
+                                                        t-field="move.quantity_done"
+                                                    />
+                                                </t>
+                                            </td>
+                                            <td class="right_with_line">
+                                                <div
+                                                    style="page-break-inside: avoid"
+                                                    t-esc="in_qty - out_qty"
+                                                />
+                                            </td>
+                                        </tr>
+                                    </t>
+                                    <tr>
+                                        <td class="left_with_line" colspan="5" />
+                                        <td class="left_with_line"><strong
+                                            >Totals</strong></td>
+                                        <td class="right_with_line">
+                                            <strong><span
+                                                    t-esc="in_qty"
+                                                    t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                                /></strong>
+                                        </td>
+                                        <td class="right_with_line">
+                                            <strong><span
+                                                    t-esc="out_qty"
+                                                    t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                                /></strong>
+                                        </td>
+                                        <td class="right_with_line">
+                                            <strong><span
+                                                    t-esc="close_line.inventory_qty + close_line.product_qty"
+                                                    t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                                /></strong>
+                                        </td>
+                                    </tr>
+                                    <tr
+                                        style="page-break-inside: avoid; border:1px solid #fff;"
+                                    >
+                                        <td colspan="7"><strong><div
+                                                    t-field="close_line.product_id.display_name"
+                                                /></strong></td>
+                                        <td class="right_with_line"><strong
+                                            >Final Evaluation<div
+                                                    t-esc="close_line.inventory_amount + close_line.amount_line"
+                                                    t-options='{"widget": "float", "decimal_precision": "Account"}'
+                                                /></strong></td>
+                                        <td class="right_with_line"><strong
+                                            >Final Quantity<div
+                                                    style="page-break-inside: avoid"
+                                                    t-esc="close_line.inventory_qty + close_line.product_qty"
+                                                    t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'
+                                                /></strong></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+<!--                        <table>-->
+<!--&lt;!&ndash;                            todo totals&ndash;&gt;-->
+<!--                            <t t-foreach="ctgs" t-as="ctg">-->
+<!--                                    <t t-if="ctg == 'total'">-->
+<!--                                        <tr>-->
+<!--                                            <td class="left_with_line"></td>-->
+<!--                                            <td class="left_with_line"><strong>Totale generale</strong></td>-->
+<!--                                            <td class="left_with_line"></td>-->
+<!--                                            <td class="left_with_line"></td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['purchase_amount']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['increase_decrease_value']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['remove_value']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['value_depreciated']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line"></td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['value_depreciation']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['value_depreciated'] + ctgs[ctg]['value_depreciation']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                            <td class="right_with_line">-->
+<!--                                                <strong><span t-esc="ctgs[ctg]['value_residual']" t-options='{"widget": "float", "precision": "Account"}'/></strong>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+<!--                                    </t>-->
+<!--                                </t>-->
+<!--                        </table>-->
+                        <br />
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="report_stock_close_product_landscape" model="report.paperformat">
+        <field name="name">Stock close product landscape</field>
+        <field name="default" eval="True" />
+        <field name="format">A4</field>
+        <field name="orientation">Landscape</field>
+        <field name="margin_top">25</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line" eval="False" />
+        <field name="header_spacing">20</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_stock_close_product_report" model="ir.actions.report">
+        <field name="name">Stock Close Product Report</field>
+        <field name="model">stock.close.period</field>
+        <field
+            name="binding_model_id"
+            ref="stock_close_period.model_stock_close_period"
+        />
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">stock_close_period_report.report_product_print</field>
+        <field name="report_file">stock_close_period_report.report_product_print</field>
+        <field
+            name="print_report_name"
+        >'Stock Close Product %s' % object.name.replace('/','')</field>
+        <field name="paperformat_id" ref="report_stock_close_product_landscape" />
+    </record>
+</odoo>

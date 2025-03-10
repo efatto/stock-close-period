@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="xlsx_stock_close_product" model="ir.actions.report">
+        <field name="name">Export Stock Close Product Moves to XLSX</field>
+        <field name="model">stock.close.period</field>
+        <field
+            name="binding_model_id"
+            ref="stock_close_period.model_stock_close_period"
+        />
+        <field name="report_type">xlsx</field>
+        <field
+            name="report_name"
+        >stock_close_period_report.xlsx_stock_close_product</field>
+        <field
+            name="report_file"
+        >stock_close_period_report.xlsx_stock_close_product</field>
+        <field name="print_report_name">
+            'Stock Close Product %s' % object.name.replace('/','')
+        </field>
+    </record>
+
+</odoo>
