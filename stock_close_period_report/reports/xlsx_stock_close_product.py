@@ -66,14 +66,18 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             _("Final Quantity"),
         ]
         i = 0
-        sheet.write(
-            i, 0,
+        sheet.merge_range(
+            i,
+            0,
+            i,
+            9,
             _("Close period - %s - %s - %s") % (
                 stock_close_period.name,
                 stock_close_period.close_date.strftime("%d/%m/%Y"),
                 stock_close_period.company_id.name,
             ),
-            title_style)
+            title_style,
+        )
         i += 1
         sheet.write(i, 0, _("Evaluation method"), title_style)
         sheet.write(i, 1, stock_close_period.force_evaluation_method, title_style)
