@@ -14,7 +14,7 @@
                                     <th class="left_with_line">Transfer type</th>
                                     <th class="left_with_line">Origin</th>
                                     <th class="left_with_line">Destination</th>
-                                    <th class="right_with_line">Purchase Amount</th>
+                                    <th class="right_with_line">Amount</th>
                                     <th class="right_with_line">UoM</th>
                                     <th class="right_with_line">Quantity IN</th>
                                     <th class="right_with_line">Quantity OUT</th>
