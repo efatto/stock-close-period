@@ -52,24 +52,40 @@ class StockClosePeriodLine(models.Model):
         copy=False,
     )
     product_qty = fields.Float(
-        string="End Quantity", digits="Product Unit of Measure", default=0
+        string="Quantity at Current Inventory Date",
+        digits="Product Unit of Measure",
     )
-    price_unit = fields.Float(string="End Average Price", digits="Product Price")
-    inventory_amount = fields.Float(string="Inventory Amount", digits="Product Price")
+    price_unit = fields.Float(
+        string="End Average Price",
+        digits="Product Price",
+    )
+    inventory_amount = fields.Float(
+        string="Last Inventory Amount",
+        digits="Product Price",
+    )
     inventory_qty = fields.Float(
-        string="Inventory Quantity", digits="Product Unit of Measure"
+        string="Last Inventory Quantity",
+        digits="Product Unit of Measure",
     )
-    cumulative_amount = fields.Float(string="Cumulative Amount", digits="Product Price")
+    cumulative_amount = fields.Float(
+        string="Cumulative Amount",
+        digits="Product Price",
+    )
     cumulative_landed_cost = fields.Float(
-        string="Cumulative Landed Cost", digits="Product Price"
+        string="Cumulative Landed Cost",
+        digits="Product Price",
     )
     cumulative_qty = fields.Float(
-        string="Cumulative Quantity", digits="Product Unit of Measure"
+        string="Cumulative Quantity",
+        help="Purchased quantity for evaluation purposes",
+        digits="Product Unit of Measure",
     )
     amount_line = fields.Float(
+        string="Current Inventory Amount",
         compute="_compute_amount_line",
         store=True,
-        digits="Product Price")
+        digits="Product Price",
+    )
     location_id = fields.Many2one("stock.location", string="Location")
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
