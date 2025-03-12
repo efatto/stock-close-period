@@ -66,7 +66,10 @@ class StockClosePeriodLine(models.Model):
     cumulative_qty = fields.Float(
         string="Cumulative Quantity", digits="Product Unit of Measure"
     )
-    amount_line = fields.Float(compute="_compute_amount_line", digits="Product Price")
+    amount_line = fields.Float(
+        compute="_compute_amount_line",
+        store=True,
+        digits="Product Price")
     location_id = fields.Many2one("stock.location", string="Location")
     lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
@@ -76,11 +79,6 @@ class StockClosePeriodLine(models.Model):
         string="Company",
         store=True,
     )
-
-    @api.depends("close_id.company_id")
-    def _compute_company(self):
-        for line in self:
-            line.company_id = line.close_id.company_id.id
 
     @api.depends("product_qty", "price_unit")
     def _compute_amount_line(self):
