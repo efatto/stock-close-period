@@ -218,19 +218,19 @@
         <field name="dpi">90</field>
     </record>
 
-    <record id="action_stock_close_product_report" model="ir.actions.report">
-        <field name="name">Stock Close Product Report</field>
-        <field name="model">stock.close.period</field>
-        <field
-            name="binding_model_id"
-            ref="stock_close_period.model_stock_close_period"
-        />
-        <field name="report_type">qweb-pdf</field>
-        <field name="report_name">stock_close_period_report.report_product_print</field>
-        <field name="report_file">stock_close_period_report.report_product_print</field>
-        <field
-            name="print_report_name"
-        >'Stock Close Product %s' % object.name.replace('/','')</field>
-        <field name="paperformat_id" ref="report_stock_close_product_landscape" />
-    </record>
+<!--    <record id="action_stock_close_product_report" model="ir.actions.report">-->
+<!--        <field name="name">Stock Close Product Report</field>-->
+<!--        <field name="model">stock.close.period</field>-->
+<!--        <field-->
+<!--            name="binding_model_id"-->
+<!--            ref="stock_close_period.model_stock_close_period"-->
+<!--        />-->
+<!--        <field name="report_type">qweb-pdf</field>-->
+<!--        <field name="report_name">stock_close_period_report.report_product_print</field>-->
+<!--        <field name="report_file">stock_close_period_report.report_product_print</field>-->
+<!--        <field-->
+<!--            name="print_report_name"-->
+<!--        >'Stock Close Product %s' % object.name.replace('/','')</field>-->
+<!--        <field name="paperformat_id" ref="report_stock_close_product_landscape" />-->
+<!--    </record>-->
 </odoo>
