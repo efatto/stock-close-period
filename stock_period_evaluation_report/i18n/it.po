@@ -201,7 +201,7 @@ msgstr "Stampa valutazione magazzino con movimenti in XLSX"
 #: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
 #, python-format
 msgid "Stock Close Period Product"
-msgstr "Valutazione magazzino con movimenti"
+msgstr "Valutazione magazzino"
 
 #. module: stock_close_period_report
 #: model:ir.model,name:stock_close_period_report.model_report_stock_close_period_report_report_product_print
