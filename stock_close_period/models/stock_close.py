@@ -7,7 +7,7 @@
 import logging
 from datetime import datetime
 
-from odoo import _, fields, models, api
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
@@ -53,7 +53,7 @@ class StockClosePeriod(models.Model):
         default=fields.Date.context_today,
         states={"draft": [("readonly", False)]},
         help="The date that will be used for the store the product quantity and average"
-             " cost.",
+        " cost.",
     )
     last_close_date = fields.Date(
         string="Last Close Date",
@@ -135,7 +135,9 @@ class StockClosePeriod(models.Model):
                         categ_name=product.categ_id.complete_name,
                         product_qty=0,
                         price_unit=0,
-                        company_id=product.company_id and product.company_id.id or False,
+                        company_id=product.company_id
+                        and product.company_id.id
+                        or False,
                     ),
                 )
                 for product in self.env["product.product"]
