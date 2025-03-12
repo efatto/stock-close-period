@@ -71,7 +71,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             0,
             i,
             9,
-            _("Close period - %s - %s - %s") % (
+            _("Close period - %s - %s - %s")
+            % (
                 stock_close_period.name,
                 stock_close_period.close_date.strftime("%d/%m/%Y"),
                 stock_close_period.company_id.name,
