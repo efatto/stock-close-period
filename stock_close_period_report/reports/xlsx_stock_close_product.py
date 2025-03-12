@@ -26,6 +26,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
         sheet.set_column(6, 6, 15)
         sheet.set_column(7, 7, 15)
         sheet.set_column(8, 8, 15)
+        sheet.set_column(9, 9, 15)
 
         border_style = workbook.add_format({"border": 1})
         title_style = workbook.add_format(
@@ -57,16 +58,23 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             _("Transfer type"),
             _("Origin"),
             _("Destination"),
-            _("Purchase Amount"),
+            _("Unit Amount"),
+            _("Amount"),
             _("UoM"),
             _("Quantity IN"),
             _("Quantity OUT"),
             _("Final Quantity"),
         ]
         i = 0
+        sheet.write(i, 0, _("Close period"), title_style)
+        sheet.write(i, 1, stock_close_period.name, title_style)
+        i += 1
+        sheet.write(i, 0, _("Evaluation method"), title_style)
+        sheet.write(i, 1, stock_close_period.force_evaluation_method, title_style)
+        i += 1
         sheet.write_row(i, 0, sheet_title, title_style)
-        sheet.freeze_panes(1, 0)
-        i = 1
+        sheet.freeze_panes(3, 0)
+        i += 1
         evaluation_amount = 0.0
         # rows
         for row in lines:
@@ -78,27 +86,15 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 i,
                 1,
                 i,
-                8,
+                9,
                 row.product_id.with_context({"lang": "it_IT"}).name or "",
                 title_style,
             )
             i += 1
             sheet.write(i, 0, _("Product Code:"), title_style)
             sheet.write(i, 1, row.product_code or "", title_style)
-            sheet.write(i, 5, _("Initial Quantity:"), title_style)
-            sheet.write(i, 6, row.inventory_qty or 0.0, qty_format_title)
-            sheet.write(i, 7, _("Initial Value:"), title_style)
-            sheet.write(i, 8, row.inventory_amount or 0.0, currency_format_title)
-            i += 1
-            sheet.write(i, 0, _("Evaluation method:"), title_style)
-            sheet.write(i, 1, row.evaluation_method or "", title_style)
-            sheet.write(i, 5, _("Final Quantity:"), title_style)
-            sheet.write(i, 6, row.product_qty or 0.0, qty_format_title)
-            sheet.write(i, 7, _("Final Value:"), title_style)
-            sheet.write(i, 8, row.amount_line or 0.0, currency_format_title)
-            i += 1
-            sheet.write(i, 0, _("Average Final Value:"), title_style)
-            sheet.write(i, 1, row.price_unit or 0.0, currency_format_title)
+            sheet.write(i, 2, _("Evaluation method:"), title_style)
+            sheet.write(i, 3, row.evaluation_method or "", title_style)
             i += 1
             moves = self.env["stock.move"].search(
                 [
@@ -121,6 +117,19 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 ),
             )
             i_row = i
+            row_in_qty += row.inventory_qty
+            # write initial inventory qty
+            sheet.write(i, 0, row.close_id.last_close_date, date_format)
+            sheet.write(i, 1, _("Initial quantity"), border_style)
+            sheet.write(i, 2, row.location_id.name, border_style)
+            sheet.write(i, 3, row.location_id.name, border_style)
+            sheet.write(i, 4, row.inventory_amount / row.inventory_qty, currency_format)
+            sheet.write(i, 5, row.inventory_amount or 0.0, currency_format)
+            sheet.write(i, 6, row.product_uom_id.name, border_style)
+            sheet.write(i, 7, row.inventory_qty or 0.0, qty_format)
+            sheet.write(i, 8, 0.0, qty_format)
+            sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
+            i += 1
             for move in moves:
                 move_type = (
                     "in"
@@ -137,16 +146,16 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 sheet.write(
                     i, 4, move.purchase_line_id.price_subtotal or 0.0, currency_format
                 )
-                sheet.write(i, 5, move.product_uom.name, border_style)
+                sheet.write(i, 6, move.product_uom.name, border_style)
                 if move_type == "in":
                     row_in_qty += move.quantity_done
-                    sheet.write(i, 6, move.quantity_done or 0.0, qty_format)
-                    sheet.write(i, 7, 0.0, qty_format)
+                    sheet.write(i, 7, move.quantity_done or 0.0, qty_format)
+                    sheet.write(i, 8, 0.0, qty_format)
                 if move_type == "out":
                     row_out_qty += move.quantity_done
-                    sheet.write(i, 6, 0.0, qty_format)
-                    sheet.write(i, 7, move.quantity_done or 0.0, qty_format)
-                sheet.write(i, 8, row_in_qty - row_out_qty, qty_format)
+                    sheet.write(i, 8, 0.0, qty_format)
+                    sheet.write(i, 8, move.quantity_done or 0.0, qty_format)
+                sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
                 i += 1
             sheet.write(i, 0, _("Totals"), title_style)
             sheet.write(i, 1, row.product_code, title_style)
@@ -154,21 +163,13 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 i,
                 2,
                 i,
-                5,
+                3,
                 row.product_id.with_context({"lang": "it_IT"}).name or "",
                 title_style,
             )
-            sheet.write_formula(
-                i,
-                6,
-                "=SUM(%s:%s)"
-                % (
-                    xl_rowcol_to_cell(i_row, 6),
-                    xl_rowcol_to_cell(i - 1, 6),
-                ),
-                qty_format_title,
-                "",
-            )
+            sheet.write(i, 4, row.price_unit, currency_format_title)
+            sheet.write(i, 5, row.amount_line, currency_format_title)
+            sheet.write(i, 6, row.product_uom_id.name, title_style)
             sheet.write_formula(
                 i,
                 7,
@@ -183,10 +184,21 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write_formula(
                 i,
                 8,
+                "=SUM(%s:%s)"
+                % (
+                    xl_rowcol_to_cell(i_row, 8),
+                    xl_rowcol_to_cell(i - 1, 8),
+                ),
+                qty_format_title,
+                "",
+            )
+            sheet.write_formula(
+                i,
+                9,
                 "=%s-%s"
                 % (
-                    xl_rowcol_to_cell(i, 6),
                     xl_rowcol_to_cell(i, 7),
+                    xl_rowcol_to_cell(i, 8),
                 ),
                 qty_format_title,
                 "",
@@ -194,5 +206,12 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             i += 2
 
         # General totals
-        sheet.write(i, 0, _("General Total"), title_style)
-        sheet.write(i, 8, evaluation_amount, currency_format_title)
+        sheet.merge_range(
+            i,
+            0,
+            i,
+            8,
+            _("General Total"),
+            title_style,
+        )
+        sheet.write(i, 9, evaluation_amount, currency_format_title)

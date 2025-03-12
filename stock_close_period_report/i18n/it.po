@@ -187,8 +187,8 @@ msgstr "Codice prodotto:"
 #: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
 #: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
 #, python-format
-msgid "Purchase Amount"
-msgstr "Valore acquisto"
+msgid "Amount"
+msgstr "Valore"
 
 #. module: stock_close_period_report
 #: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
