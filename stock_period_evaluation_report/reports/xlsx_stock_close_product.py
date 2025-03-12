@@ -67,14 +67,12 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
         sheet.write_row(i, 0, sheet_title, title_style)
         sheet.freeze_panes(1, 0)
         i = 1
-        in_qty = 0.0
-        out_qty = 0.0
         evaluation_amount = 0.0
         # rows
         for row in lines:
             row_in_qty = 0.0
             row_out_qty = 0.0
-            evaluation_amount += row.inventory_amount
+            evaluation_amount += row.amount_line
             sheet.write(i, 0, _("Description:"), title_style)
             sheet.merge_range(
                 i,
@@ -87,17 +85,20 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             i += 1
             sheet.write(i, 0, _("Product Code:"), title_style)
             sheet.write(i, 1, row.product_code or "", title_style)
-            sheet.write(i, 2, _("Initial Value:"), title_style)
-            sheet.write(i, 3, row.inventory_amount or "", currency_format_title)
-            sheet.write(i, 4, _("Final Value:"), title_style)
-            sheet.write(i, 5, row.amount_line or "", currency_format_title)
+            sheet.write(i, 5, _("Initial Quantity:"), title_style)
+            sheet.write(i, 6, row.inventory_qty or 0.0, qty_format_title)
+            sheet.write(i, 7, _("Initial Value:"), title_style)
+            sheet.write(i, 8, row.inventory_amount or 0.0, currency_format_title)
             i += 1
             sheet.write(i, 0, _("Evaluation method:"), title_style)
             sheet.write(i, 1, row.evaluation_method or "", title_style)
-            sheet.write(i, 2, _("Initial Quantity:"), title_style)
-            sheet.write(i, 3, row.inventory_qty or "", qty_format_title)
-            sheet.write(i, 4, _("Final Quantity:"), title_style)
-            sheet.write(i, 5, row.product_qty or "", qty_format_title)
+            sheet.write(i, 5, _("Final Quantity:"), title_style)
+            sheet.write(i, 6, row.product_qty or 0.0, qty_format_title)
+            sheet.write(i, 7, _("Final Value:"), title_style)
+            sheet.write(i, 8, row.amount_line or 0.0, currency_format_title)
+            i += 1
+            sheet.write(i, 0, _("Average Final Value:"), title_style)
+            sheet.write(i, 1, row.price_unit or 0.0, currency_format_title)
             i += 1
             moves = self.env["stock.move"].search(
                 [
@@ -147,8 +148,6 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     sheet.write(i, 7, move.quantity_done or 0.0, qty_format)
                 sheet.write(i, 8, row_in_qty - row_out_qty, qty_format)
                 i += 1
-            in_qty += row_in_qty
-            out_qty += row_out_qty
             sheet.write(i, 0, _("Totals"), title_style)
             sheet.write(i, 1, row.product_code, title_style)
             sheet.merge_range(
@@ -196,6 +195,4 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
 
         # General totals
         sheet.write(i, 0, _("General Total"), title_style)
-        sheet.write(i, 6, in_qty, qty_format_title)
-        sheet.write(i, 7, out_qty, qty_format_title)
         sheet.write(i, 8, evaluation_amount, currency_format_title)
