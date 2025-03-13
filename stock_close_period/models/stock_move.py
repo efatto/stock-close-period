@@ -21,8 +21,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if (
             self.purchase_line_id.invoice_lines
-            and self.purchase_line_id.invoice_lines[0].move_id.state
-            == "posted"
+            and self.purchase_line_id.invoice_lines[0].move_id.state == "posted"
         ):
             # In real life, all move lines related to an 1 invoice line
             # should be in the same state and have the same date
