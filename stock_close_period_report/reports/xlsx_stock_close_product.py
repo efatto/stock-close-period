@@ -43,7 +43,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
         )
         currency_format = workbook.add_format({"num_format": "€ #,##0.00", "border": 1})
         currency_format_long = workbook.add_format(
-            {"num_format": "€ #,##0.00000", "border": 1})
+            {"num_format": "€ #,##0.00000", "border": 1}
+        )
         currency_title_dict = {
             "num_format": "€ #,##0.00",
             "bold": False,
@@ -51,9 +52,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             "border": 1,
         }
         currency_format_title = workbook.add_format(currency_title_dict)
-        currency_title_dict.update({
-            "num_format": "€ #,##0.00000"
-        })
+        currency_title_dict.update({"num_format": "€ #,##0.00000"})
         currency_format_title_long = workbook.add_format(currency_title_dict)
         date_format = workbook.add_format({"num_format": "DD-MM-YYYY", "border": 1})
 
@@ -143,7 +142,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 i,
                 4,
                 row.inventory_amount / (row.inventory_qty or 1.0),
-                currency_format_long
+                currency_format_long,
             )
             sheet.write(i, 5, row.inventory_amount or 0.0, currency_format)
             sheet.write(i, 6, row.product_uom_id.name, border_style)
