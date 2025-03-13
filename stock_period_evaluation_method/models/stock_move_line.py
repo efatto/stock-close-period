@@ -74,16 +74,18 @@ class StockMoveLine(models.Model):
         line.ensure_one()
         order = "date desc, id desc"
         move_obj = self.env["stock.move"]
+        # exclude all inventory moves
         move_domain = [
             ("state", "=", "done"),
             ("product_id", "=", line.product_id.id),
             ("product_qty", ">", 0),
             ("date", "<=", line.close_id.close_date),
+            ("date", ">", line.close_id.last_close_date),
             ("active", "!=", False),
             ("company_id", "=", line.close_id.company_id.id),
+            ("location_id.usage", "!=", "inventory"),
+            ("location_dest_id.usage", "!=", "inventory"),
         ]
-        if line.close_id.last_closed_id:
-            move_domain += [("date", ">", line.close_id.last_closed_id.close_date)]
         if valuation_type in ["fifo", "purchase"]:
             # search for incoming moves
             move_domain += [
