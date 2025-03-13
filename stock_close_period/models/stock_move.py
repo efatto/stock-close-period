@@ -53,7 +53,7 @@ class StockMoveLine(models.Model):
         product_id = closing_line_id.product_id
         company_id = closing_line_id.close_id.company_id.id
 
-        # get all moves
+        # get all moves (exclude by default inventory moves)
         move_ids = self.env["stock.move"].search(
             [
                 ("state", "=", "done"),
@@ -63,6 +63,8 @@ class StockMoveLine(models.Model):
                 ("date", "<=", closing_line_id.close_id.close_date),
                 ("active", ">=", 0),
                 ("company_id", "=", company_id),
+                ("location_id.usage", "!=", "inventory"),
+                ("location_dest_id.usage", "!=", "inventory"),
             ],
             order="date",
         )
