@@ -134,8 +134,9 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write(i, 1, _("Initial quantity"), border_style)
             sheet.write(i, 2, row.location_id.name, border_style)
             sheet.write(i, 3, row.location_id.name, border_style)
-            sheet.write(i, 4, row.inventory_amount / (row.inventory_qty or 1.0),
-                        currency_format)
+            sheet.write(
+                i, 4, row.inventory_amount / (row.inventory_qty or 1.0), currency_format
+            )
             sheet.write(i, 5, row.inventory_amount or 0.0, currency_format)
             sheet.write(i, 6, row.product_uom_id.name, border_style)
             sheet.write(i, 7, row.inventory_qty or 0.0, qty_format)
