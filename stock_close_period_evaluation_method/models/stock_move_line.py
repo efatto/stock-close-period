@@ -201,6 +201,8 @@ class StockMoveLine(models.Model):
                 )
             if flag:
                 break
+        if not move_ids and not start_price:
+            start_price = line.product_id._get_cost()
         if qty_to_be_evaluated:
             # create a tuple for the residual not evaluated
             tuples.append(
