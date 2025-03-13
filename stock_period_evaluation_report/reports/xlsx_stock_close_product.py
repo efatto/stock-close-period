@@ -160,13 +160,13 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 )
                 sheet.write(i, 6, move.product_uom.name, border_style)
                 if move_type == "in":
-                    row_in_qty += move.quantity_done
-                    sheet.write(i, 7, move.quantity_done or 0.0, qty_format)
+                    row_in_qty += move.product_qty
+                    sheet.write(i, 7, move.product_qty or 0.0, qty_format)
                     sheet.write(i, 8, 0.0, qty_format)
                 if move_type == "out":
-                    row_out_qty += move.quantity_done
+                    row_out_qty += move.product_qty
                     sheet.write(i, 8, 0.0, qty_format)
-                    sheet.write(i, 8, move.quantity_done or 0.0, qty_format)
+                    sheet.write(i, 8, move.product_qty or 0.0, qty_format)
                 sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
                 i += 1
             sheet.write(i, 0, _("Totals"), title_style)
