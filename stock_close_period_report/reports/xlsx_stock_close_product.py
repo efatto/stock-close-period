@@ -42,14 +42,19 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             }
         )
         currency_format = workbook.add_format({"num_format": "€ #,##0.00", "border": 1})
-        currency_format_title = workbook.add_format(
-            {
-                "num_format": "€ #,##0.00",
-                "bold": False,
-                "bg_color": "#C0C0C0",
-                "border": 1,
-            }
-        )
+        currency_format_long = workbook.add_format(
+            {"num_format": "€ #,##0.00000", "border": 1})
+        currency_title_dict = {
+            "num_format": "€ #,##0.00",
+            "bold": False,
+            "bg_color": "#C0C0C0",
+            "border": 1,
+        }
+        currency_format_title = workbook.add_format(currency_title_dict)
+        currency_title_dict.update({
+            "num_format": "€ #,##0.00000"
+        })
+        currency_format_title_long = workbook.add_format(currency_title_dict)
         date_format = workbook.add_format({"num_format": "DD-MM-YYYY", "border": 1})
 
         # header
@@ -135,7 +140,10 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write(i, 2, row.location_id.name, border_style)
             sheet.write(i, 3, row.location_id.name, border_style)
             sheet.write(
-                i, 4, row.inventory_amount / (row.inventory_qty or 1.0), currency_format
+                i,
+                4,
+                row.inventory_amount / (row.inventory_qty or 1.0),
+                currency_format_long
             )
             sheet.write(i, 5, row.inventory_amount or 0.0, currency_format)
             sheet.write(i, 6, row.product_uom_id.name, border_style)
@@ -159,7 +167,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 sheet.write(i, 1, move_type.upper(), border_style)
                 sheet.write(i, 2, move.location_id.name, border_style)
                 sheet.write(i, 3, move.location_dest_id.name, border_style)
-                sheet.write(i, 4, price_unit, currency_format)
+                sheet.write(i, 4, price_unit, currency_format_long)
                 sheet.write(i, 5, price_unit * move.product_qty, currency_format)
                 sheet.write(i, 6, move.product_uom.name, border_style)
                 if move_type == "in":
@@ -168,7 +176,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     sheet.write(i, 8, 0.0, qty_format)
                 if move_type == "out":
                     row_out_qty += move.product_qty
-                    sheet.write(i, 8, 0.0, qty_format)
+                    sheet.write(i, 7, 0.0, qty_format)
                     sheet.write(i, 8, move.product_qty or 0.0, qty_format)
                 sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
                 i += 1
@@ -182,7 +190,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 row.product_id.with_context({"lang": "it_IT"}).name or "",
                 title_style,
             )
-            sheet.write(i, 4, row.price_unit, currency_format_title)
+            sheet.write(i, 4, row.price_unit, currency_format_title_long)
             sheet.write(i, 5, row.amount_line, currency_format_title)
             sheet.write(i, 6, row.product_uom_id.name, title_style)
             sheet.write_formula(
