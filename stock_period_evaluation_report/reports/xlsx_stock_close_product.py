@@ -144,6 +144,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
             i += 1
             for move in moves:
+                price_unit = (
+                    move._get_purchase_price_unit() if move.purchase_line_id else 0.0)
                 move_type = (
                     "in"
                     if (
@@ -156,9 +158,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 sheet.write(i, 1, move_type.upper(), border_style)
                 sheet.write(i, 2, move.location_id.name, border_style)
                 sheet.write(i, 3, move.location_dest_id.name, border_style)
-                sheet.write(
-                    i, 4, move.purchase_line_id.price_subtotal or 0.0, currency_format
-                )
+                sheet.write(i, 4, price_unit, currency_format)
+                sheet.write(i, 5, price_unit * move.product_qty, currency_format)
                 sheet.write(i, 6, move.product_uom.name, border_style)
                 if move_type == "in":
                     row_in_qty += move.product_qty
