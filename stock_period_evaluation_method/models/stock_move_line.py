@@ -155,43 +155,7 @@ class StockMoveLine(models.Model):
                 # Get price from purchase line
                 price_unit = 0
                 if move.purchase_line_id:
-                    if (
-                        move.purchase_line_id.invoice_lines
-                        and move.purchase_line_id.invoice_lines[0].move_id.state
-                        == "posted"
-                    ):
-                        # In real life, all move lines related to an 1 invoice line
-                        # should be in the same state and have the same date
-                        inv_line = move.purchase_line_id.invoice_lines[0]
-                        # add a check for bad inserted values in invoices (like invoice
-                        # a lot of purchased products with 1 in quantity)
-                        inv_quantity = inv_line.quantity
-                        total_inv_quantity = sum(
-                            move.purchase_line_id.invoice_lines.mapped("quantity")
-                        )
-                        purchase_quantity = move.purchase_line_id.product_uom_qty
-                        if inv_quantity < purchase_quantity > total_inv_quantity:
-                            inv_quantity = purchase_quantity
-                        invoice = inv_line.move_id
-                        price_unit = invoice.currency_id._convert(
-                            inv_line.price_subtotal,
-                            invoice.company_id.currency_id,
-                            invoice.company_id,
-                            invoice.date or fields.Date.today(),
-                        ) / (inv_quantity or 1)
-                    else:
-                        # get price from purchase line
-                        purchase = move.purchase_line_id.order_id
-                        price_unit = purchase.currency_id._convert(
-                            move.purchase_line_id.price_subtotal,
-                            purchase.company_id.currency_id,
-                            purchase.company_id,
-                            purchase.date_order or fields.Date.today(),
-                        ) / (
-                            move.purchase_line_id.product_qty
-                            if move.purchase_line_id.product_qty != 0
-                            else 1
-                        )
+                    price_unit = move._get_purchase_price_unit()
                 if not price_unit and (
                     (
                         move.location_id.usage == "internal"
