@@ -112,7 +112,7 @@ msgstr "Metodo di valutazione:"
 #. module: stock_close_period_report
 #: model:ir.actions.report,name:stock_close_period_report.xlsx_stock_close_product
 msgid "Export Stock Close Product Moves to XLSX"
-msgstr "Esporta i movimenti chiusura in XLSX"
+msgstr "Esporta le schede prodotti in XLSX"
 
 #. module: stock_close_period_report
 #: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
