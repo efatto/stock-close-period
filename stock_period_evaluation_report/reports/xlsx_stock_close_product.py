@@ -153,7 +153,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             for move_line in move_lines:
                 price_unit = (
                     move_line.move_id._get_purchase_price_unit()
-                    if move_line.move_id.purchase_line_id else 0.0
+                    if move_line.move_id.purchase_line_id
+                    else 0.0
                 )
                 move_type = (
                     "in"

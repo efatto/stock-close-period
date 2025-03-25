@@ -7,10 +7,10 @@ class StockCloseReport(models.AbstractModel):
 
     def _get_moves(self, close_line):
         # search the stock move in the same way of the current close period
-        moves = self.env["stock.move"].search(
+        move_lines = self.env["stock.move.line"].search(
             [
                 ("state", "=", "done"),
-                ("product_qty", ">", 0),
+                ("qty_done", "!=", 0),
                 ("product_id", "=", close_line.product_id.id),
                 ("date", ">", close_line.close_id.last_close_date),
                 ("date", "<=", close_line.close_id.close_date),
@@ -18,7 +18,7 @@ class StockCloseReport(models.AbstractModel):
             ],
             order="date",
         )
-        return moves
+        return move_lines
 
     def _get_report_values(self, docids, data=None):
         docs = self.env["stock.close.period"].browse(docids)
