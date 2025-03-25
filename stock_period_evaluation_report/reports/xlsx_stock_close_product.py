@@ -111,18 +111,18 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write(i, 2, _("Evaluation method:"), title_style)
             sheet.write(i, 3, row.evaluation_method or "", title_style)
             i += 1
-            moves = self.env["stock.move"].search(
+            move_lines = self.env["stock.move.line"].search(
                 [
                     ("state", "=", "done"),
-                    ("product_qty", ">", 0),
+                    ("qty_done", "!=", 0),
                     ("product_id", "=", row.product_id.id),
                     ("date", ">", row.close_id.last_close_date),
                     ("date", "<=", row.close_id.close_date),
                     ("company_id", "=", row.close_id.company_id.id),
                 ],
             )
-            moves = sorted(
-                [x for x in moves],
+            move_lines = sorted(
+                [x for x in move_lines],
                 key=lambda m: (
                     m.date.strftime("%Y-%m-%d"),
                     "a"
@@ -150,33 +150,34 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write(i, 8, 0.0, qty_format)
             sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
             i += 1
-            for move in moves:
+            for move_line in move_lines:
                 price_unit = (
-                    move._get_purchase_price_unit() if move.purchase_line_id else 0.0
+                    move_line.move_id._get_purchase_price_unit()
+                    if move_line.move_id.purchase_line_id else 0.0
                 )
                 move_type = (
                     "in"
                     if (
-                        move.location_id.usage != "internal"
-                        and move.location_dest_id.usage == "internal"
+                        move_line.location_id.usage != "internal"
+                        and move_line.location_dest_id.usage == "internal"
                     )
                     else "out"
                 )
-                sheet.write(i, 0, move.date, date_format)
+                sheet.write(i, 0, move_line.date, date_format)
                 sheet.write(i, 1, move_type.upper(), border_style)
-                sheet.write(i, 2, move.location_id.name, border_style)
-                sheet.write(i, 3, move.location_dest_id.name, border_style)
+                sheet.write(i, 2, move_line.location_id.name, border_style)
+                sheet.write(i, 3, move_line.location_dest_id.name, border_style)
                 sheet.write(i, 4, price_unit, currency_format_long)
-                sheet.write(i, 5, price_unit * move.product_qty, currency_format)
-                sheet.write(i, 6, move.product_uom.name, border_style)
+                sheet.write(i, 5, price_unit * move_line.qty_done, currency_format)
+                sheet.write(i, 6, move_line.product_uom_id.name, border_style)
                 if move_type == "in":
-                    row_in_qty += move.product_qty
-                    sheet.write(i, 7, move.product_qty or 0.0, qty_format)
+                    row_in_qty += move_line.qty_done
+                    sheet.write(i, 7, move_line.qty_done or 0.0, qty_format)
                     sheet.write(i, 8, 0.0, qty_format)
                 if move_type == "out":
-                    row_out_qty += move.product_qty
+                    row_out_qty += move_line.qty_done
                     sheet.write(i, 7, 0.0, qty_format)
-                    sheet.write(i, 8, move.product_qty or 0.0, qty_format)
+                    sheet.write(i, 8, move_line.qty_done or 0.0, qty_format)
                 sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
                 i += 1
             sheet.write(i, 0, _("Totals"), title_style)
