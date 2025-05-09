@@ -6,7 +6,9 @@ class StockCloseReport(models.AbstractModel):
     _description = "Stock Close Period Product Report"
 
     def _get_moves(self, close_line):
-        # search the stock move in the same way of the current close period
+        # search the stock move lines in the same way of the current close period
+        # n.b. not the stock moves as they don't show all the stock movement lines and
+        # the printed report would be incomplete
         move_lines = self.env["stock.move.line"].search(
             [
                 ("state", "=", "done"),
