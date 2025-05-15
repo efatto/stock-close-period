@@ -5,7 +5,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 
 import logging
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -152,7 +152,9 @@ class StockClosePeriod(models.Model):
         # get quantity on end period for each product
         for closing_line_id in self.line_ids:
             product_id = closing_line_id.product_id
-            list_product_qty = product_id._compute_qty_available(self.close_date)
+            # compute including current day selected
+            list_product_qty = product_id._compute_qty_available(
+                self.close_date + timedelta(days=1))
             count = 0
             for line in list_product_qty:
                 if count == 0:
