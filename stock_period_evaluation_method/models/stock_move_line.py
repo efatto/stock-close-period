@@ -73,22 +73,20 @@ class StockMoveLine(models.Model):
     def price_calculation(self, line, valuation_type, start_qty, start_price):
         line.ensure_one()
         order = "date desc, id desc"
-        move_obj = self.env["stock.move"]
-        # exclude all inventory moves
-        move_domain = [
+        move_line_obj = self.env["stock.move.line"]
+        # do not exclude inventory moves, as they are needed to compute qty at date
+        move_line_domain = [
             ("state", "=", "done"),
             ("product_id", "=", line.product_id.id),
-            ("product_qty", ">", 0),
+            ("qty_done", ">", 0),
             ("date", "<=", line.close_id.close_date),
             ("date", ">", line.close_id.last_close_date),
             ("active", "!=", False),
             ("company_id", "=", line.close_id.company_id.id),
-            ("location_id.usage", "!=", "inventory"),
-            ("location_dest_id.usage", "!=", "inventory"),
         ]
         if valuation_type in ["fifo", "purchase"]:
             # search for incoming moves
-            move_domain += [
+            move_line_domain += [
                 ("location_id.usage", "!=", "internal"),
                 ("location_dest_id.usage", "=", "internal"),
                 # todo solo per acquisti? ("purchase_line_id", "!=", False),
@@ -96,17 +94,27 @@ class StockMoveLine(models.Model):
         else:
             # search for incoming and outgoing moves
             # fixme this search even internal moves
-            move_domain += [
+            move_line_domain += [
                 "|",
                 ("location_id.usage", "=", "internal"),
                 ("location_dest_id.usage", "=", "internal"),
             ]
-        move_ids = move_obj.search(move_domain, order=order)
-        res = self._get_tuples(line, move_ids, valuation_type, start_qty, start_price)
+        move_line_ids = move_line_obj.search(move_line_domain, order=order)
+        move_line_ids = sorted(
+            [x for x in move_line_ids],
+            key=lambda m: (
+                m.date.strftime("%Y-%m-%d"),
+                "a"
+                if m.location_id.usage != "internal"
+                   and m.location_dest_id.usage == "internal"
+                else "z",
+            ), reverse=True,
+        )
+        res = self._get_tuples(line, move_line_ids, valuation_type, start_qty, start_price)
         return res
 
     @api.model
-    def _get_tuples(self, line, move_ids, valuation_type, start_qty, start_price):
+    def _get_tuples(self, line, move_line_ids, valuation_type, start_qty, start_price):
         """
         - calcolare il valore sulla differenza positiva tra in minimo iniziale e
         il precedente se più alto [ degli stock_move in ingresso ordinati per
@@ -135,73 +143,54 @@ class StockMoveLine(models.Model):
 
         - consumabili: no nell'inventario
         :param line:
-        :param move_ids:
+        :param move_line_ids:
         :param valuation_type:
         :return:
         """
         tuples = []
         qty_to_be_evaluated = line.product_qty
         qty_at_date = line.product_qty
-        # get all move without lot of inventory line because it is not relevant
+        # get all moves without the lot in the inventory line because it is not relevant
         flag = False
-        for move in move_ids:
-            uom_from = move.product_uom
-            for ml in move.move_line_ids:
-                # Convert to UoM of product each time
-                qty_from = ml.qty_done
-                product_qty = uom_from._compute_quantity(
-                    qty_from, move.product_id.uom_id
+        for ml in move_line_ids:
+            uom_from = ml.move_id.product_uom
+            # Convert to UoM of the product each time
+            qty_from = ml.qty_done
+            product_qty = uom_from._compute_quantity(
+                qty_from, ml.product_id.uom_id
+            )
+            # Get price from the purchase line
+            price_unit = 0
+            if ml.move_id.purchase_line_id:
+                price_unit = ml.move_id._get_purchase_price_unit()
+            if not price_unit and (
+                (
+                    ml.location_id.usage == "internal"
+                    and ml.location_dest_id.usage != "internal"
                 )
-                # Get price from purchase line
-                price_unit = 0
-                if move.purchase_line_id:
-                    price_unit = move._get_purchase_price_unit()
-                if not price_unit and (
-                    (
-                        move.location_id.usage == "internal"
-                        and move.location_dest_id.usage != "internal"
-                    )
-                    or (
-                        move.location_id.usage == "inventory"
-                        and move.location_dest_id.usage == "internal"
-                    )
-                ):
-                    # Get price from product, move is a production or a sale or an
-                    # inventory or not linked to a purchase
-                    # (income move created and even invoiced, but price is not valid)
-                    price_unit = move.product_id._get_cost()
+                or (
+                    ml.location_id.usage == "inventory"
+                    and ml.location_dest_id.usage == "internal"
+                )
+            ):
+                # Get price from the product, move is a production or a sale or an
+                # inventory or not linked to a purchase
+                # (income move created and even invoiced, but price is not valid)
+                price_unit = ml.product_id._get_cost()
 
-                qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
-                    qty_to_be_evaluated,
-                    product_qty,
-                    tuples,
-                    move,
-                    price_unit,
-                    qty_from,
-                    qty_at_date,
-                    valuation_type,
-                )
-                if flag:
-                    break
-            if not move.move_line_ids:
-                price_unit = move.product_id._get_cost()
-                qty_from = move.product_qty
-                product_qty = uom_from._compute_quantity(
-                    qty_from, move.product_id.uom_id
-                )
-                qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
-                    qty_to_be_evaluated,
-                    product_qty,
-                    tuples,
-                    move,
-                    price_unit,
-                    qty_from,
-                    qty_at_date,
-                    valuation_type,
-                )
+            qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
+                qty_to_be_evaluated,
+                product_qty,
+                tuples,
+                ml,
+                price_unit,
+                qty_from,
+                qty_at_date,
+                valuation_type,
+            )
             if flag:
                 break
-        if not move_ids and not start_price:
+        if not move_line_ids and not start_price:
             start_price = line.product_id._get_cost()
         if qty_to_be_evaluated:
             # create a tuple for the residual not evaluated
@@ -215,7 +204,7 @@ class StockMoveLine(models.Model):
         qty_to_be_evaluated,
         product_qty,
         tuples,
-        move,
+        ml,
         price_unit,
         qty_from,
         qty_at_date,
@@ -223,12 +212,12 @@ class StockMoveLine(models.Model):
     ):
         if valuation_type == "fifo":
             if qty_to_be_evaluated - product_qty >= 0:
-                tuples.append((move.product_id.id, product_qty, price_unit, qty_from))
+                tuples.append((ml.product_id.id, product_qty, price_unit, qty_from))
                 qty_to_be_evaluated -= product_qty
             else:
                 tuples.append(
                     (
-                        move.product_id.id,
+                        ml.product_id.id,
                         qty_to_be_evaluated,
                         price_unit,
                         qty_from * qty_to_be_evaluated / product_qty,
@@ -236,20 +225,20 @@ class StockMoveLine(models.Model):
                 )
                 return 0, True, qty_at_date
         elif valuation_type == "lifo":
-            # create a tuple for every move which is an income (purchase or inventory)
+            # create a tuple for every move that is an income (purchase or inventory)
             # not used for an outgoing with these values:
             # [(product.id, qty outgoing for this move, cost of purchased product,
             # qty moved)]
-            # sale
+            # out (sale, out inventory, etc)
             if (
-                move.location_id.usage == "internal"
-                and move.location_dest_id.usage != "internal"
+                ml.location_id.usage == "internal"
+                and ml.location_dest_id.usage != "internal"
             ):
                 qty_at_date += product_qty
-            # purchase
+            # in (purchase, in inventory, etc)
             if (
-                move.location_id.usage != "internal"
-                and move.location_dest_id.usage == "internal"
+                ml.location_id.usage != "internal"
+                and ml.location_dest_id.usage == "internal"
             ):
                 qty_at_date -= product_qty
                 # se la quantità da valorizzare è maggiore del saldo (maggiore di 0)
@@ -258,7 +247,7 @@ class StockMoveLine(models.Model):
                 if qty_to_be_evaluated > qty_at_date > 0:
                     tuples.append(
                         (
-                            move.product_id.id,
+                            ml.product_id.id,
                             qty_to_be_evaluated - qty_at_date,
                             price_unit,
                             qty_from,
@@ -270,7 +259,7 @@ class StockMoveLine(models.Model):
                 elif qty_to_be_evaluated > qty_at_date <= 0:
                     tuples.append(
                         (
-                            move.product_id.id,
+                            ml.product_id.id,
                             qty_to_be_evaluated,
                             price_unit,
                             qty_from * qty_to_be_evaluated / product_qty,
@@ -278,5 +267,5 @@ class StockMoveLine(models.Model):
                     )
                     return 0, True, qty_at_date
         elif valuation_type == "average":
-            tuples.append((move.product_id.id, product_qty, price_unit, qty_from))
+            tuples.append((ml.product_id.id, product_qty, price_unit, qty_from))
         return qty_to_be_evaluated, False, qty_at_date
