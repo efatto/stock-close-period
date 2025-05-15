@@ -154,7 +154,8 @@ class StockClosePeriod(models.Model):
             product_id = closing_line_id.product_id
             # compute including current day selected
             list_product_qty = product_id._compute_qty_available(
-                self.close_date + timedelta(days=1))
+                self.close_date + timedelta(days=1)
+            )
             count = 0
             for line in list_product_qty:
                 if count == 0:
