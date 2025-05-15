@@ -106,11 +106,14 @@ class StockMoveLine(models.Model):
                 m.date.strftime("%Y-%m-%d"),
                 "a"
                 if m.location_id.usage != "internal"
-                   and m.location_dest_id.usage == "internal"
+                and m.location_dest_id.usage == "internal"
                 else "z",
-            ), reverse=True,
+            ),
+            reverse=True,
         )
-        res = self._get_tuples(line, move_line_ids, valuation_type, start_qty, start_price)
+        res = self._get_tuples(
+            line, move_line_ids, valuation_type, start_qty, start_price
+        )
         return res
 
     @api.model
@@ -156,9 +159,7 @@ class StockMoveLine(models.Model):
             uom_from = ml.move_id.product_uom
             # Convert to UoM of the product each time
             qty_from = ml.qty_done
-            product_qty = uom_from._compute_quantity(
-                qty_from, ml.product_id.uom_id
-            )
+            product_qty = uom_from._compute_quantity(qty_from, ml.product_id.uom_id)
             # Get price from the purchase line
             price_unit = 0
             if ml.move_id.purchase_line_id:
