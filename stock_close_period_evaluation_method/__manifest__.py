@@ -3,7 +3,7 @@
 {
     "name": "Stock Close Period Extra Evaluation Methods",
     "summary": "Add FIFO and LIFO to evaluation methods",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Stock",
     "author": "Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
