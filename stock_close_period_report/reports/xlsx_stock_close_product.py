@@ -153,15 +153,12 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             for move_line in move_lines:
                 # exclude move line not useful for evaluation (equivalent to qty_signed
                 # = 0 in stock_move_details module)
-                if (
-                    move_line.location_id.usage != "internal"
-                        and (
-                            move_line.location_dest_id.usage in [
-                            "customer", "inventory", "production", "supplier"]
-                            or move_line.location_dest_id.scrap_location
-                            or move_line.location_dest_id.return_location
-                        )
-                    ):
+                if move_line.location_id.usage != "internal" and (
+                    move_line.location_dest_id.usage
+                    in ["customer", "inventory", "production", "supplier"]
+                    or move_line.location_dest_id.scrap_location
+                    or move_line.location_dest_id.return_location
+                ):
                     continue
                 if move_line.location_dest_id.usage == move_line.location_id.usage:
                     continue
@@ -171,7 +168,8 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     else 0.0
                 )
                 move_type = (
-                    "out" if (
+                    "out"
+                    if (
                         move_line.location_id.usage == "inventory"
                         and move_line.location_dest_id.return_location
                     )
