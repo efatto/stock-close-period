@@ -157,7 +157,11 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     else 0.0
                 )
                 move_type = (
-                    "in"
+                    "out" if (
+                        move_line.location_id.usage == "inventory"
+                        and move_line.location_dest_id.return_location
+                    )
+                    else "in"
                     if (
                         move_line.location_id.usage != "internal"
                         and move_line.location_dest_id.usage == "internal"
