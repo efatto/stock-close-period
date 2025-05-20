@@ -197,8 +197,12 @@ class StockMoveLine(models.Model):
             # create a tuple for the residual not evaluated
             tuples.append(
                 (
-                    line.product_id.id, qty_to_be_evaluated, start_price, start_qty,
-                    "Residual not evaluated", "Date not evaluated",
+                    line.product_id.id,
+                    qty_to_be_evaluated,
+                    start_price,
+                    start_qty,
+                    "Residual not evaluated",
+                    "Date not evaluated",
                 )
             )
         return tuples
@@ -279,7 +283,11 @@ class StockMoveLine(models.Model):
         elif valuation_type == "average":
             tuples.append(
                 (
-                    ml.product_id.id, product_qty, price_unit, qty_from, ml.origin,
+                    ml.product_id.id,
+                    product_qty,
+                    price_unit,
+                    qty_from,
+                    ml.origin,
                     ml.date.strftime("%d/%m/%Y"),
                 )
             )
