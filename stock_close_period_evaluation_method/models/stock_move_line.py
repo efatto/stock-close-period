@@ -196,7 +196,10 @@ class StockMoveLine(models.Model):
         if qty_to_be_evaluated:
             # create a tuple for the residual not evaluated
             tuples.append(
-                (line.product_id.id, qty_to_be_evaluated, start_price, start_qty)
+                (
+                    line.product_id.id, qty_to_be_evaluated, start_price, start_qty,
+                    "Residual not evaluated", "Date not evaluated",
+                )
             )
         return tuples
 
@@ -222,6 +225,8 @@ class StockMoveLine(models.Model):
                         qty_to_be_evaluated,
                         price_unit,
                         qty_from * qty_to_be_evaluated / product_qty,
+                        ml.origin,
+                        ml.date.strftime("%d/%m/%Y"),
                     )
                 )
                 return 0, True, qty_at_date
@@ -252,6 +257,8 @@ class StockMoveLine(models.Model):
                             qty_to_be_evaluated - qty_at_date,
                             price_unit,
                             qty_from,
+                            ml.origin,
+                            ml.date.strftime("%d/%m/%Y"),
                         )
                     )
                     qty_to_be_evaluated = qty_at_date
@@ -264,9 +271,16 @@ class StockMoveLine(models.Model):
                             qty_to_be_evaluated,
                             price_unit,
                             qty_from * qty_to_be_evaluated / product_qty,
+                            ml.origin,
+                            ml.date.strftime("%d/%m/%Y"),
                         )
                     )
                     return 0, True, qty_at_date
         elif valuation_type == "average":
-            tuples.append((ml.product_id.id, product_qty, price_unit, qty_from))
+            tuples.append(
+                (
+                    ml.product_id.id, product_qty, price_unit, qty_from, ml.origin,
+                    ml.date.strftime("%d/%m/%Y"),
+                )
+            )
         return qty_to_be_evaluated, False, qty_at_date
