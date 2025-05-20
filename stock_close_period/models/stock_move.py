@@ -29,12 +29,13 @@ class StockMove(models.Model):
             # add a check for bad inserted values in invoices (like invoice
             # a lot of purchased products with 1 in quantity)
             inv_quantity = inv_line.quantity
-            total_inv_quantity = sum(
-                self.purchase_line_id.invoice_lines.mapped("quantity")
-            )
-            purchase_quantity = self.purchase_line_id.product_uom_qty
-            if inv_quantity < purchase_quantity > total_inv_quantity:
-                inv_quantity = purchase_quantity
+            if inv_quantity in [0, 1]:
+                total_inv_quantity = sum(
+                    self.purchase_line_id.invoice_lines.mapped("quantity")
+                )
+                purchase_quantity = self.purchase_line_id.product_uom_qty
+                if inv_quantity < purchase_quantity > total_inv_quantity:
+                    inv_quantity = purchase_quantity
             invoice = inv_line.move_id
             price_unit = invoice.currency_id._convert(
                 inv_line.price_subtotal,
