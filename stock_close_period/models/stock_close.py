@@ -280,13 +280,13 @@ class StockClosePeriod(models.Model):
     def action_done(self):
         for closing in self:
             closing.state = "done"
-            closing.amount = sum(closing.mapped("line_ids.amount_line"))
             if closing.bypass_negative_qty:
                 closing.line_ids.filtered(lambda x: x.product_qty <= 0).unlink()
             else:
                 closing.line_ids.filtered(
                     lambda x: x.product_qty == 0 and x.price_unit == 0
                 ).unlink()
+            closing.amount = sum(closing.mapped("line_ids.amount_line"))
         return True
 
     def action_recompute_amount(self):
