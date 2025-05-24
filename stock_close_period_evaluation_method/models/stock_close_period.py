@@ -13,3 +13,9 @@ class StockClosePeriod(models.Model):
         ondelete={"fifo": "set default", "lifo": "set default"},
         help="Force Evaluation method will be used only for purchase costs computation.",
     )
+
+
+class StockClosePeriodLine(models.Model):
+    _inherit = "stock.close.period.line"
+
+    evaluation_details = fields.Text(string="Evaluation Details")

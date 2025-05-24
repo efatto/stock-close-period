@@ -1,4 +1,5 @@
 from odoo import api, models
+from odoo.tools.float_utils import float_round
 
 
 class StockMoveLine(models.Model):
@@ -16,6 +17,22 @@ class StockMoveLine(models.Model):
             evaluation_method or closing_line_id.close_id.force_evaluation_method,
             start_qty,
             start_price,
+        )
+        res_dict = [{
+            "product_id": x[0], "evaluated_qty": x[1], "price_unit": x[2],
+            "moved_qty": x[3], "origin": x[4], "date": x[5]
+        } for x in res]
+        line_total = float_round(
+            sum([x['evaluated_qty'] * x['price_unit'] for x in res_dict]))
+        closing_line_id.evaluation_details = "\n".join(
+            [
+                f"{x['origin']} - {x['date']}: {x['evaluated_qty']} x "
+                f"{closing_line_id.company_id.currency_id.symbol} {x['price_unit']} = "
+                f"{x['evaluated_qty'] * x['price_unit']}"
+                for x in res_dict
+            ] + [
+                f"Total: {line_total}"
+            ]
         )
         cumulative_amount = 0
         cumulative_qty = 0
@@ -148,7 +165,8 @@ class StockMoveLine(models.Model):
         :param line:
         :param move_line_ids:
         :param valuation_type:
-        :return:
+        :return: a list of tuple with
+        [(product_id, qty_to_be_evaluated, new_price, qty_from, origin, date)]
         """
         tuples = []
         qty_to_be_evaluated = line.product_qty
