@@ -189,20 +189,6 @@ class StockMoveLine(models.Model):
             price_unit = 0
             if ml.move_id.purchase_line_id:
                 price_unit = ml.move_id._get_purchase_price_unit()
-            if not price_unit and (
-                (
-                    ml.location_id.usage == "internal"
-                    and ml.location_dest_id.usage != "internal"
-                )
-                or (
-                    ml.location_id.usage == "inventory"
-                    and ml.location_dest_id.usage == "internal"
-                )
-            ):
-                # Get price from the product, move is a production or a sale or an
-                # inventory or not linked to a purchase
-                # (income move created and even invoiced, but price is not valid)
-                price_unit = ml.product_id._get_cost()
 
             qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
                 qty_to_be_evaluated,
@@ -216,8 +202,6 @@ class StockMoveLine(models.Model):
             )
             if flag:
                 break
-        if not move_line_ids and not start_price:
-            start_price = line.product_id._get_cost()
         if qty_to_be_evaluated:
             # create a tuple for the residual not evaluated
             tuples.append(
@@ -230,7 +214,39 @@ class StockMoveLine(models.Model):
                     "Date not evaluated",
                 )
             )
+        # fix zero values in the tuples
+        tuples = self._fix_zero_values(tuples)
         return tuples
+
+    def _fix_zero_values(self, tuples):
+        fixed_tuples = []
+        for i, raw_tuple in enumerate(tuples):
+            if not raw_tuple[2]:
+                # n.b. the order of the tuples is from the newer to the oldest
+                if len(tuples) > i + 1 and tuples[i + 1] and tuples[i + 1][2]:
+                    # 1. get the price from the previous evaluation tuple if exists
+                    price_unit = tuples[i + 1][2]
+                elif i != 0 and tuples[i - 1][2]:
+                    # 2. get the price from the next evaluation tuple if not the first
+                    price_unit = tuples[i - 1][2]
+                else:
+                    # 3. get the price from the product
+                    price_unit = (
+                        self.env["product.product"].browse(raw_tuple[0])._get_cost()
+                    )
+                fixed_tuples.append(
+                    (
+                        raw_tuple[0],
+                        raw_tuple[1],
+                        price_unit,
+                        raw_tuple[3],
+                        raw_tuple[4],
+                        raw_tuple[5],
+                    )
+                )
+            else:
+                fixed_tuples.append(raw_tuple)
+        return fixed_tuples
 
     @staticmethod
     def update_tuple(
