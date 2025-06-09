@@ -177,7 +177,7 @@
                     />
                 </header>
                 <sheet>
-                    <group>
+                    <group name="main_group">
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" />
                             <h1><field
