@@ -7,10 +7,10 @@ class StockMoveLine(models.Model):
 
     def _get_cost_stock_move_lifo_fifo(self, closing_line_id, evaluation_method=False):
         product_id = closing_line_id.product_id
-        company_id = closing_line_id.company_id.id
+        company_id = closing_line_id.company_id
         # get start data from last close
         start_qty, start_price = self._get_last_closing(
-            closing_line_id.close_id, product_id.id, company_id
+            closing_line_id.close_id, product_id.id, company_id.id
         )
         res = self.price_calculation(
             closing_line_id,
@@ -30,7 +30,8 @@ class StockMoveLine(models.Model):
             for x in res
         ]
         line_total = float_round(
-            sum([x["evaluated_qty"] * x["price_unit"] for x in res_dict])
+            sum([x["evaluated_qty"] * x["price_unit"] for x in res_dict]),
+            precision_rounding=company_id.currency_id.rounding,
         )
         closing_line_id.evaluation_details = "\n".join(
             [
