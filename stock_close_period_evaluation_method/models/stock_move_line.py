@@ -1,5 +1,4 @@
-from odoo import api, models
-from odoo.tools.float_utils import float_round
+from odoo import _, api, models
 
 
 class StockMoveLine(models.Model):
@@ -7,10 +6,10 @@ class StockMoveLine(models.Model):
 
     def _get_cost_stock_move_lifo_fifo(self, closing_line_id, evaluation_method=False):
         product_id = closing_line_id.product_id
-        company_id = closing_line_id.company_id
+        company_id = closing_line_id.company_id.id
         # get start data from last close
         start_qty, start_price = self._get_last_closing(
-            closing_line_id.close_id, product_id.id, company_id.id
+            closing_line_id.close_id, product_id.id, company_id
         )
         res = self.price_calculation(
             closing_line_id,
@@ -28,19 +27,20 @@ class StockMoveLine(models.Model):
                 "date": x[5],
             }
             for x in res
+            if len(x) == 6
         ]
-        line_total = float_round(
+        line_total = closing_line_id._format_value(
             sum([x["evaluated_qty"] * x["price_unit"] for x in res_dict]),
-            precision_rounding=company_id.currency_id.rounding,
         )
         closing_line_id.evaluation_details = "\n".join(
             [
-                f"{x['origin']} - {x['date']}: {x['evaluated_qty']} x "
-                f"{closing_line_id.company_id.currency_id.symbol} {x['price_unit']} = "
-                f"{x['evaluated_qty'] * x['price_unit']}"
+                f"{x['origin'] or ''} - {x['date']}: "
+                f"{closing_line_id._format_value(x['evaluated_qty'])} x "
+                f"{closing_line_id._format_value(x['price_unit'])} = "
+                f"{closing_line_id._format_value(x['evaluated_qty'] * x['price_unit'])}"
                 for x in res_dict
             ]
-            + [f"Total: {line_total}"]
+            + [_("Total: %s") % line_total]
         )
         cumulative_amount = 0
         cumulative_qty = 0
