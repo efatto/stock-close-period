@@ -18,21 +18,28 @@ class StockMoveLine(models.Model):
             start_qty,
             start_price,
         )
-        res_dict = [{
-            "product_id": x[0], "evaluated_qty": x[1], "price_unit": x[2],
-            "moved_qty": x[3], "origin": x[4], "date": x[5]
-        } for x in res]
+        res_dict = [
+            {
+                "product_id": x[0],
+                "evaluated_qty": x[1],
+                "price_unit": x[2],
+                "moved_qty": x[3],
+                "origin": x[4],
+                "date": x[5],
+            }
+            for x in res
+        ]
         line_total = float_round(
-            sum([x['evaluated_qty'] * x['price_unit'] for x in res_dict]))
+            sum([x["evaluated_qty"] * x["price_unit"] for x in res_dict])
+        )
         closing_line_id.evaluation_details = "\n".join(
             [
                 f"{x['origin']} - {x['date']}: {x['evaluated_qty']} x "
                 f"{closing_line_id.company_id.currency_id.symbol} {x['price_unit']} = "
                 f"{x['evaluated_qty'] * x['price_unit']}"
                 for x in res_dict
-            ] + [
-                f"Total: {line_total}"
             ]
+            + [f"Total: {line_total}"]
         )
         cumulative_amount = 0
         cumulative_qty = 0
