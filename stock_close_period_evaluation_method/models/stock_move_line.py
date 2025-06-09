@@ -1,4 +1,8 @@
+import logging
+
 from odoo import _, api, models
+
+_logger = logging.getLogger(__name__)
 
 
 class StockMoveLine(models.Model):
@@ -222,6 +226,9 @@ class StockMoveLine(models.Model):
     def _fix_zero_values(self, tuples):
         fixed_tuples = []
         for i, raw_tuple in enumerate(tuples):
+            if len(raw_tuple) != 6:
+                _logger.info("Tuple is malformed!")
+                continue
             if not raw_tuple[2]:
                 # n.b. the order of the tuples is from the newer to the oldest
                 if len(tuples) > i + 1 and tuples[i + 1] and tuples[i + 1][2]:
