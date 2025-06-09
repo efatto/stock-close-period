@@ -227,7 +227,7 @@ class StockMoveLine(models.Model):
         fixed_tuples = []
         for i, raw_tuple in enumerate(tuples):
             if len(raw_tuple) != 6:
-                _logger.info("Tuple is malformed!")
+                _logger.info("Tuple is malformed: %s" % str(raw_tuple))
                 continue
             if not raw_tuple[2]:
                 # n.b. the order of the tuples is from the newer to the oldest
