@@ -39,7 +39,7 @@
                 >{'invisible': ['|',('production_ok', '=', False),('state', 'not in', ['confirm'])]}</attribute>
             </xpath>
             <xpath
-                expr="//form/sheet/group/group/field[@name='force_evaluation_method']"
+                expr="//field[@name='force_evaluation_method']"
                 position="after"
             >
                 <field
@@ -48,7 +48,7 @@
                 />
             </xpath>
             <xpath
-                expr="//form/sheet/group/group/field[@name='purchase_ok']"
+                expr="//field[@name='purchase_ok']"
                 position="after"
             >
                 <field name="production_ok" />
