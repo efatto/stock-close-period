@@ -3,20 +3,17 @@
     <record id="stock_close_period_line_tree" model="ir.ui.view">
         <field name="name">stock.close.period.line.tree</field>
         <field name="model">stock.close.period.line</field>
-        <field
-            name="inherit_id"
-            ref="stock_close_period.stock_close_period_line_tree"
-        />
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_line_tree"/>
         <field name="arch" type="xml">
             <field name="evaluation_method" position="after">
-                <field name="evaluation_details" optional="hide" />
+                <field name="evaluation_details" optional="hide"/>
             </field>
         </field>
     </record>
     <record id="stock_close_period_form" model="ir.ui.view">
         <field name="name">stock.close.period.form</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
+        <field name="inherit_id" ref="stock_close_period.stock_close_period_form"/>
         <field name="arch" type="xml">
             <field name="evaluation_method" position="after">
                 <field name="evaluation_details" />
