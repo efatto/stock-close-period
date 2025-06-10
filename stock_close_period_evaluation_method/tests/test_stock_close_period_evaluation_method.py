@@ -207,7 +207,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         (stock_close_period.line_ids - stock_close_line).unlink()
         self.assertEqual(stock_close_line.product_qty, 20)
         stock_close_period.action_recalculate_purchase()
-        self.assertEqual(stock_close_line.price_unit, 55)  # todo check if should be 5
+        self.assertEqual(stock_close_line.price_unit, 5)
         stock_close_period.action_done()
         self.assertEqual(stock_close_period.state, "done")
 
@@ -235,7 +235,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
 
         self.assertEqual(stock_close_line1.product_qty, 40)
         stock_close_period1.action_recalculate_purchase()
-        self.assertEqual(stock_close_line1.price_unit, 55)  # FIXME! 6.75
+        self.assertEqual(stock_close_line1.price_unit, 6.75)
 
         self._create_sale_order_backdate(product_qty=30, days_backdating=80)
         stock_close_line1 = self._refresh_close_period(stock_close_period1)
