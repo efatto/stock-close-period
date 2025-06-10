@@ -194,20 +194,6 @@ class StockMoveLine(models.Model):
             price_unit = 0
             if ml.move_id.purchase_line_id:
                 price_unit = ml.move_id._get_purchase_price_unit()
-            if not price_unit and (
-                (
-                    ml.location_id.usage == "internal"
-                    and ml.location_dest_id.usage != "internal"
-                )
-                or (
-                    ml.location_id.usage == "inventory"
-                    and ml.location_dest_id.usage == "internal"
-                )
-            ):
-                # Get price from the product, move is a production or a sale or an
-                # inventory or not linked to a purchase
-                # (income move created and even invoiced, but price is not valid)
-                price_unit = ml.product_id._get_cost()
 
             qty_to_be_evaluated, flag, qty_at_date = self.update_tuple(
                 qty_to_be_evaluated,
@@ -221,8 +207,6 @@ class StockMoveLine(models.Model):
             )
             if flag:
                 break
-        if not move_line_ids and not start_price:
-            start_price = line.product_id._get_cost()
         if qty_to_be_evaluated:
             # create a tuple for the residual not evaluated
             tuples.append(
@@ -235,7 +219,7 @@ class StockMoveLine(models.Model):
                     "Date not evaluated",
                 )
             )
-        # fix zero values in the tuples
+        # fix zero values in the tuples, do not get price from product anymore
         tuples = self._fix_zero_values(tuples)
         return tuples
 
