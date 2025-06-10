@@ -3,7 +3,7 @@
 {
     "name": "Stock Close Period Direct Cost",
     "summary": "Glue module with Stock Close Period and Direct Cost",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Stock",
     "author": "Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
