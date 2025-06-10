@@ -39,6 +39,12 @@ class StockMoveLine(models.Model):
             return False
 
     def _get_cost_stock_move_production(self, closing_line_id):
+        # compute production costs by sum of
+        # - components values in existing closing lines
+        # - bom components with:
+        #   - operation times computed with current workcenter values (no hystorical)
+        #   - components values in existing closing lines
+        # recursively in child boms
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
         bom = self.env["mrp.bom"].sudo()._bom_find(product=product_id)
