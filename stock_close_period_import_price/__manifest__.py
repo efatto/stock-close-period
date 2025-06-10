@@ -3,7 +3,7 @@
 {
     "name": "Stock Close Period Import Prices",
     "summary": "Add ability to import prices on a stock close period",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Stock",
     "author": "Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
