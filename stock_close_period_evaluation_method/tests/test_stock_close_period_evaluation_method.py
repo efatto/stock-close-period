@@ -218,7 +218,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         self._create_purchase_order_backdate(
             product_qty=10, price_unit=10, days_backdating=90
         )
-
+        # fixme
         stock_close_period_form1 = Form(
             self.env["stock.close.period"].with_user(self.test_user)
         )
