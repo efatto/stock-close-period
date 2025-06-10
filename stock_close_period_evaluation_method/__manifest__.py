@@ -15,7 +15,9 @@
         "stock_close_period_direct_cost",
         "stock_move_backdating",  # for tests
     ],
-    "data": [],
+    "data": [
+        "views/stock_close_views.xml",
+    ],
     "installable": True,
     "application": False,
     "auto_install": False,
