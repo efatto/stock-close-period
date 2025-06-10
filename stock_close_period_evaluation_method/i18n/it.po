@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-18 14:33+0000\n"
-"PO-Revision-Date: 2024-12-18 14:33+0000\n"
+"POT-Creation-Date: 2025-06-10 10:12+0000\n"
+"PO-Revision-Date: 2025-06-10 10:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,6 +17,7 @@ msgstr ""
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__assigned_attachment_ids
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__assigned_attachment_ids
 msgid "Assigned Attachments"
 msgstr "Allegati assegnati"
@@ -28,14 +29,20 @@ msgstr "Calcola in base al FIFO"
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifo
-msgid "Compute based LIFO"
-msgstr "Calcola in base al LIFO"
+msgid "Compute based LIFO (continuos)"
+msgstr "Calcola in base al LIFO (continuo)"
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__display_name
+#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__display_name
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
+
+#. module: stock_close_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__evaluation_details
+msgid "Evaluation Details"
+msgstr "Dettagli valorizzazione"
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__force_evaluation_method
@@ -47,16 +54,19 @@ msgstr "Forza metodo di valutazione"
 msgid ""
 "Force Evaluation method will be used only for purchase costs computation."
 msgstr ""
-"Forza metodo di valutazione viene utilizzato solo per calcolo costi su acquisti."
+"Forza metodo di valutazione viene utilizzato solo per calcolo costi su "
+"acquisti."
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__id
+#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__id
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__id
 msgid "ID"
 msgstr ""
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period____last_update
+#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line____last_update
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line____last_update
 msgid "Last Modified on"
 msgstr "Ultima modifica il"
@@ -70,3 +80,14 @@ msgstr "Movimenti prodotto (riga movimento magazzino)"
 #: model:ir.model,name:stock_close_period_evaluation_method.model_stock_close_period
 msgid "Stock Close Period"
 msgstr "Chiusura di magazzino"
+
+#. module: stock_close_period_evaluation_method
+#: model:ir.model,name:stock_close_period_evaluation_method.model_stock_close_period_line
+msgid "Stock Close Period Line"
+msgstr "Riga chiusura di magazzino"
+
+#. module: stock_close_period_evaluation_method
+#: code:addons/stock_close_period_evaluation_method/models/stock_move_line.py:0
+#, python-format
+msgid "Total: %s"
+msgstr "Totale: %s"
