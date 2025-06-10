@@ -177,7 +177,8 @@ class StockMoveLine(models.Model):
         :param line:
         :param move_line_ids:
         :param valuation_type:
-        :return:
+        :return: a list of tuple with
+        [(product_id, qty_to_be_evaluated, new_price, qty_from, origin, date)]
         """
         tuples = []
         qty_to_be_evaluated = line.product_qty
@@ -234,7 +235,41 @@ class StockMoveLine(models.Model):
                     "Date not evaluated",
                 )
             )
+        # fix zero values in the tuples
+        tuples = self._fix_zero_values(tuples)
         return tuples
+
+    def _fix_zero_values(self, tuples):
+        fixed_tuples = []
+        _logger.info("Current tuples are %s" % str(tuples))
+        for i, raw_tuple in enumerate(tuples):
+            if not raw_tuple[2]:
+                # n.b. the order of the tuples is from the newer to the oldest
+                if len(tuples) > i + 1 and tuples[i + 1] and tuples[i + 1][2]:
+                    # 1. get the price from the previous evaluation tuple if exists
+                    price_unit = tuples[i + 1][2]
+                elif i != 0 and tuples[i - 1][2]:
+                    # 2. get the price from the next evaluation tuple if not the first
+                    price_unit = tuples[i - 1][2]
+                else:
+                    # 3. get the price from the product
+                    price_unit = (
+                        self.env["product.product"].browse(raw_tuple[0])._get_cost()
+                    )
+                fixed_tuples.append(
+                    (
+                        raw_tuple[0],
+                        raw_tuple[1],
+                        price_unit,
+                        raw_tuple[3],
+                        raw_tuple[4],
+                        raw_tuple[5],
+                    )
+                )
+            else:
+                fixed_tuples.append(raw_tuple)
+        _logger.info("Fixed tuples are %s" % str(fixed_tuples))
+        return fixed_tuples
 
     @staticmethod
     def update_tuple(
@@ -249,7 +284,16 @@ class StockMoveLine(models.Model):
     ):
         if valuation_type == "fifo":
             if qty_to_be_evaluated - product_qty >= 0:
-                tuples.append((ml.product_id.id, product_qty, price_unit, qty_from))
+                tuples.append(
+                    (
+                        ml.product_id.id,
+                        product_qty,
+                        price_unit,
+                        qty_from,
+                        ml.origin,
+                        ml.date.strftime("%d/%m/%Y"),
+                    )
+                )
                 qty_to_be_evaluated -= product_qty
             else:
                 tuples.append(
