@@ -9,7 +9,9 @@ class ProductProduct(models.Model):
         super()._get_cost()
         cost = self.direct_cost
         if not cost:
-            if self.standard_price > self.testing_cost:
+            if not self.testing_cost and self.standard_price:
+                cost = self.standard_price
+            elif self.standard_price > self.testing_cost:
                 cost = self.standard_price - self.testing_cost
             # if there is a seller which has 0 as price but a depreciation cost,
             # subctract it
