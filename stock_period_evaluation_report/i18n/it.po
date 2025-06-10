@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 16:14+0000\n"
-"PO-Revision-Date: 2025-03-12 16:14+0000\n"
+"POT-Creation-Date: 2025-06-10 10:18+0000\n"
+"PO-Revision-Date: 2025-06-10 10:18+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,12 +25,6 @@ msgstr ""
 "\n"
 "            'Chiusura di magazzino con movimenti %s' % object.name.replace('/','')\n"
 "        "
-
-#. module: stock_close_period_report
-#: model:ir.actions.report,print_report_name:stock_close_period_report.action_stock_close_product_report
-msgid "'Stock Close Product %s' % object.name.replace('/','')"
-msgstr ""
-"'Chiusura di magazzino con movimenti %s' % object.name.replace('/','')"
 
 #. module: stock_close_period_report
 #: model_terms:ir.ui.view,arch_db:stock_close_period_report.document_layout
@@ -212,11 +206,6 @@ msgstr "Stampa valutazione magazzino con movimenti"
 #: model_terms:ir.ui.view,arch_db:stock_close_period_report.report_product_print
 msgid "Stock Close Product"
 msgstr "Valutazione magazzino con movimenti"
-
-#. module: stock_close_period_report
-#: model:ir.actions.report,name:stock_close_period_report.action_stock_close_product_report
-msgid "Stock Close Product Report"
-msgstr "Stampa valutazione magazzino con movimenti"
 
 #. module: stock_close_period_report
 #: code:addons/stock_close_period_report/reports/xlsx_stock_close_product.py:0
