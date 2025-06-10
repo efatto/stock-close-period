@@ -7,7 +7,7 @@
 {
     "name": "Stock Close Period - MRP",
     "summary": "Stock Close Period - MRP",
-    "version": "14.0.1.0.0",
+    "version": "14.0.1.0.1",
     "category": "Stock",
     "author": "Pordenone Linux User Group (PNLUG), DinamicheAziendali, Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
