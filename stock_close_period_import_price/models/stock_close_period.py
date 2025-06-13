@@ -18,14 +18,14 @@ class StockClosePeriod(models.Model):
         st = wb.sheet_by_index(0)
         header_row = st.row(0)
         for rx in range(1, st.nrows):
-            price_unit = False
+            price_unit = 0
             product_default_code = False
             for cx, c in enumerate(st.row(rx)):
                 if header_row[cx].value == "Costo unitario":
-                    price_unit = c.value
+                    price_unit = c.value or 0
                 if header_row[cx].value == "Prodotto":
                     product_default_code = c.value
-                if price_unit and product_default_code:
+                if product_default_code:
                     lines = self.line_ids.filtered(
                         lambda l: l.product_id.default_code == product_default_code
                     )
@@ -37,6 +37,6 @@ class StockClosePeriod(models.Model):
                                 "evaluation_details": "",
                             }
                         )
-                    price_unit = False
+                    price_unit = 0
                     product_default_code = False
         self.action_recompute_amount()
