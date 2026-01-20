@@ -55,7 +55,8 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         )
 
     def _check_stock_moves(self, stock_moves):
-        # copied from the original module removing checks on stock.quants as they fail with many moves
+        # copied from the original module removing checks on stock.quants as they fail
+        # with many moves
         stock_move_lines = stock_moves.mapped("move_line_ids")
         self.assertEqual(
             len(stock_move_lines),
