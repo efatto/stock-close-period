@@ -3,6 +3,7 @@
 from datetime import timedelta
 
 from odoo import fields
+from odoo.exceptions import UserError
 from odoo.tests.common import Form
 
 from odoo.addons.stock_move_backdating.tests.common import TestCommon
@@ -52,6 +53,32 @@ class TestClosePeriodEvaluationMethod(TestCommon):
                 ],
             }
         )
+
+    def _check_stock_moves(self, stock_moves):
+        # copied from the original module removing checks on stock.quants as they fail with many moves
+        stock_move_lines = stock_moves.mapped("move_line_ids")
+        self.assertEqual(
+            len(stock_move_lines),
+            len(stock_moves),
+            "Every move should be assigned (create a move line)",
+        )
+        account_moves = self.env["account.move"].search(
+            [
+                ("stock_move_id.id", "in", stock_moves.ids),
+            ],
+        )
+        self._check_account_moves(account_moves, stock_moves)
+        for stock_move in stock_moves:
+            self.assertEqual(stock_move.state, "done")
+
+            account_move = self._search_account_move(stock_move)
+            self._check_account_move_date(account_move, stock_move.date)
+
+            stock_move_line = self._get_corresponding_move_line(stock_move)
+            move_datetime_backdating = stock_move_line.date_backdating
+            move_date_backdating = move_datetime_backdating.date()
+            self.assertEqual(stock_move.date.date(), move_date_backdating)
+            self.assertEqual(stock_move_line.date.date(), move_date_backdating)
 
     def _create_purchase_order_backdate(self, product_qty, price_unit, days_backdating):
         date_backdating = self._get_datetime_backdating(days_backdating)
@@ -137,6 +164,9 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         stock_close_period_form1.name = "Stock close evaluation 1"
         stock_close_period_form1.close_date = fields.Date.today()
         stock_close_period_form1.last_closed_id = stock_close_period
+        with self.assertRaises(UserError):
+            stock_close_period_form1.save()
+        stock_close_period_form1.force_evaluation_method = "lifp"
         stock_close_period1 = stock_close_period_form1.save()
         stock_close_period1.action_start()
         self.assertTrue(stock_close_period1.line_ids)
