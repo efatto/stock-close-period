@@ -22,7 +22,9 @@
                 <field name="evaluation_details" />
             </field>
             <field name="last_closed_id" position="attributes">
-                <attribute name="attrs">{'required': [('force_evaluation_method', '=', 'lifp')]}</attribute>
+                <attribute
+                    name="attrs"
+                >{'required': [('force_evaluation_method', '=', 'lifp')]}</attribute>
             </field>
         </field>
     </record>
