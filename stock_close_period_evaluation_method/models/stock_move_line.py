@@ -89,7 +89,7 @@ class StockMoveLine(models.Model):
     def _evaluate_product(
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
-        if closing_id.force_evaluation_method in ["lifo", "fifo"]:
+        if closing_id.force_evaluation_method in ["lifo", "fifo", "lifp"]:
             self._get_cost_stock_move_lifo_fifo(closing_line_id)
         elif product_id.categ_id.property_cost_method == "fifo":
             self._get_cost_stock_move_lifo_fifo(closing_line_id, "fifo")
@@ -291,7 +291,7 @@ class StockMoveLine(models.Model):
                     )
                 )
                 return 0, True, qty_at_date
-        elif valuation_type == "lifo":
+        elif valuation_type in ["lifo", "lifp"]:
             # create a tuple for every move that is an income (purchase or inventory)
             # not used for an outgoing with these values:
             # [(product.id, qty outgoing for this move, cost of purchased product,
