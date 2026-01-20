@@ -7,7 +7,6 @@
     "author": "Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
     "license": "AGPL-3",
-    "summary": "Italian stock close period report",
     "depends": [
         "stock_close_period",
     ],
