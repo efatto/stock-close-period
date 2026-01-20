@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-10 10:12+0000\n"
-"PO-Revision-Date: 2025-06-10 10:12+0000\n"
+"POT-Creation-Date: 2026-01-20 17:37+0000\n"
+"PO-Revision-Date: 2026-01-20 17:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -33,6 +33,11 @@ msgid "Compute based LIFO (continuos)"
 msgstr "Calcola in base al LIFO (continuo)"
 
 #. module: stock_close_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifp
+msgid "Compute based LIFO (periodic)"
+msgstr "Calcola in base al LIFO (a scatti)"
+
+#. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__display_name
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__display_name
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__display_name
@@ -52,10 +57,19 @@ msgstr "Forza metodo di valutazione"
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,help:stock_close_period_evaluation_method.field_stock_close_period__force_evaluation_method
 msgid ""
-"Force Evaluation method will be used only for purchase costs computation."
+"Force Evaluation method will be used only for purchase costs "
+"computation.\nFIFO: with FIFO logic;\nLIFO (continuos): with LIFO logic from the"
+" beginning of the moves (require that a previous closing is not set);\nLIFO "
+"(periodic): with LIFO logic from the previous closing (require that a "
+"previous closing is set)."
 msgstr ""
 "Forza metodo di valutazione viene utilizzato solo per calcolo costi su "
-"acquisti."
+"acquisti.\n"
+"FIFO: con logica FIFO;\n"
+"LIFO (continuo): con logica LIFO dall'inizio dei movimenti (richiede che "
+"non sia impostata una chiusura precedente);\n"
+"LIFO (periodic): con logica LIFO dalla chiusura precedente (richiede che sia "
+"impostata una chiusura precedente)."
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__id
@@ -91,3 +105,15 @@ msgstr "Riga chiusura di magazzino"
 #, python-format
 msgid "Total: %s"
 msgstr "Totale: %s"
+
+#. module: stock_close_period_evaluation_method
+#: code:addons/stock_close_period_evaluation_method/models/stock_close_period.py:0
+#, python-format
+msgid "You can't set a previous closing."
+msgstr "Non è possibile impostare una chiusura precedente."
+
+#. module: stock_close_period_evaluation_method
+#: code:addons/stock_close_period_evaluation_method/models/stock_close_period.py:0
+#, python-format
+msgid "You must set a previous closing."
+msgstr "È necessario impostare una chiusura precedente."
