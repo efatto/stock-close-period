@@ -136,18 +136,17 @@ class StockMoveLine(models.Model):
                 move_id.purchase_line_id.currency_id
                 == move_id.purchase_line_id.company_id.currency_id
             ):
-                price = move_id.purchase_line_id.price_unit
-                cumulative_amount += move_id.purchase_line_id.product_uom_qty * price
+                cumulative_amount += move_id.purchase_line_id.price_subtotal
                 cumulative_qty += move_id.purchase_line_id.product_uom_qty
             else:
-                price = move_id.purchase_line_id.currency_id._convert(
-                    move_id.purchase_line_id.price_unit,
+                price_subtotal = move_id.purchase_line_id.currency_id._convert(
+                    move_id.purchase_line_id.price_subtotal,
                     move_id.purchase_line_id.company_id.currency_id,
                     move_id.purchase_line_id.company_id,
                     move_id.date,
                     False,
                 )
-                cumulative_amount += move_id.purchase_line_id.product_uom_qty * price
+                cumulative_amount += price_subtotal
                 cumulative_qty += move_id.purchase_line_id.product_uom_qty
 
             additional_landed_cost_new = self._get_additional_landed_cost_new(
