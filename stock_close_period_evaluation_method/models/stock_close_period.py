@@ -14,9 +14,8 @@ class StockClosePeriod(models.Model):
             ("lifp", "Compute based LIFO (periodic)"),
         ],
         ondelete={"fifo": "set default", "lifo": "set default"},
-        help=
-        "Force Evaluation method will be used only for purchase costs computation.\n"
-        "FIFO: with FIFO logic;\n"
+        help="Force Evaluation method will be used only for purchase costs computation."
+        "\nFIFO: with FIFO logic;\n"
         "LIFO (continuos): with LIFO logic from the beginning of the moves (require "
         "that a previous closing is not set);\n"
         "LIFO (periodic): with LIFO logic from the previous closing (require that a "
