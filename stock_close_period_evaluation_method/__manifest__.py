@@ -2,7 +2,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 {
     "name": "Stock Close Period Extra Evaluation Methods",
-    "summary": "Add FIFO and LIFO to evaluation methods",
+    "summary": "Add FIFO and LIFO, continuos or periodic, to evaluation methods",
     "version": "14.0.1.0.2",
     "category": "Stock",
     "author": "Sergio Corato",
