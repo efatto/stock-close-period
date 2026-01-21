@@ -53,6 +53,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           persist-credentials: false
+      - name: Install stock_move_backdating module with PR
+        run: pip3 install -e "git+https://github.com/efatto/stock-logistics-workflow@14.0-fix-stock_move_backdating-action_done#egg=odoo14-addon-stock_move_backdating&subdirectory=setup/stock_move_backdating"
       - name: Install addons and dependencies
         run: oca_install_addons
       - name: Check licenses
