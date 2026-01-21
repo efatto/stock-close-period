@@ -57,6 +57,26 @@ It is possible to get product prices from standard price, without computation, b
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/force_standard_price.png
     :alt: Force Standard Price
 
+Ricalcolo della produzione nel periodo di chiusura
+==================================================
+
+Nel record del periodo di chiusura è presente un nuovo pulsante per ricalcolare i prezzi dei prodotti in base ai valori della distinta base e al tempo impiegato:
+
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/compute_production_price.png
+    :alt: Calcola i prezzi della distinta base
+
+Questo valore viene calcolato con questa formula:
+
+- durata prevista = tempo di inizio + tempo di fine + (somma del ciclo di tempo * efficienza temporale / 100)
+- prezzo delle operazioni = durata prevista / 60 * costo orario del centro di lavoro
+- prezzo dei componenti = somma dei componenti * quantità * prezzo (ricorsivo)
+- prezzo totale = prezzo delle operazioni + prezzo dei componenti
+
+È possibile ottenere i prezzi dei prodotti dal prezzo standard, senza calcolo, selezionando l'opzione "Forza prezzo standard":
+
+.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/force_standard_price.png
+    :alt: Forza Prezzo Standard
+
 Bug Tracker
 ===========
 
