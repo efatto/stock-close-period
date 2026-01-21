@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 class StockClosePeriod(models.Model):
     _name = "stock.close.period"
     _description = "Stock Close Period"
+    _order = "close_date desc, id desc"
 
     name = fields.Char(
         string="Reference",
