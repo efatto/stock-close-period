@@ -53,7 +53,7 @@ class StockMoveLine(models.Model):
         unit_amount_duration_expected = 0
         total_amount_child_from_bom = 0
         total_amount_child_from_closing_line = 0
-        child_product_ids = self.env["product.product"].browse()
+        child_product_dict = {}
         if bom:
             total = 0
             boms_to_recompute = self.env["mrp.bom"].search(
@@ -83,7 +83,12 @@ class StockMoveLine(models.Model):
             for line in bom.bom_line_ids:
                 if line._skip_bom_line(product_id):
                     continue
-                child_product_ids |= line.product_id
+                if line.product_id in child_product_dict:
+                    child_product_dict[line.product_id] += line.product_qty
+                else:
+                    child_product_dict.update({
+                        line.product_id: line.product_qty
+                    })
                 # Compute recursive if line has 'child_line_ids'
                 if line.child_bom_id and line.child_bom_id in boms_to_recompute:
                     child_total = line.product_id._compute_bom_price(
@@ -123,6 +128,10 @@ class StockMoveLine(models.Model):
             if not skip:
                 closing_line_id.price_unit = total
                 closing_line_id.evaluation_method = "production"
+                child_info = ' '.join(
+                    f"{x.default_code} x {child_product_dict[x]}"
+                    for x in child_product_dict
+                )
                 closing_line_id.evaluation_details = (
                     f"BOM unit cost: operation cost: "
                     f"{closing_line_id._format_value(unit_amount_duration_expected)}, "
@@ -132,7 +141,7 @@ class StockMoveLine(models.Model):
                     f"{closing_line_id._format_value(total_amount_child_from_bom)}, "
                     f"compute from closing lines:"
                     f"{closing_line_id._format_value(total_amount_child_from_closing_line)}, "
-                    f"child products: {str(child_product_ids.mapped('default_code'))}"
+                    f"child products: {child_info}"
                 )
 
         if not skip and closing_line_id.price_unit == 0:
