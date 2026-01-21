@@ -21,10 +21,10 @@ class StockClosePeriod(models.Model):
             "lifp": "set default",
         },
         help="Force Evaluation method will be used only for purchase costs computation."
-        "\nFIFO: with FIFO logic from the beginning of the moves (require "
+        "\nFIFO (continuos): with FIFO logic from the beginning of the moves (require "
         "that a previous closing is not set);\n"
         "FIFO (periodic): with FIFO logic from the previous closing (require that a "
-        "previous closing is set)."
+        "previous closing is set).\n"
         "LIFO (continuos): with LIFO logic from the beginning of the moves (require "
         "that a previous closing is not set);\n"
         "LIFO (periodic): with LIFO logic from the previous closing (require that a "
