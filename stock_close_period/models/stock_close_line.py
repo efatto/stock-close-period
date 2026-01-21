@@ -15,12 +15,18 @@ class StockClosePeriodLine(models.Model):
     _name = "stock.close.period.line"
     _description = "Stock Close Period Line"
     _rec_name = "product_id"
+    _order = "closing_date desc, id desc"
 
     close_id = fields.Many2one(
         "stock.close.period",
         string="Stock Close Period",
         index=True,
         ondelete="cascade",
+    )
+    closing_date = fields.Date(
+        related="close_id.close_date",
+        store=True,
+        readonly=True,
     )
     product_id = fields.Many2one(
         "product.product",
