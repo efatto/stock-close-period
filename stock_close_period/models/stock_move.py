@@ -227,23 +227,24 @@ class StockMoveLine(models.Model):
             if product_id.categ_id.property_cost_method == "standard":
                 self._get_cost_stock_move_standard(closing_line_id)
 
-    def _recompute_cost_stock_move_purchase(self, closing_id):
+    def _recompute_cost_stock_move_purchase(self, closing_id, closing_line_ids=False):
         _logger.info("[1/2] Start recompute cost product purchase")
 
-        # search only lines not elaborated
-        closing_line_ids = self.env["stock.close.period.line"].search(
-            [
-                ("close_id", "=", closing_id.id),
-                ("evaluation_method", "not in", ["manual"]),
-                # ("product_qty", ">", 0),  # all products must be present to compute
-                # other lines values
-                # ("price_unit", "=", 0),
-            ]
-        )
+        if not closing_line_ids:
+            closing_line_ids = self.env["stock.close.period.line"].search(
+                [
+                    ("close_id", "=", closing_id.id),
+                    ("evaluation_method", "not in", ["manual"]),
+                    # commented as all products must be present
+                    # to compute other lines values
+                    # ("product_qty", ">", 0),
+                    # ("price_unit", "=", 0),
+                ]
+            )
 
         last_close_date = closing_id.last_close_date
 
-        # all closing line ready to elaborate
+        # all the closing lines ready to elaborate
         elaborated_products = self.env["product.product"]
         for closing_line_id in closing_line_ids:
             if not self._check_consistency(closing_line_id):
@@ -261,30 +262,34 @@ class StockMoveLine(models.Model):
             # self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish recompute average cost product")
 
-    def _write_results(self, closing_id):
+    def _write_results(self, closing_id, closing_line_ids=False):
         decimal = self.env["decimal.precision"].precision_get("Product Price")
 
         _logger.info("[2/2] Start writing results")
 
         # compute amount
         amount = 0
-        for closing_line_id in closing_id.line_ids:
+        if not closing_line_ids:
+            closing_line_ids = closing_id.line_ids
+        for closing_line_id in closing_line_ids:
             row_value = (
                 closing_line_id.product_qty if closing_line_id.product_qty > 0 else 0
             ) * closing_line_id.price_unit
             amount += round(row_value, decimal)
 
-        # set amount closing
-        closing_id.amount = amount
+        # recompute amount closing
+        closing_id.action_recompute_amount()
 
         _logger.info("[2/2] Finish writing results")
 
-    def recompute_average_cost_period_purchase(self, closing_id):
+    def recompute_average_cost_period_purchase(
+        self, closing_id, closing_line_ids=False
+    ):
         _logger.info("Recompute average cost period. Making in 2 phases:")
         _logger.info("[1/2] Recompute cost product purchase")
         _logger.info("[2/2] Write results")
 
-        self._recompute_cost_stock_move_purchase(closing_id)
-        self._write_results(closing_id)
+        self._recompute_cost_stock_move_purchase(closing_id, closing_line_ids)
+        self._write_results(closing_id, closing_line_ids)
 
         _logger.info("End recompute average cost product")

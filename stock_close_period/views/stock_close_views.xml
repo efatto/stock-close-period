@@ -55,6 +55,14 @@
                 <field name="product_qty" />
                 <field name="price_unit" />
                 <field name="amount_line" />
+                <button
+                    name="action_recalculate_purchase"
+                    states="confirm"
+                    icon="fa-dollar"
+                    help="Compute Purchase"
+                    type="object"
+                    groups="stock_close_period.group_stock_close_period_manager"
+                />
             </tree>
         </field>
     </record>
@@ -223,6 +231,7 @@
                                     default_order="product_code"
                                 >
                                     <field name="product_code" invisible="1" />
+                                    <field name="state" invisible="1" />
                                     <field name="product_id" />
                                     <field name="categ_name" />
                                     <field name="location_id" />
@@ -233,6 +242,14 @@
                                     <field name="product_qty" />
                                     <field name="price_unit" />
                                     <field name="amount_line" />
+                                    <button
+                                        name="action_recalculate_purchase"
+                                        states="confirm"
+                                        icon="fa-dollar"
+                                        help="Compute Purchase"
+                                        type="object"
+                                        groups="stock_close_period.group_stock_close_period_manager"
+                                    />
                                 </tree>
                             </field>
                         </page>
