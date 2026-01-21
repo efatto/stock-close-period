@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-20 17:37+0000\n"
-"PO-Revision-Date: 2026-01-20 17:37+0000\n"
+"POT-Creation-Date: 2026-01-21 18:33+0000\n"
+"PO-Revision-Date: 2026-01-21 18:33+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -24,8 +24,13 @@ msgstr "Allegati assegnati"
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifo
-msgid "Compute based FIFO"
-msgstr "Calcola in base al FIFO"
+msgid "Compute based FIFO (continuos)"
+msgstr "Calcola in base al FIFO (continuo)"
+
+#. module: stock_close_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifp
+msgid "Compute based FIFO (periodic)"
+msgstr "Calcola in base al FIFO (a scatti)"
 
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifo
@@ -57,18 +62,21 @@ msgstr "Forza metodo di valutazione"
 #. module: stock_close_period_evaluation_method
 #: model:ir.model.fields,help:stock_close_period_evaluation_method.field_stock_close_period__force_evaluation_method
 msgid ""
-"Force Evaluation method will be used only for purchase costs "
-"computation.\nFIFO: with FIFO logic;\nLIFO (continuos): with LIFO logic from the"
-" beginning of the moves (require that a previous closing is not set);\nLIFO "
-"(periodic): with LIFO logic from the previous closing (require that a "
-"previous closing is set)."
+"Force Evaluation method will be used only for purchase costs computation.\n"
+"FIFO (continuo): with FIFO logic from the beginning of the moves (require that a previous closing is not set);\n"
+"FIFO (periodic): with FIFO logic from the previous closing (require that a previous closing is set).\n"
+"LIFO (continuos): with LIFO logic from the beginning of the moves (require that a previous closing is not set);\n"
+"LIFO (periodic): with LIFO logic from the previous closing (require that a previous closing is set)."
 msgstr ""
 "Forza metodo di valutazione viene utilizzato solo per calcolo costi su "
 "acquisti.\n"
-"FIFO: con logica FIFO;\n"
+"FIFO (continuo): con logica FIFO dall'inizio dei movimenti (richiede che "
+"non sia impostata una chiusura precedente);\n"
+"FIFO (a scatti): con logica FIFO dalla chiusura precedente (richiede che sia "
+"impostata una chiusura precedente)."
 "LIFO (continuo): con logica LIFO dall'inizio dei movimenti (richiede che "
 "non sia impostata una chiusura precedente);\n"
-"LIFO (periodic): con logica LIFO dalla chiusura precedente (richiede che sia "
+"LIFO (a scatti): con logica LIFO dalla chiusura precedente (richiede che sia "
 "impostata una chiusura precedente)."
 
 #. module: stock_close_period_evaluation_method
