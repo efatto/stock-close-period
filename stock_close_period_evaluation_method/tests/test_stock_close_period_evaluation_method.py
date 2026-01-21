@@ -257,6 +257,9 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         stock_close_period_form1.name = "Stock close evaluation 1"
         stock_close_period_form1.close_date = fields.Date.today()
         stock_close_period_form1.last_closed_id = stock_close_period
+        with self.assertRaises(UserError):
+            stock_close_period_form1.save()
+        stock_close_period_form1.force_evaluation_method = "fifp"
         stock_close_period1 = stock_close_period_form1.save()
         stock_close_period1.action_start()
         self.assertTrue(stock_close_period1.line_ids)
