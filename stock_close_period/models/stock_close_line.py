@@ -6,7 +6,8 @@
 
 import logging
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
@@ -25,6 +26,11 @@ class StockClosePeriodLine(models.Model):
     )
     closing_date = fields.Date(
         related="close_id.close_date",
+        store=True,
+        readonly=True,
+    )
+    state = fields.Selection(
+        related="close_id.state",
         store=True,
         readonly=True,
     )
@@ -106,3 +112,19 @@ class StockClosePeriodLine(models.Model):
     def _compute_amount_line(self):
         for line in self:
             line.amount_line = line.product_qty * line.price_unit
+
+    def action_recalculate_purchase(self):
+        for line in self:
+            if not line.close_id.bypass_negative_qty and line.product_qty < 0:
+                raise UserError(
+                    _(
+                        "It's not possible to continue the execution."
+                        "This product have quantity < 0."
+                    )
+                )
+
+            self.env["stock.move.line"].recompute_average_cost_period_purchase(
+                line.close_id, line
+            )
+            line.close_id.work_end = fields.Datetime.now()
+        return True
