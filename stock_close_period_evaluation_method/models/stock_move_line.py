@@ -89,7 +89,7 @@ class StockMoveLine(models.Model):
     def _evaluate_product(
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
-        if closing_id.force_evaluation_method in ["lifo", "fifo", "lifp"]:
+        if closing_id.force_evaluation_method in ["lifo", "fifo", "fifp", "lifp"]:
             self._get_cost_stock_move_lifo_fifo(closing_line_id)
         elif product_id.categ_id.property_cost_method == "fifo":
             self._get_cost_stock_move_lifo_fifo(closing_line_id, "fifo")
@@ -113,7 +113,7 @@ class StockMoveLine(models.Model):
             ("active", "!=", False),
             ("company_id", "=", line.close_id.company_id.id),
         ]
-        if valuation_type in ["fifo", "purchase"]:
+        if valuation_type in ["fifo", "fifp", "purchase"]:
             # search for incoming moves
             move_line_domain += [
                 ("location_id.usage", "!=", "internal"),
@@ -266,7 +266,7 @@ class StockMoveLine(models.Model):
         qty_at_date,
         valuation_type,
     ):
-        if valuation_type == "fifo":
+        if valuation_type in ["fifo", "fifp"]:
             if qty_to_be_evaluated - product_qty >= 0:
                 tuples.append(
                     (

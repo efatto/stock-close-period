@@ -9,13 +9,22 @@ class StockClosePeriod(models.Model):
 
     force_evaluation_method = fields.Selection(
         selection_add=[
-            ("fifo", "Compute based FIFO"),
+            ("fifo", "Compute based FIFO (continuos)"),
+            ("fifp", "Compute based FIFO (periodic)"),
             ("lifo", "Compute based LIFO (continuos)"),
             ("lifp", "Compute based LIFO (periodic)"),
         ],
-        ondelete={"fifo": "set default", "lifo": "set default"},
+        ondelete={
+            "fifo": "set default",
+            "fifp": "set default",
+            "lifo": "set default",
+            "lifp": "set default",
+        },
         help="Force Evaluation method will be used only for purchase costs computation."
-        "\nFIFO: with FIFO logic;\n"
+        "\nFIFO: with FIFO logic from the beginning of the moves (require "
+        "that a previous closing is not set);\n"
+        "FIFO (periodic): with FIFO logic from the previous closing (require that a "
+        "previous closing is set)."
         "LIFO (continuos): with LIFO logic from the beginning of the moves (require "
         "that a previous closing is not set);\n"
         "LIFO (periodic): with LIFO logic from the previous closing (require that a "
@@ -25,9 +34,15 @@ class StockClosePeriod(models.Model):
     @api.constrains("force_evaluation_method")
     def _check_force_evaluation_method(self):
         for closing in self:
-            if closing.force_evaluation_method == "lifo" and closing.last_closed_id:
+            if (
+                closing.force_evaluation_method in ["lifo", "fifo"]
+                and closing.last_closed_id
+            ):
                 raise UserError(_("You can't set a previous closing."))
-            if closing.force_evaluation_method == "lifp" and not closing.last_closed_id:
+            if (
+                closing.force_evaluation_method in ["lifp", "fifp"]
+                and not closing.last_closed_id
+            ):
                 raise UserError(_("You must set a previous closing."))
 
 
