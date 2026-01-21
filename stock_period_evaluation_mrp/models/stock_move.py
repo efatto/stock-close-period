@@ -52,7 +52,7 @@ class StockMoveLine(models.Model):
         unit_extra_cost = 0
         unit_amount_duration_expected = 0
         total_amount_child_from_bom = 0
-        total_amount_child_from_closing_line = 0
+        total_amount_child_from_line = 0
         child_product_dict = {}
         if bom:
             total = 0
@@ -86,9 +86,7 @@ class StockMoveLine(models.Model):
                 if line.product_id in child_product_dict:
                     child_product_dict[line.product_id] += line.product_qty
                 else:
-                    child_product_dict.update({
-                        line.product_id: line.product_qty
-                    })
+                    child_product_dict.update({line.product_id: line.product_qty})
                 # Compute recursive if line has 'child_line_ids'
                 if line.child_bom_id and line.child_bom_id in boms_to_recompute:
                     child_total = line.product_id._compute_bom_price(
@@ -122,13 +120,11 @@ class StockMoveLine(models.Model):
                         * line.product_qty
                     )
                     total += amount_child_from_closing_line
-                    total_amount_child_from_closing_line += (
-                        amount_child_from_closing_line
-                    )
+                    total_amount_child_from_line += amount_child_from_closing_line
             if not skip:
                 closing_line_id.price_unit = total
                 closing_line_id.evaluation_method = "production"
-                child_info = ' '.join(
+                child_info = ", ".join(
                     f"{x.default_code} x {child_product_dict[x]}"
                     for x in child_product_dict
                 )
@@ -139,8 +135,8 @@ class StockMoveLine(models.Model):
                     f"cost from child boms: compute from BOM (if not available in "
                     f"lines): "
                     f"{closing_line_id._format_value(total_amount_child_from_bom)}, "
-                    f"compute from closing lines:"
-                    f"{closing_line_id._format_value(total_amount_child_from_closing_line)}, "
+                    f"compute from closing lines: "
+                    f"{closing_line_id._format_value(total_amount_child_from_line)}, "
                     f"child products: {child_info}"
                 )
 
