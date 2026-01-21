@@ -57,6 +57,8 @@ It is possible to get product prices from standard price, without computation, b
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_mrp/static/description/force_standard_price.png
     :alt: Force Standard Price
 
+The components prices are computed from the same closing period, if presents in rows, otherwise they are computed as described above.
+
 Ricalcolo della produzione nel periodo di chiusura
 ==================================================
 
@@ -71,6 +73,8 @@ Questo valore viene calcolato con questa formula:
 - prezzo delle operazioni = durata prevista / 60 * costo orario del centro di lavoro
 - prezzo dei componenti = somma dei componenti * quantità * prezzo (ricorsivo)
 - prezzo totale = prezzo delle operazioni + prezzo dei componenti
+
+I prezzi dei componenti sono calcolati dalla stessa chiusura di magazzino, se presenti nelle righe, altrimenti sono calcolati come descritto sopra.
 
 È possibile ottenere i prezzi dei prodotti dal prezzo standard, senza calcolo, selezionando l'opzione "Forza prezzo standard":
 
