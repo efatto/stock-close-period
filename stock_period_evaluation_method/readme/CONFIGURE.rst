@@ -10,8 +10,13 @@ Qui è possibile creare la chiusura dalla prima voce:
 
 In questa maschera è necessario inserire il nome, la data in cui verrà calcolata la giacenza dei prodotti e il metodo di valuzione a scelta tra i seguenti:
 
-.. image:: ../static/description/metodi_valutazione.png
-    :alt: Metodi valutazione
+#. in base alla categoria del prodotto
+#. in base al costo medio di acquisto
+#. in base al costo del prodotto
+#. in base al FIFO continuo
+#. in base al FIFO a scatti
+#. in base al LIFO continuo
+#. in base al LIFO a scatti
 
 È possibile impostare di ignorare le quantità negative a magazzino, nel caso sia necessario (tenendo conto che vanno comunque sistemate):
 
