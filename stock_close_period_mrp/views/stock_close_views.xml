@@ -9,7 +9,7 @@
             ref="stock_close_period.stock_close_period_line_tree"
         />
         <field name="arch" type="xml">
-            <field name="amount_line" position="after">
+            <button name="action_recalculate_purchase" position="after">
                 <button
                     name="action_recalculate_production"
                     states="confirm"
@@ -18,7 +18,7 @@
                     type="object"
                     groups="stock_close_period.group_stock_close_period_manager"
                 />
-            </field>
+            </button>
         </field>
     </record>
 
