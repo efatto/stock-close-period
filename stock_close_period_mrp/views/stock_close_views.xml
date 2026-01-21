@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
+    <record id="stock_close_period_line_tree" model="ir.ui.view">
+        <field name="name">stock.close.period.line.tree</field>
+        <field name="model">stock.close.period.line</field>
+        <field
+            name="inherit_id"
+            ref="stock_close_period.stock_close_period_line_tree"
+        />
+        <field name="arch" type="xml">
+            <field name="amount_line" position="after">
+                <button
+                    name="action_recalculate_production"
+                    states="confirm"
+                    help="Compute Production"
+                    icon="fa-industry"
+                    type="object"
+                    groups="stock_close_period.group_stock_close_period_manager"
+                />
+            </field>
+        </field>
+    </record>
+
     <record id="stock_close_period_tree_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.tree.inherit</field>
         <field name="model">stock.close.period</field>
@@ -54,6 +75,19 @@
                 <attribute name="attrs">
                     {'readonly': ['|', ('purchase_ok', '=', True), ('production_ok', '=', True)]}
                 </attribute>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/button[@name='action_recalculate_purchase']"
+                position="after"
+            >
+                <button
+                    name="action_recalculate_production"
+                    states="confirm"
+                    help="Compute Production"
+                    icon="fa-industry"
+                    type="object"
+                    groups="stock_close_period.group_stock_close_period_manager"
+                />
             </xpath>
         </field>
     </record>
