@@ -107,7 +107,7 @@ class StockClosePeriod(models.Model):
                         % closing.state
                     )
                 )
-        return super(StockClosePeriod, self).unlink()
+        return super().unlink()
 
     def action_set_to_draft(self):
         for closing in self:
