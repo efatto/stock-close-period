@@ -5,7 +5,7 @@
         <field name="name">stock.close.period.tree</field>
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
-            <tree create="0" delete="0" edit="0">
+            <tree>
                 <field name="name" />
                 <field name="close_date" />
                 <field name="amount" />
@@ -18,32 +18,11 @@
         </field>
     </record>
 
-    <record id="stock_close_period_tree_manager_view_inherit" model="ir.ui.view">
-        <field name="name">stock.close.period.tree.manager.view.inherit</field>
-        <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_tree" />
-        <field
-            name="groups_id"
-            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
-        />
-        <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
-                <attribute name="create">1</attribute>
-            </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="delete">1</attribute>
-            </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="edit">1</attribute>
-            </xpath>
-        </field>
-    </record>
-
     <record id="stock_close_period_line_tree" model="ir.ui.view">
         <field name="name">stock.close.period.line.tree</field>
         <field name="model">stock.close.period.line</field>
         <field name="arch" type="xml">
-            <tree create="0" delete="0" edit="0">
+            <tree editable="top">
                 <field name="close_id" />
                 <field name="product_id" />
                 <field name="categ_name" />
@@ -65,33 +44,6 @@
                     groups="stock_close_period.group_stock_close_period_manager"
                 />
             </tree>
-        </field>
-    </record>
-
-    <record id="stock_close_period_line_tree_manager_view_inherit" model="ir.ui.view">
-        <field name="name">stock.close.period.line.tree.manager.view.inherit</field>
-        <field name="model">stock.close.period.line</field>
-        <field
-            name="inherit_id"
-            ref="stock_close_period.stock_close_period_line_tree"
-        />
-        <field
-            name="groups_id"
-            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
-        />
-        <field name="arch" type="xml">
-            <xpath expr="//tree" position="attributes">
-                <attribute name="create">1</attribute>
-            </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="delete">1</attribute>
-            </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="edit">1</attribute>
-            </xpath>
-            <xpath expr="//tree" position="attributes">
-                <attribute name="editable">top</attribute>
-            </xpath>
         </field>
     </record>
 
@@ -139,7 +91,7 @@
         <field name="name">stock.close.period.form</field>
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
-            <form create="0" delete="0" edit="0" string="stock Close Period">
+            <form string="stock Close Period">
                 <header>
                     <button
                         name="action_start"
@@ -253,27 +205,6 @@
                     </notebook>
                 </sheet>
             </form>
-        </field>
-    </record>
-
-    <record id="stock_close_period_form_manager_view_inherit" model="ir.ui.view">
-        <field name="name">stock.close.period.form.manager.view.inherit</field>
-        <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
-        <field
-            name="groups_id"
-            eval="[(4, ref('stock_close_period.group_stock_close_period_manager'))]"
-        />
-        <field name="arch" type="xml">
-            <xpath expr="//form" position="attributes">
-                <attribute name="create">1</attribute>
-            </xpath>
-            <xpath expr="//form" position="attributes">
-                <attribute name="delete">1</attribute>
-            </xpath>
-            <xpath expr="//form" position="attributes">
-                <attribute name="edit">1</attribute>
-            </xpath>
         </field>
     </record>
 
