@@ -20,7 +20,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         supplierinfo = cls.env["product.supplierinfo"].create(
             [
                 {
-                    "name": cls.vendor.id,
+                    "partner_id": cls.vendor.id,
                     "delay": 10,
                 }
             ]
