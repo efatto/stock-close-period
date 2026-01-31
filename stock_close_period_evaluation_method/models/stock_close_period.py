@@ -49,7 +49,7 @@ class StockClosePeriod(models.Model):
 class StockClosePeriodLine(models.Model):
     _inherit = "stock.close.period.line"
 
-    evaluation_details = fields.Text(string="Evaluation Details")
+    evaluation_details = fields.Text()
 
     def _format_value(self, value):
         lang = get_lang(self.env, lang_code=self.company_id.partner_id.lang)
