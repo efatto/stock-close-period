@@ -80,11 +80,9 @@ class StockClosePeriodLine(models.Model):
         digits="Product Unit of Measure",
     )
     cumulative_amount = fields.Float(
-        string="Cumulative Amount",
         digits="Product Price",
     )
     cumulative_landed_cost = fields.Float(
-        string="Cumulative Landed Cost",
         digits="Product Price",
     )
     cumulative_qty = fields.Float(
@@ -99,7 +97,7 @@ class StockClosePeriodLine(models.Model):
         digits="Product Price",
     )
     location_id = fields.Many2one("stock.location", string="Location")
-    lot_id = fields.Many2one("stock.production.lot", string="Lot/Serial Number")
+    lot_id = fields.Many2one("stock.lot", string="Lot/Serial Number")
     owner_id = fields.Many2one("res.partner", string="Owner")
     company_id = fields.Many2one(
         "res.company",

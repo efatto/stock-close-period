@@ -96,4 +96,4 @@ class StockCloseImportWizard(models.TransientModel):
             self.close_id.state = "done"
 
         except Exception as e:
-            raise UserError(e)
+            raise UserError(_("Error %(error)s importing csv.") % {"error": e}) from e

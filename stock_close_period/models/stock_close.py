@@ -57,7 +57,6 @@ class StockClosePeriod(models.Model):
         " cost.",
     )
     last_close_date = fields.Date(
-        string="Last Close Date",
         compute="_compute_last_close_date",
         store=True,
     )
@@ -103,8 +102,8 @@ class StockClosePeriod(models.Model):
             if closing.state in ["confirm", "done"]:
                 raise UserError(
                     _(
-                        "State in '%s'. You can only delete in state 'Draft' or 'Cancelled'."
-                        % closing.state
+                        "State in '%s'. You can only delete in state 'Draft' or "
+                        "'Cancelled'." % closing.state
                     )
                 )
         return super().unlink()
