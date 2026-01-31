@@ -5,7 +5,7 @@
         <field name="name">stock.close.period.tree</field>
         <field name="model">stock.close.period</field>
         <field name="arch" type="xml">
-            <tree create="0" delete="0" edit="0" string="stock close period">
+            <tree create="0" delete="0" edit="0">
                 <field name="name" />
                 <field name="close_date" />
                 <field name="amount" />
@@ -43,7 +43,7 @@
         <field name="name">stock.close.period.line.tree</field>
         <field name="model">stock.close.period.line</field>
         <field name="arch" type="xml">
-            <tree create="0" delete="0" edit="0" string="stock Close Period Lines">
+            <tree create="0" delete="0" edit="0">
                 <field name="close_id" />
                 <field name="product_id" />
                 <field name="categ_name" />
@@ -226,11 +226,7 @@
                     <notebook>
                         <page string="Product list">
                             <field name="line_ids">
-                                <tree
-                                    string="stock Close Period Lines"
-                                    editable="top"
-                                    default_order="product_code"
-                                >
+                                <tree editable="top" default_order="product_code">
                                     <field name="product_code" invisible="1" />
                                     <field name="state" invisible="1" />
                                     <field name="product_id" />
