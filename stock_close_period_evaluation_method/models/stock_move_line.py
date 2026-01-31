@@ -90,11 +90,11 @@ class StockMoveLine(models.Model):
         self, closing_id, closing_line_id, last_close_date, product_id
     ):
         if closing_id.force_evaluation_method in ["lifo", "fifo", "fifp", "lifp"]:
-            self._get_cost_stock_move_lifo_fifo(closing_line_id)
+            return self._get_cost_stock_move_lifo_fifo(closing_line_id)
         elif product_id.categ_id.property_cost_method == "fifo":
-            self._get_cost_stock_move_lifo_fifo(closing_line_id, "fifo")
+            return self._get_cost_stock_move_lifo_fifo(closing_line_id, "fifo")
         else:
-            super()._evaluate_product(
+            return super()._evaluate_product(
                 closing_id, closing_line_id, last_close_date, product_id
             )
 
