@@ -1,0 +1,1 @@
+odoo-addon-stock_move_backdating@git+https://github.com/OCA/stock-logistics-workflow@refs/pull/1594/head#subdirectory=setup/stock_move_backdating
