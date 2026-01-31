@@ -1,3 +1,7 @@
+.. image:: https://odoo-community.org/readme-banner-image
+   :target: https://odoo-community.org/get-involved?utm_source=readme
+   :alt: Odoo Community Association
+
 ===========================================
 Stock Close Period Extra Evaluation Methods
 ===========================================
@@ -13,11 +17,11 @@ Stock Close Period Extra Evaluation Methods
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-efatto%2Fstock--close--period-lightgray.png?logo=github
-    :target: https://github.com/efatto/stock-close-period/tree/14.0/stock_close_period_evaluation_method
+    :target: https://github.com/efatto/stock-close-period/tree/16.0/stock_close_period_evaluation_method
     :alt: efatto/stock-close-period
 
 |badge1| |badge2| |badge3|
@@ -34,58 +38,70 @@ Configuration
 
 La chiusura di magazzino è accessibile dal menu:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/menu_chiusura.png
-    :alt: Menu chiusura
+|Menu chiusura|
 
 Qui è possibile creare la chiusura dalla prima voce:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/crea_chiusura.png
-    :alt: Crea chiusura
+|Crea chiusura|
 
-In questa maschera è necessario inserire il nome, la data in cui verrà calcolata la giacenza dei prodotti e il metodo di valuzione a scelta tra i seguenti:
+In questa maschera è necessario inserire il nome, la data in cui verrà
+calcolata la giacenza dei prodotti e il metodo di valuzione a scelta tra
+i seguenti:
 
-#. in base alla categoria del prodotto
-#. in base al costo medio di acquisto
-#. in base al costo del prodotto
-#. in base al FIFO continuo
-#. in base al FIFO a scatti
-#. in base al LIFO continuo
-#. in base al LIFO a scatti
+1. in base alla categoria del prodotto
+2. in base al costo medio di acquisto
+3. in base al costo del prodotto
+4. in base al FIFO continuo
+5. in base al FIFO a scatti
+6. in base al LIFO continuo
+7. in base al LIFO a scatti
 
-È possibile impostare di ignorare le quantità negative a magazzino, nel caso sia necessario (tenendo conto che vanno comunque sistemate):
+È possibile impostare di ignorare le quantità negative a magazzino, nel
+caso sia necessario (tenendo conto che vanno comunque sistemate):
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/ignora_negativi.png
-    :alt: Ignora quantità negative
+|Ignora quantità negative|
 
-Si può quindi avviare la procedura con il seguente bottone, che calcola le giacenze dei prodotti alla data indicata:
+Si può quindi avviare la procedura con il seguente bottone, che calcola
+le giacenze dei prodotti alla data indicata:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/inizia.png
-    :alt: Inizia
+|Inizia|
 
-Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare). Il calcolo del costo prende il prezzo dalla fattura collegata all'ordine, se esiste ed è validata, altrimenti dall'ordine, infine dal prodotto.
+Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci
+metterà un po' di tempo, quindi lasciarlo lavorare). Il calcolo del
+costo prende il prezzo dalla fattura collegata all'ordine, se esiste ed
+è validata, altrimenti dall'ordine, infine dal prodotto.
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/calcola_acquisti.png
-    :alt: Calcola acquisti
+|Calcola acquisti|
 
-Nel caso sia installata l'app produzione, avviare il calcolo dei manufatti con questo bottone (anche questo impiegherà del tempo):
+Nel caso sia installata l'app produzione, avviare il calcolo dei
+manufatti con questo bottone (anche questo impiegherà del tempo):
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/calcola_produzione.png
-    :alt: Calcola produzione
+|Calcola produzione|
 
-Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che sono stati eseguiti correttamente:
+Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che
+sono stati eseguiti correttamente:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/flag.png
-    :alt: Flag
+|Flag|
 
-Si può quindi validare la chiusura (che si può sempre riportare a bozza e rifare) con questo bottone, che provvede anche ad eliminare le righe con quantità negativa o pari a zero:
+Si può quindi validare la chiusura (che si può sempre riportare a bozza
+e rifare) con questo bottone, che provvede anche ad eliminare le righe
+con quantità negativa o pari a zero:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/valida.png
-    :alt: Valida
+|Valida|
 
 È infine possibile esportare un report in xlsx:
 
-.. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/esporta.png
-    :alt: Esporta
+|Esporta|
+
+.. |Menu chiusura| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/menu_chiusura.png
+.. |Crea chiusura| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/crea_chiusura.png
+.. |Ignora quantità negative| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/ignora_negativi.png
+.. |Inizia| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/inizia.png
+.. |Calcola acquisti| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/calcola_acquisti.png
+.. |Calcola produzione| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/calcola_produzione.png
+.. |Flag| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/flag.png
+.. |Valida| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/valida.png
+.. |Esporta| image:: https://raw.githubusercontent.com/efatto/stock-close-period/16.0/stock_close_period_evaluation_method/static/description/esporta.png
 
 Bug Tracker
 ===========
@@ -93,7 +109,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/efatto/stock-close-period/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/efatto/stock-close-period/issues/new?body=module:%20stock_close_period_evaluation_method%0Aversion:%2014.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/efatto/stock-close-period/issues/new?body=module:%20stock_close_period_evaluation_method%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -101,18 +117,18 @@ Credits
 =======
 
 Authors
-~~~~~~~
+-------
 
 * Sergio Corato
 
 Contributors
-~~~~~~~~~~~~
+------------
 
-* Sergio Corato <https://github.com/sergiocorato>
+-  Sergio Corato <https://github.com/sergiocorato>
 
 Maintainers
-~~~~~~~~~~~
+-----------
 
-This module is part of the `efatto/stock-close-period <https://github.com/efatto/stock-close-period/tree/14.0/stock_close_period_evaluation_method>`_ project on GitHub.
+This module is part of the `efatto/stock-close-period <https://github.com/efatto/stock-close-period/tree/16.0/stock_close_period_evaluation_method>`_ project on GitHub.
 
 You are welcome to contribute.
