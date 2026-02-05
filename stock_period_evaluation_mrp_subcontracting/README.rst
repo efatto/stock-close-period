@@ -22,7 +22,15 @@ Stock Close Period - MRP with subcontracting
 
 |badge1| |badge2| |badge3|
 
+ENGLISH
+#######
+
 This module add subcontracting cost to product price from BOM.
+
+ITALIANO
+########
+
+Questo modulo aggiunge il costo di lavorazione del subappalto nel caso sia presente nel tab acquisti del prodotto.
 
 **Table of contents**
 
