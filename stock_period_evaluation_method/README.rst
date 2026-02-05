@@ -62,7 +62,7 @@ Si può quindi avviare la procedura con il seguente bottone, che calcola le giac
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/inizia.png
     :alt: Inizia
 
-Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare). Il calcolo del costo prende il prezzo dalla fattura collegata all'ordine, se esiste ed è validata, altrimenti dall'ordine, infine dal prodotto.
+Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po' di tempo, quindi lasciarlo lavorare). Il calcolo del costo prende il prezzo dalla fattura collegata all'ordine, se esiste ed è validata, altrimenti dall'ordine, in ultima istanza dal prodotto.
 
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/calcola_acquisti.png
     :alt: Calcola acquisti
@@ -71,6 +71,8 @@ Nel caso sia installata l'app produzione, avviare il calcolo dei manufatti con q
 
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_evaluation_method/static/description/calcola_produzione.png
     :alt: Calcola produzione
+
+Il calcolo dei prodotti manufatti avviene secondo la formula descritta nel modulo auto-installante `stock_close_period_mrp`. Nel caso sia installata l'app per il subappalto, viene aggiunto il relativo costo come descritto nel modulo auto-installante `stock_close_period_mrp_subcontracting`.
 
 Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che sono stati eseguiti correttamente:
 
