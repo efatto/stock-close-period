@@ -80,7 +80,9 @@ class TestClosePeriodEvaluationMethod(TestCommon):
             self.assertEqual(stock_move.date.date(), move_date_backdating)
             self.assertEqual(stock_move_line.date.date(), move_date_backdating)
 
-    def _create_purchase_order_backdate(self, product_qty, price_unit, days_backdating, product=None):
+    def _create_purchase_order_backdate(
+        self, product_qty, price_unit, days_backdating, product=None
+    ):
         date_backdating = self._get_datetime_backdating(days_backdating)
         purchase_order_form = Form(self.env["purchase.order"].with_user(self.test_user))
         purchase_order_form.partner_id = self.vendor
