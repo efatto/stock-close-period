@@ -29,9 +29,25 @@
                 expr="//form/header/button[@name='action_done']"
                 position="attributes"
             >
+                <attribute name="attrs">{'invisible': [
+                    '|',
+                        '&amp;',
+                            '&amp;',
+                                '|',
+                        ('import_file', '!=', False),
+                        ('state', '!=', 'confirm'),
+                            ('import_file', '=', False),
+                                ('production_ok', '=', False),
+                                ('state', '!=', 'confirm'),
+                ]}</attribute>
+            </xpath>
+            <xpath
+                expr="//form/header/button[@name='action_recalculate_purchase']"
+                position="attributes"
+            >
                 <attribute
                     name="attrs"
-                >{'invisible': [('import_file', '=', False)]}</attribute>
+                >{'invisible': ['|', ('import_file', '!=', False)]}</attribute>
             </xpath>
         </field>
     </record>
