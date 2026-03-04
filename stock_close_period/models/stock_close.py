@@ -118,6 +118,14 @@ class StockClosePeriod(models.Model):
                 closing.amount = 0
                 closing.purchase_ok = False
 
+    def _get_products(self):
+        return self.env["product.product"].with_context(
+            active_test=False).search(
+                [
+                    ("type", "!=", "service"),
+                ]
+            )
+
     def _get_product_lines(self):
         self.ensure_one()
         # add all products active or not, of not service type,
@@ -141,13 +149,7 @@ class StockClosePeriod(models.Model):
                         or False,
                     ),
                 )
-                for product in self.env["product.product"]
-                .with_context(active_test=False)
-                .search(
-                    [
-                        ("type", "!=", "service"),
-                    ]
-                )
+                for product in self._get_products()
             ]
 
         # get quantity on end period for each product
