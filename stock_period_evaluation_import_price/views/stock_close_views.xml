@@ -25,6 +25,14 @@
                     </div>
                 </div>
             </xpath>
+            <xpath
+                expr="//form/header/button[@name='action_done']"
+                position="attributes"
+            >
+                <attribute
+                    name="attrs"
+                >{'invisible': [('import_file', '=', False)]}</attribute>
+            </xpath>
         </field>
     </record>
 
