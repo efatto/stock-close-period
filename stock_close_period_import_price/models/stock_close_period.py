@@ -8,8 +8,8 @@ from odoo import fields, models
 class StockClosePeriod(models.Model):
     _inherit = "stock.close.period"
 
-    import_file = fields.Binary(string="Import File with prices")
-    import_file_name = fields.Char(string="Import File Name")
+    import_file = fields.Binary(string="Import File with prices", copy=False)
+    import_file_name = fields.Char(string="Import File Name", copy=False)
 
     def action_import_price_file(self):
         self.ensure_one()
