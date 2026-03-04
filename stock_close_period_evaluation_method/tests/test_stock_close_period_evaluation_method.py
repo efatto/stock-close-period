@@ -17,7 +17,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         cls.customer.customer_rank = 1
         cls.buy_route = cls.env.ref("purchase_stock.route_warehouse0_buy")
         cls.vendor = cls.env.ref("base.res_partner_3")
-        supplierinfo = cls.env["product.supplierinfo"].create(
+        cls.supplierinfo = cls.env["product.supplierinfo"].create(
             [
                 {
                     "name": cls.vendor.id,
@@ -31,7 +31,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
                     "name": "Product Test",
                     "standard_price": 55.0,
                     "type": "product",
-                    "seller_ids": [(6, 0, [supplierinfo.id])],
+                    "seller_ids": [(6, 0, [cls.supplierinfo.id])],
                     "route_ids": [(6, 0, [cls.buy_route.id])],
                 }
             ]
@@ -80,12 +80,12 @@ class TestClosePeriodEvaluationMethod(TestCommon):
             self.assertEqual(stock_move.date.date(), move_date_backdating)
             self.assertEqual(stock_move_line.date.date(), move_date_backdating)
 
-    def _create_purchase_order_backdate(self, product_qty, price_unit, days_backdating):
+    def _create_purchase_order_backdate(self, product_qty, price_unit, days_backdating, product=None):
         date_backdating = self._get_datetime_backdating(days_backdating)
         purchase_order_form = Form(self.env["purchase.order"].with_user(self.test_user))
         purchase_order_form.partner_id = self.vendor
         with purchase_order_form.order_line.new() as order_line:
-            order_line.product_id = self.product
+            order_line.product_id = product or self.product
             order_line.product_qty = product_qty
             order_line.price_unit = price_unit
         purchase_order = purchase_order_form.save()
