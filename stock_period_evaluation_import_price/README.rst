@@ -32,7 +32,7 @@ This module add an option to override prices for an existing inventory evaluatio
 Configuration
 =============
 
-Nella chiusura di magazzino è disponibile un bottone per caricare un file, precedentemente esportata dalla stessa, o un'altra, chiusura, che abbia almeno le colonne `Costo unitario` e `Prodotto`:
+Nella chiusura di magazzino è disponibile un bottone per caricare un file, precedentemente esportata dalla stessa, o un'altra chiusura, o creato manualmente, che abbia almeno una colonna il cui nome contenga `costo`, `prezzo` o `unit` e una `prodotto`, senza riguardo delle maiuscole/minuscole:
 
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_import_price/static/description/carica_file.png
     :alt: Carica file
@@ -41,6 +41,8 @@ Quindi è possibile eseguire la sovrascrittura dei prezzi a video con quelli pre
 
 .. image:: https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_import_price/static/description/importa_prezzi.png
     :alt: Importa prezzi
+
+Non è necessario fare i calcoli dei costi dagli acquisti e dalla produzione quando si caricano i prezzi con questa funzionalità. È sufficiente quindi avviare la chiusura, importare i prezzi e poi validarla.
 
 Bug Tracker
 ===========
