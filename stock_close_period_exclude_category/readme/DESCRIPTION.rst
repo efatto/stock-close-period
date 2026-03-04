@@ -1,1 +1,1 @@
-This module add other evalution method for inventory evaluation.
+This module add a boolean to exclude some product categories from evaluation.

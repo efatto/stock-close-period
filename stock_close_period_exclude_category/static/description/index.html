@@ -369,7 +369,7 @@ ul.auto-toc {
 !! source digest: sha256:1077868e3d33eda6965536c590477109ff1e0518ffd2bbfb9e20999da3dfded2
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/licence-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/efatto/stock-close-period/tree/14.0/stock_close_period_exclude_category"><img alt="efatto/stock-close-period" src="https://img.shields.io/badge/github-efatto%2Fstock--close--period-lightgray.png?logo=github" /></a></p>
-<p>This module add other evalution method for inventory evaluation.</p>
+<p>This module add a boolean to exclude some product categories from evaluation.</p>
 <p><strong>Table of contents</strong></p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
@@ -385,35 +385,8 @@ ul.auto-toc {
 </div>
 <div class="section" id="configuration">
 <h1><a class="toc-backref" href="#toc-entry-1">Configuration</a></h1>
-<p>La chiusura di magazzino è accessibile dal menu:</p>
-<img alt="Menu chiusura" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/menu_chiusura.png" />
-<p>Qui è possibile creare la chiusura dalla prima voce:</p>
-<img alt="Crea chiusura" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/crea_chiusura.png" />
-<p>In questa maschera è necessario inserire il nome, la data in cui verrà calcolata la giacenza dei prodotti e il metodo di valuzione a scelta tra i seguenti:</p>
-<ol class="arabic simple">
-<li>in base alla categoria del prodotto</li>
-<li>in base al costo medio di acquisto</li>
-<li>in base al costo del prodotto</li>
-<li>in base al FIFO continuo</li>
-<li>in base al FIFO a scatti</li>
-<li>in base al LIFO continuo</li>
-<li>in base al LIFO a scatti</li>
-</ol>
-<p>È possibile impostare di ignorare le quantità negative a magazzino, nel caso sia necessario (tenendo conto che vanno comunque sistemate):</p>
-<img alt="Ignora quantità negative" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/ignora_negativi.png" />
-<p>Si può quindi avviare la procedura con il seguente bottone, che calcola le giacenze dei prodotti alla data indicata:</p>
-<img alt="Inizia" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/inizia.png" />
-<p>Il passaggio successivo è avviare il calcolo dei prodotti acquistati (ci metterà un po’ di tempo, quindi lasciarlo lavorare). Il calcolo del costo prende il prezzo dalla fattura collegata all’ordine, se esiste ed è validata, altrimenti dall’ordine, in ultima istanza dal prodotto.</p>
-<img alt="Calcola acquisti" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/calcola_acquisti.png" />
-<p>Nel caso sia installata l’app produzione, avviare il calcolo dei manufatti con questo bottone (anche questo impiegherà del tempo):</p>
-<img alt="Calcola produzione" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/calcola_produzione.png" />
-<p>Il calcolo dei prodotti manufatti avviene secondo la formula descritta nel modulo auto-installante <cite>stock_close_period_mrp</cite>. Nel caso sia installata l’app per il subappalto, viene aggiunto il relativo costo come descritto nel modulo auto-installante <cite>stock_close_period_mrp_subcontracting</cite>.</p>
-<p>Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che sono stati eseguiti correttamente:</p>
-<img alt="Flag" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/flag.png" />
-<p>Si può quindi validare la chiusura (che si può sempre riportare a bozza e rifare) con questo bottone, che provvede anche ad eliminare le righe con quantità negativa o pari a zero:</p>
-<img alt="Valida" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/valida.png" />
-<p>È infine possibile esportare un report in xlsx:</p>
-<img alt="Esporta" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/esporta.png" />
+<p>Questo modulo aggiunge un flag nelle categorie prodotto per escluderle dalla valorizzazione di magazzino (solo la categoria selezionata viene esclusa, le figlie non sono comprese):</p>
+<img alt="Escludi la categoria dalla valorizzazione di magazzino" src="https://raw.githubusercontent.com/efatto/stock-close-period/14.0/stock_close_period_exclude_category/static/description/escludi.png" />
 </div>
 <div class="section" id="bug-tracker">
 <h1><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h1>
