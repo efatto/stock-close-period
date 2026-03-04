@@ -119,12 +119,15 @@ class StockClosePeriod(models.Model):
                 closing.purchase_ok = False
 
     def _get_products(self):
-        return self.env["product.product"].with_context(
-            active_test=False).search(
+        return (
+            self.env["product.product"]
+            .with_context(active_test=False)
+            .search(
                 [
                     ("type", "!=", "service"),
                 ]
             )
+        )
 
     def _get_product_lines(self):
         self.ensure_one()
