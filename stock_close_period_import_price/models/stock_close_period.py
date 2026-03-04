@@ -22,10 +22,13 @@ class StockClosePeriod(models.Model):
             price_unit_found = False
             product_default_code = False
             for cx, c in enumerate(st.row(rx)):
-                if header_row[cx].value == "Costo unitario":
+                if any(
+                    x in header_row[cx].value.lower()
+                    for x in ["costo", "prezzo", "unit"]
+                ):
                     price_unit_found = True
                     price_unit = c.value or 0
-                if header_row[cx].value == "Prodotto":
+                if "prodotto" in header_row[cx].value.lower():
                     product_default_code = c.value
                 if product_default_code and price_unit_found:
                     lines = self.line_ids.filtered(
