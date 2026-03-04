@@ -10,6 +10,7 @@
     "license": "AGPL-3",
     "depends": [
         "stock_close_period_evaluation_method",
+        "stock_close_period_mrp",
     ],
     "data": [
         "views/stock_close_views.xml",
