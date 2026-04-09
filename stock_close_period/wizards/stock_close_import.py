@@ -23,8 +23,16 @@ class StockCloseImportWizard(models.TransientModel):
     _name = "stock.close.import.wizard"
     _description = "Stock Close Import Wizard"
 
-    file = fields.Binary()
-    close_id = fields.Many2one("stock.close.period", string="Stock Close Period")
+    file = fields.Binary(
+        required=True,
+        string="CSV File",
+        help="Select the CSV file to import",
+    )
+    close_id = fields.Many2one(
+        "stock.close.period",
+        required=True,
+        string="Stock Close Period",
+    )
 
     def load_products(self, lines):
         products = {}
@@ -97,3 +105,8 @@ class StockCloseImportWizard(models.TransientModel):
 
         except Exception as e:
             raise UserError(e)
+
+        return {
+            "type": "ir.actions.client",
+            "tag": "reload",
+        }
