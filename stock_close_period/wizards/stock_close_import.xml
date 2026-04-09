@@ -10,6 +10,12 @@
                     <field name="close_id" />
                     <field name="file" filename="filename" />
                 </group>
+                <group colspan="4" col="1">
+                    <span>CSV file with minimum these columns:</span>
+                    <span>CODE: the product default code</span>
+                    <span>QTY: the stock quantity</span>
+                    <span>COST: the cost unit amount of the product (formatted without currency simbol as 1234.78)</span>
+                </group>
                 <footer>
                     <button name="import_csv" string="Import" type="object" />
                 </footer>
