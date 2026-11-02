@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_close_period_evaluation_method
+# 	* stock_period_evaluation_method
 #
 msgid ""
 msgstr ""
@@ -15,52 +15,52 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__assigned_attachment_ids
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__assigned_attachment_ids
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__assigned_attachment_ids
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period_line__assigned_attachment_ids
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_move_line__assigned_attachment_ids
 msgid "Assigned Attachments"
 msgstr "Allegati assegnati"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifo
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifo
 msgid "Compute based FIFO (continuos)"
 msgstr "Calcola in base al FIFO (continuo)"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifp
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_period_evaluation_method.selection__stock_close_period__force_evaluation_method__fifp
 msgid "Compute based FIFO (periodic)"
 msgstr "Calcola in base al FIFO (a scatti)"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifo
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifo
 msgid "Compute based LIFO (continuos)"
 msgstr "Calcola in base al LIFO (continuo)"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields.selection,name:stock_close_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifp
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields.selection,name:stock_period_evaluation_method.selection__stock_close_period__force_evaluation_method__lifp
 msgid "Compute based LIFO (periodic)"
 msgstr "Calcola in base al LIFO (a scatti)"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__display_name
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__display_name
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__display_name
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period__display_name
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period_line__display_name
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_move_line__display_name
 msgid "Display Name"
 msgstr "Nome visualizzato"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__evaluation_details
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period_line__evaluation_details
 msgid "Evaluation Details"
 msgstr "Dettagli valorizzazione"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__force_evaluation_method
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period__force_evaluation_method
 msgid "Force Evaluation Method"
 msgstr "Forza metodo di valutazione"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,help:stock_close_period_evaluation_method.field_stock_close_period__force_evaluation_method
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,help:stock_period_evaluation_method.field_stock_close_period__force_evaluation_method
 msgid ""
 "Force Evaluation method will be used only for purchase costs computation.\n"
 "FIFO (continuo): with FIFO logic from the beginning of the moves (require that a previous closing is not set);\n"
@@ -79,49 +79,49 @@ msgstr ""
 "LIFO (a scatti): con logica LIFO dalla chiusura precedente (richiede che sia "
 "impostata una chiusura precedente)."
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period__id
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line__id
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line__id
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period__id
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period_line__id
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_move_line__id
 msgid "ID"
 msgstr ""
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period____last_update
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_close_period_line____last_update
-#: model:ir.model.fields,field_description:stock_close_period_evaluation_method.field_stock_move_line____last_update
+#. module: stock_period_evaluation_method
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period____last_update
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_close_period_line____last_update
+#: model:ir.model.fields,field_description:stock_period_evaluation_method.field_stock_move_line____last_update
 msgid "Last Modified on"
 msgstr "Ultima modifica il"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model,name:stock_close_period_evaluation_method.model_stock_move_line
+#. module: stock_period_evaluation_method
+#: model:ir.model,name:stock_period_evaluation_method.model_stock_move_line
 msgid "Product Moves (Stock Move Line)"
 msgstr "Movimenti prodotto (riga movimento magazzino)"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model,name:stock_close_period_evaluation_method.model_stock_close_period
+#. module: stock_period_evaluation_method
+#: model:ir.model,name:stock_period_evaluation_method.model_stock_close_period
 msgid "Stock Close Period"
 msgstr "Chiusura di magazzino"
 
-#. module: stock_close_period_evaluation_method
-#: model:ir.model,name:stock_close_period_evaluation_method.model_stock_close_period_line
+#. module: stock_period_evaluation_method
+#: model:ir.model,name:stock_period_evaluation_method.model_stock_close_period_line
 msgid "Stock Close Period Line"
 msgstr "Riga chiusura di magazzino"
 
-#. module: stock_close_period_evaluation_method
-#: code:addons/stock_close_period_evaluation_method/models/stock_move_line.py:0
+#. module: stock_period_evaluation_method
+#: code:addons/stock_period_evaluation_method/models/stock_move_line.py:0
 #, python-format
 msgid "Total: %s"
 msgstr "Totale: %s"
 
-#. module: stock_close_period_evaluation_method
-#: code:addons/stock_close_period_evaluation_method/models/stock_close_period.py:0
+#. module: stock_period_evaluation_method
+#: code:addons/stock_period_evaluation_method/models/stock_close_period.py:0
 #, python-format
 msgid "You can't set a previous closing."
 msgstr "Non è possibile impostare una chiusura precedente."
 
-#. module: stock_close_period_evaluation_method
-#: code:addons/stock_close_period_evaluation_method/models/stock_close_period.py:0
+#. module: stock_period_evaluation_method
+#: code:addons/stock_period_evaluation_method/models/stock_close_period.py:0
 #, python-format
 msgid "You must set a previous closing."
 msgstr "È necessario impostare una chiusura precedente."
