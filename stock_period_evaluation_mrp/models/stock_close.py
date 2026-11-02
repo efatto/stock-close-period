@@ -28,7 +28,7 @@ class StockClosePeriodInherit(models.Model):
     )
 
     def action_set_to_draft(self):
-        res = super(StockClosePeriodInherit, self).action_set_to_draft()
+        res = super().action_set_to_draft()
         for closing in self:
             closing.production_ok = False
         return res
