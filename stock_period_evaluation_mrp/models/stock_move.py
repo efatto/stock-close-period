@@ -47,7 +47,7 @@ class StockMoveLine(models.Model):
         # recursively in child boms
         closing_id = closing_line_id.close_id
         product_id = closing_line_id.product_id
-        bom = self.env["mrp.bom"].sudo()._bom_find(product=product_id)
+        bom = self.env["mrp.bom"].sudo()._bom_find(product_id)[product_id]
         skip = False
         unit_extra_cost = 0
         unit_amount_duration_expected = 0
@@ -70,14 +70,15 @@ class StockMoveLine(models.Model):
             total += extra_cost
             unit_extra_cost += extra_cost
             for opt in bom.operation_ids:
+                if opt._skip_operation_line(product_id):
+                    continue
                 duration_expected = (
-                    opt.workcenter_id.time_start
-                    + opt.workcenter_id.time_stop
+                    opt.workcenter_id._get_expected_duration(product_id)
                     + opt.time_cycle * 100 / opt.workcenter_id.time_efficiency
                 )
                 amount_duration_expected = (
                     duration_expected / 60
-                ) * opt.workcenter_id.costs_hour
+                ) * opt._total_cost_per_hour()
                 total += amount_duration_expected
                 unit_amount_duration_expected += amount_duration_expected
             for line in bom.bom_line_ids:
@@ -153,8 +154,8 @@ class StockMoveLine(models.Model):
                 [
                     ("close_id", "=", closing_id.id),
                     ("evaluation_method", "!=", "manual"),
-                    # ("product_qty", ">", 0),  # all lines must be here to compute costs
-                    # ("price_unit", "=", 0),  # this was for elaborate only not already
+                    # ("product_qty", ">", 0), all lines must be here to compute costs
+                    # ("price_unit", "=", 0), this was for elaborate only not already
                     # done lines, which we instead want to check always
                 ]
             )
@@ -169,7 +170,7 @@ class StockMoveLine(models.Model):
             product_id = closing_line_id.product_id
 
             # skip if the product doesn't have a bom (it's purchased)
-            if not self.env["mrp.bom"]._bom_find(product=product_id):
+            if not self.env["mrp.bom"]._bom_find(product_id)[product_id]:
                 continue
 
             # imposta il metodo di calcolo
@@ -178,7 +179,6 @@ class StockMoveLine(models.Model):
             else:
                 self._get_cost_stock_move_production(closing_line_id)
 
-            self.env.cr.commit()  # pylint: disable=E8102
         _logger.info("[1/2] Finish add standard cost product")
 
     def recompute_average_cost_period_production(
@@ -189,12 +189,14 @@ class StockMoveLine(models.Model):
         _logger.info("[2/2] Write results")
 
         self._recompute_cost_stock_move_production(closing_id, closing_line_ids)
-        self._write_results(closing_id, closing_line_ids)
+        self._write_results(closing_id)
 
         _logger.info("End recompute average cost product")
 
     def _check_consistency(self, closing_line_id):
         result = super()._check_consistency(closing_line_id)
-        if self.env["mrp.bom"]._bom_find(product=closing_line_id.product_id):
+        if self.env["mrp.bom"]._bom_find(closing_line_id.product_id)[
+            closing_line_id.product_id
+        ]:
             return False
         return result

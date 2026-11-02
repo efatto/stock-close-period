@@ -47,7 +47,5 @@ class StockClosePeriodInherit(models.Model):
                 closing
             )
             closing.production_ok = True
-            if closing.force_archive:
-                closing._deactivate_moves()
-            closing.work_end = datetime.now()
+            closing.work_end_date = datetime.now()
         return True

@@ -1,32 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="stock_close_period_line_tree" model="ir.ui.view">
-        <field name="name">stock.close.period.line.tree</field>
+        <field name="name">stock.close.period.line.list</field>
         <field name="model">stock.close.period.line</field>
         <field
             name="inherit_id"
-            ref="stock_close_period.stock_close_period_line_tree"
+            ref="stock_period_evaluation.stock_period_evaluation_line_tree"
         />
         <field name="arch" type="xml">
-            <button name="action_recalculate_purchase" position="after">
+            <field name="amount_line" position="after">
                 <button
                     name="action_recalculate_production"
-                    states="confirm"
                     help="Compute Production"
+                    title="Compute Production"
                     icon="fa-industry"
                     type="object"
-                    groups="stock_close_period.group_stock_close_period_manager"
+                    groups="stock_period_evaluation.group_stock_period_evaluation_manager"
+                    invisible="close_id.state != 'confirm'"
                 />
-            </button>
+            </field>
         </field>
     </record>
 
     <record id="stock_close_period_tree_inherit" model="ir.ui.view">
-        <field name="name">stock.close.period.tree.inherit</field>
+        <field name="name">stock.close.period.list.inherit</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_tree" />
+        <field
+            name="inherit_id"
+            ref="stock_period_evaluation.stock_period_evaluation_tree"
+        />
         <field name="arch" type="xml">
-            <xpath expr="//tree/field[@name='state']" position="after">
+            <xpath expr="//list/field[@name='state']" position="after">
                 <field name="force_standard_price" />
             </xpath>
         </field>
@@ -35,7 +39,10 @@
     <record id="stock_close_period_form_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.form.inherit</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
+        <field
+            name="inherit_id"
+            ref="stock_period_evaluation.stock_period_evaluation_form"
+        />
         <field name="arch" type="xml">
             <xpath
                 expr="//form/header/button[@name='action_recalculate_purchase']"
@@ -46,8 +53,8 @@
                     string="Compute Production"
                     type="object"
                     class="oe_highlight"
-                    groups="stock_close_period.group_stock_close_period_manager"
-                    attrs="{'invisible': ['|',('purchase_ok', '=', False),('state', 'not in', ['confirm'])]}"
+                    groups="stock_period_evaluation.group_stock_period_evaluation_manager"
+                    invisible="not purchase_ok or state != 'confirm'"
                 />
             </xpath>
             <xpath
@@ -55,14 +62,11 @@
                 position="attributes"
             >
                 <attribute
-                    name="attrs"
-                >{'invisible': ['|',('production_ok', '=', False),('state', 'not in', ['confirm'])]}</attribute>
+                    name="invisible"
+                >not production_ok or state != 'confirm'</attribute>
             </xpath>
             <xpath expr="//field[@name='force_evaluation_method']" position="after">
-                <field
-                    name="force_standard_price"
-                    attrs="{'invisible': [('purchase_ok', '=', False)]}"
-                />
+                <field name="force_standard_price" invisible="not purchase_ok" />
             </xpath>
             <xpath expr="//field[@name='purchase_ok']" position="after">
                 <field name="production_ok" />
@@ -71,21 +75,21 @@
                 expr="//field[@name='force_evaluation_method']"
                 position="attributes"
             >
-                <attribute name="attrs">
-                    {'readonly': ['|', ('purchase_ok', '=', True), ('production_ok', '=', True)]}
-                </attribute>
+                <attribute name="readonly">purchase_ok or production_ok</attribute>
             </xpath>
             <xpath
-                expr="//field[@name='line_ids']/tree/button[@name='action_recalculate_purchase']"
+                expr="//field[@name='line_ids']/list/field[@name='amount_line']"
                 position="after"
             >
+                <field name="close_id" column_invisible="True" />
                 <button
                     name="action_recalculate_production"
-                    states="confirm"
                     help="Compute Production"
+                    title="Compute Production"
                     icon="fa-industry"
                     type="object"
-                    groups="stock_close_period.group_stock_close_period_manager"
+                    groups="stock_period_evaluation.group_stock_period_evaluation_manager"
+                    invisible="close_id.state != 'confirm'"
                 />
             </xpath>
         </field>
