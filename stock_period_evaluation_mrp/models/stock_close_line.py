@@ -30,5 +30,5 @@ class StockClosePeriodLineInherit(models.Model):
             self.env["stock.move.line"].recompute_average_cost_period_production(
                 line.close_id, line
             )
-            line.close_id.work_end = fields.Datetime.now()
+            line.close_id.work_end_date = fields.Datetime.now()
         return True

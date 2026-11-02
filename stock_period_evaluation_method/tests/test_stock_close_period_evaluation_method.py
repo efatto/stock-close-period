@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from odoo import fields
 from odoo.exceptions import UserError
-from odoo.tests.common import Form
+from odoo.tests import Form
 
 from odoo.addons.stock_move_backdating.tests.common import TestCommon
 
