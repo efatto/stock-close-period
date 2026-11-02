@@ -1,30 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="stock_close_period_line_tree" model="ir.ui.view">
-        <field name="name">stock.close.period.line.tree</field>
-        <field name="model">stock.close.period.line</field>
-        <field
-            name="inherit_id"
-            ref="stock_close_period.stock_close_period_line_tree"
-        />
-        <field name="arch" type="xml">
-            <field name="evaluation_method" position="after">
-                <field name="evaluation_details" optional="hide" />
-            </field>
-        </field>
-    </record>
-    <record id="stock_close_period_form" model="ir.ui.view">
+    <record id="stock_period_evaluation_form" model="ir.ui.view">
         <field name="name">stock.close.period.form</field>
         <field name="model">stock.close.period</field>
-        <field name="inherit_id" ref="stock_close_period.stock_close_period_form" />
+        <field
+            name="inherit_id"
+            ref="stock_period_evaluation.stock_period_evaluation_form"
+        />
         <field name="arch" type="xml">
-            <field name="evaluation_method" position="after">
-                <field name="evaluation_details" />
-            </field>
             <field name="last_closed_id" position="attributes">
                 <attribute
-                    name="attrs"
-                >{'required': [('force_evaluation_method', '=', 'lifp')]}</attribute>
+                    name="required"
+                >force_evaluation_method in ('fifp', 'lifp')</attribute>
             </field>
         </field>
     </record>

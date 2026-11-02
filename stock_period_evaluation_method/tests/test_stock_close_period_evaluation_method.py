@@ -20,7 +20,7 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         cls.supplierinfo = cls.env["product.supplierinfo"].create(
             [
                 {
-                    "name": cls.vendor.id,
+                    "partner_id": cls.vendor.id,
                     "delay": 10,
                 }
             ]
@@ -30,7 +30,8 @@ class TestClosePeriodEvaluationMethod(TestCommon):
                 {
                     "name": "Product Test",
                     "standard_price": 55.0,
-                    "type": "product",
+                    "type": "consu",
+                    "is_storable": True,
                     "seller_ids": [(6, 0, [cls.supplierinfo.id])],
                     "route_ids": [(6, 0, [cls.buy_route.id])],
                 }
@@ -49,6 +50,13 @@ class TestClosePeriodEvaluationMethod(TestCommon):
                 "groups_id": [
                     (4, cls.env.ref("sales_team.group_sale_salesman").id),
                     (4, cls.env.ref("purchase.group_purchase_user").id),
+                    (4, cls.env.ref("stock.group_stock_user").id),
+                    (
+                        4,
+                        cls.env.ref(
+                            "stock_period_evaluation.group_stock_period_evaluation_manager"
+                        ).id,
+                    ),
                 ],
             }
         )
@@ -162,9 +170,17 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         stock_close_period_form1 = Form(
             self.env["stock.close.period"].with_user(self.test_user)
         )
-        stock_close_period_form1.force_evaluation_method = "lifo"
         stock_close_period_form1.name = "Stock close evaluation 1"
         stock_close_period_form1.close_date = fields.Date.today()
+        with self.assertRaises(UserError):
+            self.env["stock.close.period"].create(
+                {
+                    "name": "Stock close evaluation no last closing",
+                    "close_date": fields.Date.today(),
+                    "force_evaluation_method": "lifp",
+                }
+            )
+        stock_close_period_form1.force_evaluation_method = "lifo"
         stock_close_period_form1.last_closed_id = stock_close_period
         with self.assertRaises(UserError):
             stock_close_period_form1.save()
@@ -254,9 +270,17 @@ class TestClosePeriodEvaluationMethod(TestCommon):
         stock_close_period_form1 = Form(
             self.env["stock.close.period"].with_user(self.test_user)
         )
-        stock_close_period_form1.force_evaluation_method = "fifo"
         stock_close_period_form1.name = "Stock close evaluation 1"
         stock_close_period_form1.close_date = fields.Date.today()
+        with self.assertRaises(UserError):
+            self.env["stock.close.period"].create(
+                {
+                    "name": "Stock close evaluation no last closing",
+                    "close_date": fields.Date.today(),
+                    "force_evaluation_method": "fifp",
+                }
+            )
+        stock_close_period_form1.force_evaluation_method = "fifo"
         stock_close_period_form1.last_closed_id = stock_close_period
         with self.assertRaises(UserError):
             stock_close_period_form1.save()

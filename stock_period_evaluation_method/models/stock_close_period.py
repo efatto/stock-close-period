@@ -1,7 +1,5 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import get_lang
-from odoo.tools.float_utils import float_round
 
 
 class StockClosePeriod(models.Model):
@@ -20,7 +18,7 @@ class StockClosePeriod(models.Model):
             "lifo": "set default",
             "lifp": "set default",
         },
-        help="Force Evaluation method will be used only for purchase costs computation."
+        help="Force Evaluation method will be used only to compute purchase costs."
         "\nFIFO (continuos): with FIFO logic from the beginning of the moves (require "
         "that a previous closing is not set);\n"
         "FIFO (periodic): with FIFO logic from the previous closing (require that a "
@@ -44,22 +42,3 @@ class StockClosePeriod(models.Model):
                 and not closing.last_closed_id
             ):
                 raise UserError(_("You must set a previous closing."))
-
-
-class StockClosePeriodLine(models.Model):
-    _inherit = "stock.close.period.line"
-
-    evaluation_details = fields.Text(string="Evaluation Details")
-
-    def _format_value(self, value):
-        lang = get_lang(self.env, lang_code=self.company_id.partner_id.lang)
-        amount = float_round(
-            value, precision_rounding=self.company_id.currency_id.rounding
-        )
-        amount_formatted = lang.format(
-            "%.2f",
-            amount,
-            grouping=True,
-            monetary=True,
-        )
-        return amount_formatted
