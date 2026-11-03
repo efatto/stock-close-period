@@ -5,7 +5,7 @@
         <field name="model">stock.close.period</field>
         <field
             name="binding_model_id"
-            ref="stock_close_period.model_stock_close_period"
+            ref="stock_period_evaluation.model_stock_close_period"
         />
         <field name="report_type">xlsx</field>
         <field
