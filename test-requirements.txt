@@ -1,0 +1,1 @@
+odoo-addon-stock_period_evaluation@git+https://github.com/OCA/l10n-italy@refs/pull/5128/head#subdirectory=stock_period_evaluation

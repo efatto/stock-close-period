@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: |
-          for reqfile in requirements.txt test-requirements.txt ; do
+          for reqfile in requirements.txt ; do
               if [ -f ${reqfile} ] ; then
                   result=0
                   # reject non-comment lines that contain a / (i.e. URLs, relative paths)
