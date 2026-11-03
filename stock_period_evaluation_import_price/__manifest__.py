@@ -3,15 +3,18 @@
 {
     "name": "Stock Close Period Import Prices",
     "summary": "Add ability to import prices on a stock close period",
-    "version": "14.0.1.0.1",
+    "version": "18.0.1.0.0",
     "category": "Stock",
     "author": "Sergio Corato",
     "website": "https://github.com/efatto/stock-close-period",
     "license": "AGPL-3",
     "depends": [
-        "stock_close_period_evaluation_method",
-        "stock_close_period_mrp",
+        "stock_period_evaluation_method",
+        "stock_period_evaluation_mrp",
     ],
+    "external_dependencies": {
+        "python": ["openpyxl", "xlrd"],
+    },
     "data": [
         "views/stock_close_views.xml",
     ],
