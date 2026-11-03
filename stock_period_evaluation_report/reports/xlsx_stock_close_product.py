@@ -4,7 +4,7 @@ from odoo import _, models
 
 
 class XlsxStockClosePeriodProduct(models.AbstractModel):
-    _name = "report.stock_close_period_report.xlsx_stock_close_product"
+    _name = "report.stock_period_evaluation_report.xlsx_stock_close_product"
     _inherit = "report.report_xlsx.abstract"
     _description = "Report Stock Close Product XLSX"
 
