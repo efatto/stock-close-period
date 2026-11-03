@@ -1,6 +1,6 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* stock_close_period_mrp_subcontracting
+# 	* stock_period_evaluation_mrp_subcontracting
 #
 msgid ""
 msgstr ""
