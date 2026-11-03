@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-
     <record id="xlsx_stock_close_product" model="ir.actions.report">
         <field name="name">Export Stock Close Product Moves to XLSX</field>
         <field name="model">stock.close.period</field>
@@ -19,5 +18,4 @@
             'Stock Close Product %s' % object.name.replace('/','')
         </field>
     </record>
-
 </odoo>
