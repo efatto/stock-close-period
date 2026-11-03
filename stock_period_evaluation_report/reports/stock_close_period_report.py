@@ -2,7 +2,7 @@ from odoo import models
 
 
 class StockCloseReport(models.AbstractModel):
-    _name = "report.stock_close_period_report.report_product_print"
+    _name = "report.stock_period_evaluation_report.report_product_print"
     _description = "Stock Close Period Product Report"
 
     def _get_moves(self, close_line):

@@ -12,7 +12,7 @@
     ],
     "data": [
         "reports/layout.xml",
-        "reports/stock_close_period_report.xml",
+        "reports/stock_period_evaluation_report.xml",
         "reports/xlsx_stock_close_product.xml",
     ],
     "installable": True,

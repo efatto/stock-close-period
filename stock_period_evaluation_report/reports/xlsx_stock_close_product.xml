@@ -11,10 +11,10 @@
         <field name="report_type">xlsx</field>
         <field
             name="report_name"
-        >stock_close_period_report.xlsx_stock_close_product</field>
+        >stock_period_evaluation_report.xlsx_stock_close_product</field>
         <field
             name="report_file"
-        >stock_close_period_report.xlsx_stock_close_product</field>
+        >stock_period_evaluation_report.xlsx_stock_close_product</field>
         <field name="print_report_name">
             'Stock Close Product %s' % object.name.replace('/','')
         </field>

@@ -42,7 +42,7 @@
 
         <div class="article">
             <link
-                href="stock_close_period_report/static/src/css/report.css"
+                href="stock_period_evaluation_report/static/src/css/report.css"
                 rel="stylesheet"
             />
             <t t-raw="0" />
