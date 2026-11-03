@@ -5,14 +5,14 @@ class StockCloseReport(models.AbstractModel):
     _name = "report.stock_period_evaluation_report.report_product_print"
     _description = "Stock Close Period Product Report"
 
-    def _get_moves(self, close_line):
+    def _get_move_lines(self, close_line):
         # search the stock move lines in the same way of the current close period
         # n.b. not the stock moves as they don't show all the stock movement lines and
         # the printed report would be incomplete
         move_lines = self.env["stock.move.line"].search(
             [
                 ("state", "=", "done"),
-                ("qty_done", "!=", 0),
+                ("quantity", "!=", 0),
                 ("product_id", "=", close_line.product_id.id),
                 ("date", ">", close_line.close_id.last_close_date),
                 ("date", "<=", close_line.close_id.close_date),
@@ -28,5 +28,5 @@ class StockCloseReport(models.AbstractModel):
             "doc_ids": docs.ids,
             "doc_model": "stock.close.period",
             "docs": docs,
-            "get_moves": self._get_moves,
+            "get_move_lines": self._get_move_lines,
         }

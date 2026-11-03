@@ -27,10 +27,11 @@
                 </span> -
                     <span
                     class="fiscalcode text-right"
-                    t-if="company.partner_id.fiscalcode"
+                    t-if="'l10n_it_codice_fiscale' in company.partner_id._fields
+                        and company.partner_id.l10n_it_codice_fiscale"
                 >
                     <span>Fiscalcode:</span>
-                    <span t-esc="company.partner_id.fiscalcode" />
+                    <span t-esc="company.partner_id.l10n_it_codice_fiscale" />
                 </span>
                 </div>
                 <div class="col-4 text-right doc-info">
@@ -44,7 +45,7 @@
                 href="stock_period_evaluation_report/static/src/css/report.css"
                 rel="stylesheet"
             />
-            <t t-raw="0" />
+            <t t-out="0" />
         </div>
 
         <div class="footer">

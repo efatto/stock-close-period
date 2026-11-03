@@ -8,11 +8,11 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
     _inherit = "report.report_xlsx.abstract"
     _description = "Report Stock Close Product XLSX"
 
-    def generate_xlsx_report(self, workbook, data, lines):
-        stock_close_period = self.env["stock.close.period"].browse(
+    def generate_xlsx_report(self, workbook, data, objs):
+        stock_close_period = objs[:1] or self.env["stock.close.period"].browse(
             self.env.context.get("active_id")
         )
-        lines = stock_close_period.line_ids
+        objs = stock_close_period.line_ids
 
         sheet = workbook.add_worksheet(_("Stock Close Period Product"))
         sheet.set_landscape()
@@ -75,11 +75,11 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             0,
             i,
             9,
-            _("Close period - %s - %s - %s")
-            % (
-                stock_close_period.name,
-                stock_close_period.close_date.strftime("%d/%m/%Y"),
-                stock_close_period.company_id.name,
+            _(
+                "Close period - %(period_name)s - %(close_date)s - %(company_name)s",
+                period_name=stock_close_period.name,
+                close_date=stock_close_period.close_date.strftime("%d/%m/%Y"),
+                company_name=stock_close_period.company_id.name,
             ),
             title_style,
         )
@@ -92,7 +92,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
         i += 1
         evaluation_amount = 0.0
         # rows
-        for row in lines:
+        for row in objs:
             row_in_qty = 0.0
             row_out_qty = 0.0
             evaluation_amount += row.amount_line
@@ -102,7 +102,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 1,
                 i,
                 9,
-                row.product_id.with_context({"lang": "it_IT"}).name or "",
+                row.product_id.with_context(lang="it_IT").name or "",
                 title_style,
             )
             i += 1
@@ -114,7 +114,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             move_lines = self.env["stock.move.line"].search(
                 [
                     ("state", "=", "done"),
-                    ("qty_done", "!=", 0),
+                    ("quantity", "!=", 0),
                     ("product_id", "=", row.product_id.id),
                     ("date", ">", row.close_id.last_close_date),
                     ("date", "<=", row.close_id.close_date),
@@ -157,7 +157,6 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     move_line.location_dest_id.usage
                     in ["customer", "inventory", "production", "supplier"]
                     or move_line.location_dest_id.scrap_location
-                    or move_line.location_dest_id.return_location
                 ):
                     continue
                 if move_line.location_dest_id.usage == move_line.location_id.usage:
@@ -168,12 +167,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                     else 0.0
                 )
                 move_type = (
-                    "out"
-                    if (
-                        move_line.location_id.usage == "inventory"
-                        and move_line.location_dest_id.return_location
-                    )
-                    else "in"
+                    "in"
                     if (
                         move_line.location_id.usage != "internal"
                         and move_line.location_dest_id.usage == "internal"
@@ -185,16 +179,16 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 sheet.write(i, 2, move_line.location_id.name, border_style)
                 sheet.write(i, 3, move_line.location_dest_id.name, border_style)
                 sheet.write(i, 4, price_unit, currency_format_long)
-                sheet.write(i, 5, price_unit * move_line.qty_done, currency_format)
+                sheet.write(i, 5, price_unit * move_line.quantity, currency_format)
                 sheet.write(i, 6, move_line.product_uom_id.name, border_style)
                 if move_type == "in":
-                    row_in_qty += move_line.qty_done
-                    sheet.write(i, 7, move_line.qty_done or 0.0, qty_format)
+                    row_in_qty += move_line.quantity
+                    sheet.write(i, 7, move_line.quantity or 0.0, qty_format)
                     sheet.write(i, 8, 0.0, qty_format)
                 if move_type == "out":
-                    row_out_qty += move_line.qty_done
+                    row_out_qty += move_line.quantity
                     sheet.write(i, 7, 0.0, qty_format)
-                    sheet.write(i, 8, move_line.qty_done or 0.0, qty_format)
+                    sheet.write(i, 8, move_line.quantity or 0.0, qty_format)
                 sheet.write(i, 9, row_in_qty - row_out_qty, qty_format)
                 i += 1
             sheet.write(i, 0, _("Totals"), title_style)
@@ -204,7 +198,7 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
                 2,
                 i,
                 3,
-                row.product_id.with_context({"lang": "it_IT"}).name or "",
+                row.product_id.with_context(lang="it_IT").name or "",
                 title_style,
             )
             sheet.write(i, 4, row.price_unit, currency_format_title_long)
@@ -213,33 +207,21 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             sheet.write_formula(
                 i,
                 7,
-                "=SUM(%s:%s)"
-                % (
-                    xl_rowcol_to_cell(i_row, 7),
-                    xl_rowcol_to_cell(i - 1, 7),
-                ),
+                f"=SUM({xl_rowcol_to_cell(i_row, 7)}:{xl_rowcol_to_cell(i - 1, 7)})",
                 qty_format_title,
                 "",
             )
             sheet.write_formula(
                 i,
                 8,
-                "=SUM(%s:%s)"
-                % (
-                    xl_rowcol_to_cell(i_row, 8),
-                    xl_rowcol_to_cell(i - 1, 8),
-                ),
+                f"=SUM({xl_rowcol_to_cell(i_row, 8)}:{xl_rowcol_to_cell(i - 1, 8)})",
                 qty_format_title,
                 "",
             )
             sheet.write_formula(
                 i,
                 9,
-                "=%s-%s"
-                % (
-                    xl_rowcol_to_cell(i, 7),
-                    xl_rowcol_to_cell(i, 8),
-                ),
+                f"={xl_rowcol_to_cell(i, 7)}-{xl_rowcol_to_cell(i, 8)}",
                 qty_format_title,
                 "",
             )
