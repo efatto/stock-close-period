@@ -12,6 +12,7 @@
         "stock_period_evaluation_mrp",
         "stock_period_evaluation_direct_cost",
         "mrp_subcontracting",
+        "mrp_subcontracting_account",
     ],
     "data": [],
     "installable": True,

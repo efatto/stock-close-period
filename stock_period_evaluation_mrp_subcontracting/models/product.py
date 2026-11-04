@@ -4,14 +4,17 @@ from odoo import models
 class ProductProduct(models.Model):
     _inherit = "product.product"
 
-    def _compute_bom_price(self, bom, boms_to_recompute=False):
-        self.ensure_one()
-        total = super()._compute_bom_price(bom, boms_to_recompute)
-        if bom.type == "subcontract" and any(
-            seller.is_subcontractor for seller in self.seller_ids
-        ):
-            total += self._get_cost()
-        return total
+    # TODO this method get cost from custom method _get_cost(), which is different
+    #  from the one got from mrp_subcontracting_account module, which get it simply
+    #  from the seller. This way is better I think, but ask for customers opinion.
+    # def _compute_bom_price(self, bom, boms_to_recompute=False):
+    #     self.ensure_one()
+    #     total = super()._compute_bom_price(bom, boms_to_recompute)
+    #     if bom.type == "subcontract" and any(
+    #         seller.is_subcontractor for seller in self.seller_ids
+    #     ):
+    #         total += self._get_cost()
+    #     return total
 
     def _get_extra_cost(self, bom):
         # e.g. Prodotto padre con componenti e subcomponenti
