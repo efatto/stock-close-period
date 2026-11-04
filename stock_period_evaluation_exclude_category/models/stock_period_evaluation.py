@@ -8,6 +8,8 @@ class StockClosePeriod(models.Model):
         res = super()._get_product_lines()
         if not self.no_recompute_lines:
             self.line_ids.filtered(
-                lambda line: line.product_id.categ_id.exclude_from_stock_close_period
+                lambda line: (
+                    line.product_id.categ_id.exclude_from_stock_period_evaluation
+                )
             ).unlink()
         return res

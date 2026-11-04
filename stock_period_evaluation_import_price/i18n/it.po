@@ -42,7 +42,7 @@ msgid "Import File with prices"
 msgstr "Importa file con prezzi"
 
 #. module: stock_period_evaluation_import_price
-#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_import_price.stock_close_period_form
+#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_import_price.stock_period_evaluation_form
 msgid "Import prices from file"
 msgstr "Importa prezzi da file"
 
@@ -57,6 +57,6 @@ msgid "Stock Close Period"
 msgstr "Chiusura di magazzino"
 
 #. module: stock_period_evaluation_import_price
-#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_import_price.stock_close_period_form
+#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_import_price.stock_period_evaluation_form
 msgid "Update prices from uploaded file"
 msgstr "Aggiorna i prezzi da file"

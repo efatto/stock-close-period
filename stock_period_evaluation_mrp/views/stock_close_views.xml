@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="stock_close_period_line_tree" model="ir.ui.view">
+    <record id="stock_period_evaluation_line_tree" model="ir.ui.view">
         <field name="name">stock.close.period.line.list</field>
         <field name="model">stock.close.period.line</field>
         <field
@@ -22,7 +22,7 @@
         </field>
     </record>
 
-    <record id="stock_close_period_tree_inherit" model="ir.ui.view">
+    <record id="stock_period_evaluation_tree_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.list.inherit</field>
         <field name="model">stock.close.period</field>
         <field
@@ -36,7 +36,7 @@
         </field>
     </record>
 
-    <record id="stock_close_period_form_inherit" model="ir.ui.view">
+    <record id="stock_period_evaluation_form_inherit" model="ir.ui.view">
         <field name="name">stock.close.period.form.inherit</field>
         <field name="model">stock.close.period</field>
         <field

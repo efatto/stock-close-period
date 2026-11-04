@@ -57,8 +57,9 @@ class StockClosePeriod(models.Model):
                     product_default_code = str(value) if value else False
                 if product_default_code and price_unit_found:
                     lines = self.line_ids.filtered(
-                        lambda li, pdc=product_default_code: li.product_id.default_code
-                        == pdc
+                        lambda li, pdc=product_default_code: (
+                            li.product_id.default_code == pdc
+                        )
                     )
                     if lines:
                         lines.write(

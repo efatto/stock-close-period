@@ -9,10 +9,10 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
     _description = "Report Stock Close Product XLSX"
 
     def generate_xlsx_report(self, workbook, data, objs):
-        stock_close_period = objs[:1] or self.env["stock.close.period"].browse(
+        stock_period_evaluation = objs[:1] or self.env["stock.close.period"].browse(
             self.env.context.get("active_id")
         )
-        objs = stock_close_period.line_ids
+        objs = stock_period_evaluation.line_ids
 
         sheet = workbook.add_worksheet(_("Stock Close Period Product"))
         sheet.set_landscape()
@@ -77,15 +77,15 @@ class XlsxStockClosePeriodProduct(models.AbstractModel):
             9,
             _(
                 "Close period - %(period_name)s - %(close_date)s - %(company_name)s",
-                period_name=stock_close_period.name,
-                close_date=stock_close_period.close_date.strftime("%d/%m/%Y"),
-                company_name=stock_close_period.company_id.name,
+                period_name=stock_period_evaluation.name,
+                close_date=stock_period_evaluation.close_date.strftime("%d/%m/%Y"),
+                company_name=stock_period_evaluation.company_id.name,
             ),
             title_style,
         )
         i += 1
         sheet.write(i, 0, _("Evaluation method"), title_style)
-        sheet.write(i, 1, stock_close_period.force_evaluation_method, title_style)
+        sheet.write(i, 1, stock_period_evaluation.force_evaluation_method, title_style)
         i += 1
         sheet.write_row(i, 0, sheet_title, title_style)
         sheet.freeze_panes(3, 0)

@@ -116,13 +116,13 @@ msgid "Total: %s"
 msgstr "Totale: %s"
 
 #. module: stock_period_evaluation_method
-#: code:addons/stock_period_evaluation_method/models/stock_close_period.py:0
+#: code:addons/stock_period_evaluation_method/models/stock_period_evaluation.py:0
 #, python-format
 msgid "You can't set a previous closing."
 msgstr "Non è possibile impostare una chiusura precedente."
 
 #. module: stock_period_evaluation_method
-#: code:addons/stock_period_evaluation_method/models/stock_close_period.py:0
+#: code:addons/stock_period_evaluation_method/models/stock_period_evaluation.py:0
 #, python-format
 msgid "You must set a previous closing."
 msgstr "È necessario impostare una chiusura precedente."

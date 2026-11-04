@@ -29,7 +29,7 @@ msgid "Display Name"
 msgstr "Nome visualizzato"
 
 #. module: stock_period_evaluation_exclude_category
-#: model:ir.model.fields,field_description:stock_period_evaluation_exclude_category.field_product_category__exclude_from_stock_close_period
+#: model:ir.model.fields,field_description:stock_period_evaluation_exclude_category.field_product_category__exclude_from_stock_period_evaluation
 msgid "Exclude from Stock Close Period"
 msgstr "Escludi dalla valorizzazione di magazzino"
 

@@ -41,10 +41,10 @@ manufatti con questo bottone (anche questo impiegherà del tempo):
 ![Calcola produzione](../static/description/calcola_produzione.png)
 
 Il calcolo dei prodotti manufatti avviene secondo la formula descritta
-nel modulo auto-installante stock_close_period_mrp. Nel caso sia
+nel modulo auto-installante stock_period_evaluation_mrp. Nel caso sia
 installata l'app per il subappalto, viene aggiunto il relativo costo
 come descritto nel modulo auto-installante
-stock_close_period_mrp_subcontracting.
+stock_period_evaluation_mrp_subcontracting.
 
 Alla fine dei calcoli saranno marcati i flag seguenti, per indicare che
 sono stati eseguiti correttamente:

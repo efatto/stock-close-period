@@ -11,7 +11,7 @@ class TestClosePeriodExcludeCategory(TransactionCase):
         cls.excluded_category = cls.env["product.category"].create(
             {
                 "name": "Excluded Category",
-                "exclude_from_stock_close_period": True,
+                "exclude_from_stock_period_evaluation": True,
             }
         )
         cls.included_category = cls.env["product.category"].create(
@@ -67,6 +67,6 @@ class TestClosePeriodExcludeCategory(TransactionCase):
         self.assertNotIn(self.product_excluded, product_ids)
 
     def test_01_include_category(self):
-        self.excluded_category.exclude_from_stock_close_period = False
+        self.excluded_category.exclude_from_stock_period_evaluation = False
         closing = self._create_closing()
         self.assertIn(self.product_excluded, closing.line_ids.mapped("product_id"))

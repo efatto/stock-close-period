@@ -25,7 +25,7 @@ msgid "Assigned Attachments"
 msgstr "Allegati assegnati"
 
 #. module: stock_period_evaluation_mrp
-#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_mrp.stock_close_period_form_inherit
+#: model_terms:ir.ui.view,arch_db:stock_period_evaluation_mrp.stock_period_evaluation_form_inherit
 msgid "Compute Production"
 msgstr "Calcola produzione"
 

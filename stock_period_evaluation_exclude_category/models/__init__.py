@@ -1,2 +1,2 @@
-from . import stock_close_period
+from . import stock_period_evaluation
 from . import product_category
